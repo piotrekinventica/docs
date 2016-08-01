@@ -38,7 +38,7 @@
 
   <div id="documentation">
     <p>blang[swift,objc].<br />
-  <code>ARTStatsGranularity</code> is an enum specifying the granularity of a <a href="#stats-type"><code>ARTStats interval</code></a>.</p>
+  <code>ARTStatsGranularity</code> is an enum specifying the granularity of a <a href="/rest/statistics#stats-type"><code>ARTStats interval</code></a>.</p>
 ```[objc]
 typedef NS_ENUM(NSUInteger, ARTStatsGranularity) {
 ARTStatsGranularityMinute,
@@ -53,6 +53,17 @@ case Minute
 case Hour
 case Day
 case Month
+}
+```
+<p>blang[csharp].<br />
+  <code>StatsIntervalGranularity</code> is an enum specifying the granularity of a <a href="/rest/statistics#stats-type"><code>Stats interval</code></a>.</p>
+```[csharp]
+public enum StatsGranularity
+{
+Minute,
+Hour,
+Day,
+Month
 }
 ```
   </div>
@@ -93,6 +104,7 @@ case Month
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

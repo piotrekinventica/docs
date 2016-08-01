@@ -48,6 +48,7 @@
 <option id="anchor-title">Understanding WebHooks</option>
 <option id="anchor-channel-lifecycle">Channel lifecycle events</option>
 <option id="anchor-presence">Presence events</option>
+<option id="anchor-messages">Messages</option>
 <option id="anchor-configure">Configuring a WebHook</option>
 <option id="anchor-transport">WebHook transport details</option>
 <option id="anchor-security">WebHook security</option>
@@ -63,12 +64,14 @@
       
     </header>
     <article>
-      <p>WebHooks allow your server to be notified via an HTTP request following channel lifecycle events (such as channel creation) and presence events (such as members entering or leaving).</p>
-<p>Generally, our customers who want to receive events as they happen, use our <a href="/realtime">realtime client libraries</a> and subscribe to events and messages published. However, some customers prefer to be notified over HTTP when events occur such as a user attaching to a channel, or members entering or leaving the presence set on a channel. For example, a customer may want to start pushing content to a channel only when the channel becomes active and there is someone there to receive the data, or they may want to send a welcome message to someone when they first enter a chat channel. A WebHook is useful feature to achieve this in both these scenarios.</p>
-<p>Ably currently supports two types of WebHooks:</p>
+      <p>WebHooks allow your server to be notified via an HTTP request following channel lifecycle events (such as channel creation), presence events (such as members entering or leaving) or messages being published.</p>
+<p class="tip">WebHooks are <a href="#transport">rate limited</a> and designed for low to medium volumes of updates. If you expect a high volume of events and messages (upwards of 20 per second), then you should consider using our <a href="#queues">message queues</a> instead as they are designed to scale without limits.</p>
+<p>Generally, customers who want to receive events as they happen, use our <a href="/general/queues">message queues</a>, or alternatively our <a href="/realtime">realtime client libraries</a> and subscribe to events and messages published. However, some customers prefer to be notified over HTTP when events occur such as a user attaching to a channel, or members entering or leaving the presence set on a channel. For example, a customer may want to start pushing content to a channel only when the channel becomes active and there is someone there to receive the data, or they may want to send a welcome message to someone when they first enter a chat channel. A WebHook is useful feature to achieve this in both these scenarios.</p>
+<p>Ably currently supports three types of WebHooks:</p>
 <ul>
 	<li><a href="#channel-lifecycle">Channel lifecycle events</a> &#8211; get notified when a channel is created (following the first client attaching to this channel) or discarded (when there are no more clients attached to the channel)</li>
 	<li><a href="#presence">Presence events</a> &#8211; get notified when clients enter, update their data, or leave channels</li>
+	<li><a href="#messages">Messages</a> &#8211; get notified when messages are published on a channel</li>
 </ul>
 <p>In order to prevent overloading your servers with requests, Ably batches WebHook data and issues a <code>POST</code> request with <code>JSON</code> data in the body of the request to your servers. WebHook requests are typically published at most once per second per configured WebHook. See <a href="#transport">WebHook transport details</a> below for the specifics on throughput, restrictions and expected behaviour of WebHooks.</p>
 <p>You can <a href="#configure">configure WebHooks</a> in your <a href="https://support.ably.io/solution/articles/3000048664-how-do-i-access-my-account-dashboard">account dashboard</a> on a per app basis which will apply to all channels in that app. If you require WebHook filtering, then <a href="https://www.ably.io/contact">get in touch</a>.</p>
@@ -134,6 +137,8 @@
 	<dd>name of the channel that the presence event belongs to</dd>
 	<dt>data.site</dt>
 	<dd>an internal site identifier indicating which primary data center the member is present in</dd>
+	<dt>data.presence</dt>
+	<dd>an <code>Array</code> of presence events with fields for each event described below</dd>
 	<dt>data.presence.clientId</dt>
 	<dd>the client identifier for the member. Find out more about <a href="https://support.ably.io/solution/articles/3000038608-authenticated-and-identified-clients">identified clients</a></dd>
 	<dt>data.presence.connectionId</dt>
@@ -163,11 +168,13 @@
          "data":{
             "channelId":"livechat",
             "site":"eu-west-1-A",
-            "presence":{
-               "clientId":"Sam",
-               "connectionId":"JYNDvRnLPc",
-               "action":"enter"
-            }
+            "presence":[
+               {
+                  "clientId":"Sam",
+                  "connectionId":"JYNDvRnLPc",
+                  "action":"enter"
+               }
+            ]
          }
       }
    ]
@@ -184,12 +191,14 @@
          "data":{
             "channelId":"livechat",
             "site":"eu-west-1-A",
-            "presence":{
-               "clientId":"Mike",
-               "connectionId":"SDJLqIgGXT",
-               "action":"update",
-               "data":"status:typing"
-            }
+            "presence":[
+               {
+                  "clientId":"Mike",
+                  "connectionId":"SDJLqIgGXT",
+                  "action":"update",
+                  "data":"status:typing"
+               }
+            ]
          }
       },
       {
@@ -201,15 +210,26 @@
          "data":{
             "channelId":"livechat",
             "site":"eu-west-1-A",
-            "presence":{
-               "clientId":"Mike",
-               "connectionId":"SDJLqIgGXT",
-               "action":"leave"
-            }
+            "presence":[
+               {
+                  "clientId":"Mike",
+                  "connectionId":"SDJLqIgGXT",
+                  "action":"leave"
+               },
+               {
+                  "clientId":"Sam",
+                  "connectionId":"Fa9ahWh2HA",
+                  "action":"update",
+                  "data":"status:typing"
+               }
+            ]
          }
       }
    ]
 }</code></pre>
+<h2 id="messages">Messages</h2>
+<p>Receiving messages via WebHooks is currently in beta. As such, this functionality is currently only available to Enterprise customers. If you are interested in receiving messages via WebHooks, please <a href="https://www.ably.io/contact">get in touch with us</a>.</p>
+<p>Please note that if you are plannig to receive messages via WebHooks, it is theoretically very easy to exceed the <a href="#transport">transport rate limits</a> we impose on WebHooks to prevent DoS attacks. We recommend you consider <a href="/general/queues">message queues</a> instead as they are far more scalable.</p>
 <h2>Configuring a WebHook</h2>
 <p>WebHooks are configured in your <a href="https://support.ably.io/solution/articles/3000048664-how-do-i-access-my-account-dashboard">account dashboard</a>. The following fields are available for each configured WebHook:</p>
 <dl>
@@ -293,6 +313,7 @@
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class='selected'><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

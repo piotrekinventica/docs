@@ -56,7 +56,7 @@
 <p>For customers who want to ensure that all channels are attached when a connection is available, regardless of whether messages may have been missed, we recommend the following approach:</p>
 <ul>
 	<li>Add a listener on the connection object for all <code>connected</code> events</li>
-	<li>Reattach all channels you have created. If a channel is already attached, and you call the <a href="/realtime/channels-messages/#attach"><code>channel#attach</code></a> method, the channel will simply remain attached. It is therefore safe to simply attach all channels every time the connection becomes <code>connected</code></li>
+	<li>Reattach all channels you have created. If a channel is already attached, and you call the <a href="/realtime/channels-messages/#attach"><span lang="default"><code>channel#attach</code></span><span lang="csharp"><code>channel#Attach</code></span></a> method, the channel will simply remain attached. It is therefore safe to simply attach all channels every time the connection becomes <code>connected</code></li>
 </ul>
 <p>The following Javascript example demonstrates a trivial way to ensure all channels are attached when the client becomes connected or the channel becomes detached:</p>
 <pre lang="javascript"><code lang="javascript">function reattach(channel) {
@@ -122,6 +122,7 @@ channel.on('detached', function() {
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

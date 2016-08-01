@@ -47,37 +47,39 @@
     <article>
       <h4>Parameters</h4>
 <dl>
-	<dt><span lang="default">options</span><span lang="objc,swift">query</span></dt>
-	<dd><span lang="default">an optional object</span><span lang="python">optional keyword arguments</span><span lang="ruby">an optional Hash</span><span lang="php">an optional Associative Array</span><span lang="objc,swift">an optional <code>ARTStatsQuery</code></span><span lang="java">an optional <a href="#param"><code>Param</code></a>[] array</span> containing the query parameters</dd>
+	<dt><span lang="default">options</span><span lang="objc,swift,csharp">query</span></dt>
+	<dd>an optional <span lang="default">object</span><span lang="ruby">Hash</span><span lang="objc,swift"><code>ARTStatsQuery</code></span><span lang="csharp"><code>StatsDataRequestQuery</code></span><span lang="java"><a href="#param"><code>Param</code></a>[] array</span> containing the query parameters</dd>
 </dl>
 <dl>
 	<dt><div lang="javascript,nodejs">callback</div></dt>
 	<dd>is a function of the form: <code>function(err, result)</code></dd>
+	<dt><div lang="ruby">&amp;block</div></dt>
+	<dd>yields a <code>PaginatedResult&lt;Stats&gt;</code> array</dd>
 	<dt><div lang="swift,objc">callback</div></dt>
 	<dd>called with a <a href="#paginated-result">ARTPaginatedResult</a>&lt;<a href="/rest/types#stats">ARTStats</a>&gt; object or an error</dd>
 </dl>
-<h4><span lang="default"><code>options</code> parameters</span><span lang="objc,swift"><code>ARTStatsQuery</code> properties</span></h4>
+<h4><span lang="default"><code>options</code> parameters</span><span lang="objc,swift"><code>ARTStatsQuery</code> properties</span><span lang="csharp"><code>StatsDataRequestQuery</code> properties</span></h4>
 <p>The following options, as defined in the <a href="/rest-api#stats">REST <code>/stats</code> API</a> endpoint, are permitted:</p>
 <dl>
-	<dt><span lang="ruby">:</span>start</dt>
-	<dd><em>beginning of time</em> earliest <span lang="ruby"><code>Time</code> or </span>time in milliseconds since the epoch for any stats retrieved<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
-	<dt><span lang="ruby">:</span>end</dt>
-	<dd><em>current time</em> latest <span lang="ruby"><code>Time</code> or </span>time in milliseconds since the epoch for any stats retrieved<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
-	<dt><span lang="ruby">:</span>direction</dt>
-	<dd><em>backwards</em> <span lang="ruby"><code>:</code></span><code>forwards</code> or <span lang="ruby"><code>:</code></span><code>backwards</code><br><i>Type: <span lang="default">String</span><span lang="ruby">Symbol</span></i></dd>
-	<dt><span lang="ruby">:</span>limit</dt>
+	<dt><span lang="default">start</span><span lang="ruby">:start</span><span lang="csharp">Start</span></dt>
+	<dd><em>beginning of time</em> earliest <span lang="csharp"><code>DateTimeOffset</code> or </span><span lang="ruby"><code>Time</code> or </span>time in milliseconds since the epoch for any stats retrieved<br><i>Type: <span lang="default"><code>Long</code></span><span lang="ruby"><code>Int or @Time</code></span><span lang="csharp"><code>DateTimeOffset</code></span></i></dd>
+	<dt><span lang="default">end</span><span lang="ruby">:end</span><span lang="csharp">End</span></dt>
+	<dd><em>current time</em> latest <span lang="csharp"><code>DateTimeOffset</code> or </span><span lang="ruby"><code>Time</code> or </span>time in milliseconds since the epoch for any stats retrieved<br><i>Type: <span lang="default"><code>Long</code></span><span lang="ruby"><code>Int or @Time</code></span><span lang="csharp"><code>DateTimeOffset</code></span></i></dd>
+	<dt><span lang="default">direction</span><span lang="ruby">:direction</span><span lang="csharp">Direction</span></dt>
+	<dd><em>backwards</em> <span lang="ruby"><code>:</code></span><code>forwards</code> or <span lang="ruby"><code>:</code></span><code>backwards</code><br><i>Type: <span lang="default"><code>String</code></span><span lang="ruby"><code>Symbol</code></span><span lang="csharp"><code>Direction</code> enum</span></i></dd>
+	<dt><span lang="default">limit</span><span lang="ruby">:limit</span><span lang="csharp">Limit</span></dt>
 	<dd><em>100</em> maximum number of messages to retrieve up to 1,000<br><i>Type: <code>Integer</code></i></dd>
-	<dt><span lang="ruby">:</span>unit</dt>
-	<dd><em>minute</em> <span lang="ruby"><code>:</code></span><code>minute</code>, <span lang="ruby"><code>:</code></span><code>hour</code>, <span lang="ruby"><code>:</code></span><code>day</code> or <span lang="ruby"><code>:</code></span><code>month</code>. Based on the unit selected, the given start or end times are rounded down to the start of the relevant interval depending on the unit granularity of the query<br><i>Type: <span lang="default"><code>String</code></span><span lang="objc,swift"><a href="#stats-granularity"><code>ARTStatsGranularity</code></a></span><span lang="ruby"><code>Symbol</code></span></i></dd>
+	<dt><span lang="default">unit</span><span lang="ruby">:unit</span><span lang="csharp">Unit</span></dt>
+	<dd><em>minute</em> <span lang="ruby"><code>:</code></span><code>minute</code>, <span lang="ruby"><code>:</code></span><code>hour</code>, <span lang="ruby"><code>:</code></span><code>day</code> or <span lang="ruby"><code>:</code></span><code>month</code>. Based on the unit selected, the given start or end times are rounded down to the start of the relevant interval depending on the unit granularity of the query<br><i>Type: <span lang="default"><code>String</code></span><span lang="objc,swift"><a href="#stats-granularity"><code>ARTStatsGranularity</code></a></span><span lang="ruby"><code>Symbol</code></span><span lang="csharp"><code>StatsBy</code> enum</span></i></dd>
 </dl>
 
 
-<div lang="javascript,nodejs,,swift,objc"> <!-- start javascript,nodejs,,swift,objc language block -->
+<div lang="javascript,nodejs,,objc,swift"> <!-- start javascript,nodejs,,objc,swift language block -->
 <h4>Callback result</h4>
 <p>On success, <code>result</code> contains a <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulating an array of <a href="/rest/types#stats"><code>Stats</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>next</code></a> and <a href="#paginated-result"><code>first</code></a> methods.</p>
 <p>On failure to retrieve stats, <code>err</code> contains an <a href="#error-info"><code>ErrorInfo</code></a> object with an error response as defined in the <a href="/rest-api#common">Ably REST API</a> documentation.</p>
 
-</div> <!-- /end javascript,nodejs,,swift,objc language block -->
+</div> <!-- /end javascript,nodejs,,objc,swift language block -->
 
 
 
@@ -87,6 +89,16 @@
 <p>Failure to retrieve the stats will raise an <a href="/rest/types#ably-exception"><code>AblyException</code></a></p>
 
 </div> <!-- /end java,ruby,php language block -->
+
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<h4>Returns</h4>
+<p>The method is asyncronous and return Task which needs to be awaited.</p>
+<p>On success, the returned <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulates a list of <a href="/rest/types#stats"><code>Stats</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>NextAsync</code></a> and <a href="#paginated-result"><code>FirstAsync</code></a> methods.</p>
+<p>Failure to retrieve the stats will raise an <a href="/rest/types#ably-exception"><code>AblyException</code></a></p>
+
+</div> <!-- /end csharp language block -->
 
 
     </article>
@@ -130,6 +142,7 @@
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

@@ -76,14 +76,14 @@
       <p>The Ably Realtime service organises the message traffic within applications into named channels. Channels are the &#8220;unit&#8221; of message distribution; clients attach to channels to subscribe to messages, and every message published to a unique channel is broadcast by Ably to all subscribers. This scalable and resilient messaging pattern is commonly called <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a>.</p>
 <h2 id="getting-started">Getting started</h2>
 <p>The Ably REST client library provides a straightforward API for publishing and retrieve history messages on a channel.</p>
-<pre class="code-editor open-jsbin open-jsbin-ugobiz" lang="javascript"><code class="code-editor open-jsbin open-jsbin-ugobiz" lang="javascript">var rest = new Ably.Rest('{{API_KEY}}');
+<pre class="code-editor open-jsbin open-jsbin-anoqir" lang="javascript"><code class="code-editor open-jsbin open-jsbin-anoqir" lang="javascript">var rest = new Ably.Rest('{{API_KEY}}');
 var channel = rest.channels.get('{{RANDOM_CHANNEL_NAME}}');
 channel.publish('example', 'message data', function() {
   channel.history(function(err, resultPage) {
     console.log('Last published message:' + resultPage.items[0]);
   });
 });</code></pre>
-<pre class="code-editor open-jsbin open-jsbin-ugobiz" lang="nodejs"><code class="code-editor open-jsbin open-jsbin-ugobiz" lang="nodejs">var rest = new Ably.Rest('{{API_KEY}}');
+<pre class="code-editor open-jsbin open-jsbin-anoqir" lang="nodejs"><code class="code-editor open-jsbin open-jsbin-anoqir" lang="nodejs">var rest = new Ably.Rest('{{API_KEY}}');
 var channel = rest.channels.get('{{RANDOM_CHANNEL_NAME}}');
 channel.publish('example', 'message data', function() {
   channel.history(function(err, resultPage) {
@@ -110,6 +110,11 @@ Channel channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}");
 channel.publish("example", "message data");
 PaginatedResult&lt;Message&gt; resultPage = channel.history(null);
 System.out.println("Last published message ID: " + resultPage.items[0].id);</code></pre>
+<pre lang="csharp"><code lang="csharp">AblyRest rest = new AblyRest("{{API_KEY}}");
+var channel = rest.Channels.Get("{{RANDOM_CHANNEL_NAME}}");
+await channel.PublishAsync("example", "message data");
+PaginatedResult&lt;Message&gt; resultPage = await channel.HistoryAsync();
+Console.WriteLine("Last published message ID: " + resultPage.Items[0].id);</code></pre>
 <pre lang="objc"><code lang="objc">ARTRest *rest = [[ARTRest alloc] initWithKey:@"{{API_KEY}}"];
 ARTRestChannel *channel = [rest.channels get:@"{{RANDOM_CHANNEL_NAME}}"];
 [channel publish:@"example" data:@"message data"];
@@ -129,6 +134,7 @@ channel.history { resultPage, error in
 <pre lang="javascript"><code lang="javascript">var channel = rest.channels.get('channelName');</code></pre>
 <pre lang="nodejs"><code lang="nodejs">var channel = rest.channels.get('channelName');</code></pre>
 <pre lang="java"><code lang="java">Channel channel = rest.channels.get("channelName");</code></pre>
+<pre lang="csharp"><code lang="csharp">Channel channel = rest.Channels.Get("channelName");</code></pre>
 <pre lang="ruby"><code lang="ruby">channel = rest.channels.get('channelName')</code></pre>
 <pre lang="python"><code lang="python">channel = rest.channels.get('channelName')</code></pre>
 <pre lang="php"><code lang="php">$channel = $rest-&gt;channels-&gt;get('channelName');</code></pre>
@@ -148,7 +154,10 @@ channel.history { resultPage, error in
 <pre lang="java"><code lang="java">CipherParams params = Crypto.getDefaultParams(key);
 ChannelOptions options = new ChannelOptions();
 options.cipher = params;
-Channel channel = rest.channels.get("channelName", channelOpts);</code></pre>
+Channel channel = rest.channels.get("channelName", options);</code></pre>
+<pre lang="csharp"><code lang="csharp">CipherParams cipherParams = Crypto.GetDefaultParams(key);
+var options = new ChannelOptions(cipherParams);
+var encryptedChannel = rest.Channels.Get("channelName", options);</code></pre>
 <pre lang="ruby"><code lang="ruby">key = Ably::Util::Crypto.generate_random_key
 options = { cipher: { key: key } }
 channel = rest.channels.get('channelName', options)</code></pre>
@@ -175,20 +184,20 @@ let channel = rest.channels.get("channelName", options: options)</code></pre>
 <p>Key or token capabilities can also specify access rights based on channel namespace, find out more about <a href="/general/authentication">authentication</a></p>
 <h2>Messages</h2>
 <p>Each message published has an optional event <code>name</code> <span lang="default">property</span><span lang="java">member</span><span lang="ruby">attribute</span> and a <code>data</code> <span lang="default">property</span><span lang="java">member</span><span lang="ruby">attribute</span> carrying the payload of the message. Various primitive and object types are portably defined and supported in all clients, enabling clients to be interoperable despite being hosted in different languages or environments.</p>
-<p>The supported payload types are Strings, JSON objects and arrays, buffers containing arbitrary binary data, and Null objects. Client libraries detect the supplied message payload and encode the message appropriately.</p>
+<p>The supported payload types are Strings, JSON objects and arrays, <span lang="csharp">plain c# objects which are converted to json,</span> buffers containing arbitrary binary data, and Null objects. Client libraries detect the supplied message payload and encode the message appropriately.</p>
 <h3 id="message-subscription">Subscribing to messages</h3>
 <p>The REST client library does not offer message realtime subscription but instead provides access to the &#8220;live&#8221; history using the <a href="/rest/history">REST history API</a>. Find out more about <a href="/realtime/channels-messages#message-subscription">subscribing to messages in realtime using the Realtime API</a>.</p>
 <p>The <code>name</code> <span lang="default">property</span><span lang="java">member</span><span lang="ruby">attribute</span> of published messages does not affect the distribution of a channel message to clients but may be used as a subscription filter, allowing a client to register a listener that only sees a subset of the messages received on the channel. Find out more about <a href="/realtime/channels-messages#subscribe">registering listeners using the Realtime API</a>.</p>
 <h3 id="message-publish">Publishing messages</h3>
 <p>Channels expose a <code>publish</code> method whereby a client can publish either a single message or an array of messages to a channel over <a href="/rest-api#publish">REST</a>.</p>
-<pre class="code-editor open-jsbin open-jsbin-ojanow" lang="javascript"><code class="code-editor open-jsbin open-jsbin-ojanow" lang="javascript">channel.publish('event', 'This is my payload', function(err) {
+<pre class="code-editor open-jsbin open-jsbin-ajevoz" lang="javascript"><code class="code-editor open-jsbin open-jsbin-ajevoz" lang="javascript">channel.publish('event', 'This is my payload', function(err) {
   if(err) {
     console.log('Unable to publish message; err = ' + err.message);
   } else {
     console.log('Message successfully sent');
   }
 });</code></pre>
-<pre class="code-editor open-jsbin open-jsbin-ojanow" lang="nodejs"><code class="code-editor open-jsbin open-jsbin-ojanow" lang="nodejs">channel.publish('event', 'This is my payload', function(err) {
+<pre class="code-editor open-jsbin open-jsbin-ajevoz" lang="nodejs"><code class="code-editor open-jsbin open-jsbin-ajevoz" lang="nodejs">channel.publish('event', 'This is my payload', function(err) {
   if(err) {
     console.log('Unable to publish message; err = ' + err.message);
   } else {
@@ -199,10 +208,14 @@ let channel = rest.channels.get("channelName", options: options)</code></pre>
 <pre lang="python"><code lang="python">channel.publish(u'event', u'This is my payload')</code></pre>
 <pre lang="php"><code lang="php">$channel-&gt;publish('event', 'This is my payload');</code></pre>
 <pre lang="java"><code lang="java">channel.publish("event", "This is my payload");</code></pre>
+<pre lang="csharp"><code lang="csharp">channel.PublishAsync("event", "This is my payload");</code></pre>
 <pre lang="objc"><code lang="objc">[channel publish:@"event" data:@"This is my payload"];</code></pre>
 <pre lang="swift"><code lang="swift">channel.publish("event", data: "This is my payload")</code></pre>
+<h4 id="publish-on-behalf">Publishing on behalf of realtime connection</h4>
+<p>Message published using the REST API may be done so on behalf of an existing realtime connection when a valid <code>connectionKey</code> is present in the published message. For example, if you want to publish a message using the REST client library so that it appears to come from an existing connected realtime client, then the connection&#8217;s <a href="/realtime/connection#key">private (secret) connection key</a> must be included. See a <a href="https://jsbin.ably.io:443/aqanoy/1/edit?javascript,live">publish on behalf of a realtime client example</a>.</p>
+<p>If the <code>connectionKey</code> is invalid or belongs to a connection that has since been closed, then the publish operation will fail.</p>
 <h3 id="message-history">Retrieving message history</h3>
-<p>Channels expose a <a href="#history"><code>history</code></a> method providing a means for clients to obtain messages previously sent on the channel. Channel history can be used to return continuous message history up to the exact point a realtime channel was attached.</p>
+<p>Channels expose a <a href="#history"><span lang="default"><code>history</code></span><span lang="csharp"><code>History</code></span></a> method providing a means for clients to obtain messages previously sent on the channel. Channel history can be used to return continuous message history up to the exact point a realtime channel was attached.</p>
 <p>History provides access to instantaneous &#8220;live&#8221; history as well as the longer term persisted history for attached channels. If <a href="/rest/history#persisted-history">persisted history</a> is enabled for the channel, then messages will <a href="https://support.ably.io/solution/articles/3000030059-how-long-are-messages-stored-for">typically be stored for 24 &#8211; 72 hours</a>. If persisted history is not enabled, Ably retains the last two minutes of message history in memory.</p>
 <p>The following example retrieves the first two pages of historical messages published up until the point the channel was attached.</p>
 <pre lang="javascript"><code lang="javascript">channel.history(function(err, resultPage) {
@@ -231,6 +244,12 @@ if(resultPage.hasNext()) {
   PaginatedResult&lt;Message&gt; nextPage = resultPage.next();
   System.out.println(nextPage.items().length + " messages received in second page");
 }</code></pre>
+<pre lang="csharp"><code lang="csharp">PaginatedResult&lt;Message&gt; resultPage = await channel.HistoryAsync();
+Console.WriteLine(resultPage.Items.Count + " messages received in first page");
+if(resultPage.HasNext) {
+  PaginatedResult&lt;Message&gt; nextPage = await resultPage.NextAsync();
+  Console.WriteLine(nextPage.Items.Count + " messages received in second page");
+}</code></pre>
 <pre lang="ruby"><code lang="ruby">result_page = channel.history
 puts "#{result_page.items.length} messages received in first page"
 if result_page.has_next?
@@ -249,25 +268,25 @@ if($resultPage-&gt;hasMext()) {
   echo(count($resultPage-&gt;items) . 'messages received in second page');
 }</code></pre>
 <pre lang="objc"><code lang="objc">[channel history:^(ARTPaginatedResult&lt;ARTMessage *&gt; *resultPage, ARTErrorInfo *error) {
-    NSLog(@"%lu messages received in first page", (unsigned long)[resultPage.items count]);
-    if (resultPage.hasNext) {
-        [resultPage next:^(ARTPaginatedResult&lt;ARTMessage *&gt; *nextPage, ARTErrorInfo *error) {
-            // ...
-        }];
-    }
+  NSLog(@"%lu messages received in first page", (unsigned long)[resultPage.items count]);
+  if (resultPage.hasNext) {
+    [resultPage next:^(ARTPaginatedResult&lt;ARTMessage *&gt; *nextPage, ARTErrorInfo *error) {
+      // ...
+    }];
+  }
 }];</code></pre>
 <pre lang="swift"><code lang="swift">channel.history { resultPage, error in
-    let resultPage = resultPage!
-    print("\(resultPage.items.count) messages received in first page")
-    if resultPage.hasNext {
-        resultPage.next { nextPage, error in
-            // ...
-        }
+  let resultPage = resultPage!
+  print("\(resultPage.items.count) messages received in first page")
+  if resultPage.hasNext {
+    resultPage.next { nextPage, error in
+      // ...
     }
+  }
 }</code></pre>
-<p>See the <a href="/rest/history">history</a> documentation for further details of the supported query parameters.</p>
+<p>See the <a href="/rest/history">history documentation</a> for further details of the supported query parameters.</p>
 <h2>Presence</h2>
-<p>Channels expose a <code>presence</code> member which a client can use to obtain present members and presence event history for the channel itself. See the <a href="/rest/presence">REST presence</a> documentation for details.</p>
+<p>Channels expose a <span lang="default"><code>presence</code></span><span lang="csharp"><code>Presence</code></span> member which a client can use to obtain present members and presence event history for the channel itself. See the <a href="/rest/presence">REST presence</a> documentation for details.</p>
 <h1>Channel API Reference</h1>
 <div class="inline-toc">
 <ul><li>Channel reference
@@ -298,21 +317,21 @@ Related types
 </li>
 </ul>
 </li></ul>
-</div><h2 id="properties"><span lang='default'>Channel Properties</span><span lang='python'>Channel Attributes</span><span lang='php'>Ably\Channel Properties</span><span lang='objc,swift'>ARTRestChannel Properties</span><span lang='ruby'>Ably::Rest::Channel Attributes</span><span lang='java'>io.ably.lib.rest.Channel Members</span></h2>
+</div><h2 id="properties"><span lang='default'>Channel Properties</span><span lang='python'>Channel Attributes</span><span lang='php'>Ably\Channel Properties</span><span lang='objc,swift'>ARTRestChannel Properties</span><span lang='ruby'>Ably::Rest::Channel Attributes</span><span lang='java'>io.ably.lib.rest.Channel Members</span><span lang='csharp'>IO.Ably.Rest.RestChannel Members</span></h2>
 <p>The <code>Channel</code> object exposes the following public <span lang="default">properties</span><span lang="ruby,python">attributes</span><span lang="java">members</span>:</p>
-<h6 id="name">name</h6>
-<p>The name String unique to this channel.</p>
-<h6 id="presence">presence</h6>
+<h6 id="name"><span lang='default'>name</span><span lang='csharp'>Name</span></h6>
+<p>The name <code>String</code> unique to this channel.</p>
+<h6 id="presence"><span lang='default'>presence</span><span lang='csharp'>Presence</span></h6>
 <p>Provides access to the <a href="/rest/presence">REST Presence</a> object for this channel which can be used to get members present on the channel, or retrieve presence event history.</p>
 <h2>Methods</h2>
-<h6 id="publish">publish</h6>
+<h6 id="publish"><span lang='default'>publish</span><span lang='csharp'>Publish</span></h6>
 <p>There are two overloaded versions of this method:</p>
 <blockquote class="definition" id="publish-data">
-<p class="definition" id="publish-data"><span lang='default'>publish(String name, Object data, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='ruby,php'>publish(String name, Object data)</span><span lang='python'>publish(name=Unicode, data=Object)</span><span lang='java'>public void publish(String name, Object data)</span><span lang='objc,swift'>publish(name: String?, data: AnyObject?, callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
+<p class="definition" id="publish-data"><span lang='default'>publish(String name, Object data, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='ruby,php'>publish(String name, Object data)</span><span lang='python'>publish(name=Unicode, data=Object)</span><span lang='java'>void publish(String name, Object data)</span><span lang='csharp'>Task PublishAsync(string name, object data, string clientId = null)</span><span lang='objc,swift'>publish(name: String?, data: AnyObject?, callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
 </blockquote>
 <p>Publish a single message on this channel based on a given event name and payload. <span lang="javascript,nodejs,,java,objc,swift">A <span lang="default">callback</span><span lang="java">listener</span> may optionally be passed in to this call to be notified of success <span lang="default">or failure</span><span lang="ruby"></span> of the operation.</span></p>
 <blockquote class="definition" id="publish-msg-array">
-<p class="definition" id="publish-msg-array"><span lang='default'>publish(Object[] messages, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='ruby,php'>publish(<a href="#message">Message</a>[] messages)</span><span lang='python'>publish(messages=List&lt;<a href="#message">Message</a>&gt;)</span><span lang='java'>public void publish(<a href="#message">Message</a>[] messages)</span><span lang='objc,swift'>publish(messages: [ <a href="#message">ARTMessage</a> ], callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
+<p class="definition" id="publish-msg-array"><span lang='default'>publish(Object[] messages, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='ruby,php'>publish(<a href="#message">Message</a>[] messages)</span><span lang='python'>publish(messages=List&lt;<a href="#message">Message</a>&gt;)</span><span lang='java'>void publish(<a href="#message">Message</a>[] messages)</span><span lang='csharp'>Task PublishAsync(IEnumerable&lt;<a href="#message">Message</a>&gt; messages)</span><span lang='objc,swift'>publish(messages: [ <a href="#message">ARTMessage</a> ], callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
 </blockquote>
 <p>Publish several messages on this channel. <span lang="javascript,nodejs,,java,objc,swift">A <span lang="default">callback</span><span lang="java">listener</span> may optionally be passed in to this call to be notified of success <span lang="default">or failure</span><span lang="ruby"></span> of the operation.</span></p>
 <h4>Parameters</h4>
@@ -323,6 +342,8 @@ Related types
 	<dd>data payload for the message. The supported payload types are Strings, JSON objects and arrays, buffers containing arbitrary binary data, and null.<br><i>Type: <code>Object</code></i></dd>
 	<dt><div lang="java">data</div></dt>
 	<dd>data payload for the message. The supported payload types are Strings, JsonObject, binary data as byte arrays, and null.<br><i>Type: <code>Object</code></i></dd>
+	<dt><div lang="csharp">data</div></dt>
+	<dd>data payload for the message. The supported payload types are strings, plain .Net objects, binary data as byte arrays, and null.<br><i>Type: <code>Object</code></i></dd>
 	<dt><div lang="ruby">data</div></dt>
 	<dd>data payload for the message. The supported payload types are Strings, Hash or Array objects that can be serialised to JSON using <code>to_json</code>, binary data as <code>ASCII-8BIT</code> byte arrays, and null.<br><i>Type: <code>Object</code></i></dd>
 	<dt><div lang="python">data</div></dt>
@@ -358,14 +379,23 @@ Related types
 
 </div> <!-- /end java,ruby,php language block -->
 
-<h6 id="history">history</h6>
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<h4>Returns</h4>
+<p>The method is asyncronous and returns a Task that can be awaited.</p>
+<p>On failure to publish the message, an <a href="/rest/types#ably-exception"><code>AblyException</code></a> will be raised.</p>
+
+</div> <!-- /end csharp language block -->
+
+<h6 id="history"><span lang='default'>history</span><span lang='csharp'>History</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>history(Object options, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; resultPage))</span><span lang='ruby'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(Hash options)</span><span lang='ruby'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(kwargs_options)</span><span lang='php'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(Array options)</span><span lang='java'>public <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(<a href="#param">Param</a>[] options)</span><span lang='objc,swift'>history(query: ARTRealtimeHistoryQuery?, callback: (<a href="#paginated-result">ARTPaginatedResult</a>&lt;<a href="#message">ARTMessage</a>&gt;?, ARTErrorInfo?) &#8594; Void) throws</span></p>
+<p class="definition"><span lang='default'>history(Object options, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; resultPage))</span><span lang='ruby'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(Hash options)</span><span lang='ruby'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(kwargs_options)</span><span lang='php'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(Array options)</span><span lang='java'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(<a href="#param">Param</a>[] options)</span><span lang='csharp'>Task&lt;<a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt;&gt; HistoryAsync(<a href="#data-request-query">DataRequestQuery</a> dataQuery)</span><span lang='objc,swift'>history(query: ARTRealtimeHistoryQuery?, callback: (<a href="#paginated-result">ARTPaginatedResult</a>&lt;<a href="#message">ARTMessage</a>&gt;?, ARTErrorInfo?) &#8594; Void) throws</span></p>
 </blockquote>
 <p>Gets a <a href="#paginated-result">paginated</a> set of historical messages for this channel. If the <a href="https://support.ably.io/support/solutions/articles/3000030059-how-long-are-messages-stored-for">channel is configured to persist messages to disk</a>, then message history will <a href="https://support.ably.io/solution/articles/3000030059-how-long-are-messages-stored-for">typically be available for 24 &#8211; 72 hours</a>. If not, messages are only retained in memory by the Ably service for two minutes.</p>
 <h4>Parameters</h4>
 <dl>
-	<dt><span lang="default">options</span><span lang="objc,swift">query</span><span lang="java"><a href="#param">Param</a>[] options</span></dt>
+	<dt><span lang="default">options</span><span lang="objc,swift,csharp">query</span><span lang="java"><a href="#param">Param</a>[] options</span></dt>
 	<dd><span lang="default">an optional object containing the query parameters</span><span lang="python">optional keyword arguments containing the query parameters</span><span lang="ruby">an optional set of key value pairs containing the query parameters</span><span lang="php">an optional Associative Array containing the query parameters</span>, as specified in the <a href="/rest/history#channel-history">message history API documentation</a>.</dd>
 </dl>
 <dl>
@@ -392,8 +422,18 @@ Related types
 
 </div> <!-- /end java,ruby,php,python language block -->
 
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<h4>Returns</h4>
+<p>The method is asyncronous and return a Task that has to be awaited to get the result.</p>
+<p>On success, the returned <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulates an array of <a href="#message"><code>Message</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>NextAsync</code></a> and <a href="#paginated-result"><code>FirstAsync</code></a> methods.</p>
+<p>Failure to retrieve the message history will raise an <a href="/realtime/types/#ably-exception"><code>AblyException</code></a></p>
+
+</div> <!-- /end csharp language block -->
+
 <h2 id="related-types">Related types</h2>
-<h3 id="message"><span lang='default'>Message</span><span lang='objc,swift'>ARTMessage</span><span lang='ruby'>Ably::Models::Message</span><span lang='php'>Ably\Models\Message</span><span lang='java'>io.ably.lib.types.Message</span></h3>
+<h3 id="message"><span lang='default'>Message</span><span lang='objc,swift'>ARTMessage</span><span lang='ruby'>Ably::Models::Message</span><span lang='php'>Ably\Models\Message</span><span lang='java'>io.ably.lib.types.Message</span><span lang='csharp'>IO.Ably.Message</span></h3>
 <p>A <code>Message</code> represents an individual message that is sent to or received from Ably.</p>
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span><span lang='python'>Attributes</span></h4>
 <dl>
@@ -405,6 +445,8 @@ Related types
 	<dd>The message payload, if provided<br><i>Type: <code>String</code>, <code>StringBuffer</code>, <code>JSON Object</code></i></dd>
 	<dt><div lang="java">data</div></dt>
 	<dd>The message payload, if provided<br><i>Type: <code>String</code>, <code>ByteArray</code>, <code>JSONObject</code>, <code>JSONArray</code></i></dd>
+	<dt><div lang="csharp">data</div></dt>
+	<dd>The message payload, if provided<br><i>Type: <code>String</code>, <code>byte[]</code>, plain C# object that can be serialized to Json</i></dd>
 	<dt><div lang="ruby">data</div></dt>
 	<dd>The message payload, if provided<br><i>Type: <code>String</code>, <code>Binary</code> (ASCII-8BIT String), <code>Hash</code>, <code>Array</code></i></dd>
 	<dt><div lang="python">data</div></dt>
@@ -430,13 +472,13 @@ Related types
 </dl>
 <dl>
 	<dt>timestamp</dt>
-	<dd>Timestamp when the presence update was received by the Ably the realtime service, as <span lang="default">milliseconds since the epoch</span><span lang="ruby">a <code>Time</code> object</span><br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
+	<dd>Timestamp when the presence update was received by the Ably the realtime service, as <span lang="default">milliseconds since the epoch</span><span lang="ruby">a <code>Time</code> object</span><br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="csharp"><code>DateTimeOffset</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
 </dl>
 <dl>
 	<dt>encoding</dt>
 	<dd>This will typically be empty as all messages received from Ably are automatically decoded client-side using this value. However, if the message encoding cannot be processed, this attribute will contain the remaining transformations not applied to the <code>data</code> payload<br><i>Type: <code>String</code></i></dd>
 </dl>
-<h3 id="channel-options"><span lang='default'>ChannelOptions Object</span><span lang='objc,swift'>ARTChannelOptions</span><span lang='ruby'>ChannelOptions Hash</span><span lang='python'>ChannelOptions keyword arguments</span><span lang='php'>ChannelOptions Array</span><span lang='java'>io.ably.lib.types.ChannelOptions</span></h3>
+<h3 id="channel-options"><span lang='default'>ChannelOptions Object</span><span lang='objc,swift'>ARTChannelOptions</span><span lang='ruby'>ChannelOptions Hash</span><span lang='python'>ChannelOptions keyword arguments</span><span lang='php'>ChannelOptions Array</span><span lang='java'>io.ably.lib.types.ChannelOptions</span><span lang='csharp'>IO.Ably.ChannelOptions</span></h3>
 <p>Currently the supported channel options are only used for <a href="/realtime/encryption">configuring encryption</a>.</p>
 
 
@@ -466,9 +508,16 @@ Related types
 
 </div> <!-- /end java,swift,objc language block -->
 
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>IO.Ably.ChannelOptions</code> may optionally be specified when instancing a <a href="/realtime/channels-messages"><code>Channel</code></a>, and this may be used to specify channel-specific options.</p>
+
+</div> <!-- /end csharp language block -->
+
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span></h4>
 <dl>
-	<dt><span lang="default">cipher</span><span lang="ruby">:cipher</span></dt>
+	<dt><span lang="default">cipher</span><span lang="ruby">:cipher</span><span lang="csharp">CipherParams</span></dt>
 	<dd>Requests encryption for this channel when not null, and specifies encryption-related parameters (such as algorithm, chaining mode, key length and key). See <a href="/realtime/encryption#getting-started">an example</a><br><i>Type: <a href="/realtime/encryption#cipher-params"><code>CipherParams</code></a><span lang="javascript,nodejs,,java,ruby,php"> or <span lang="javascript,nodejs">an options object</span><span lang="java">a <code>Param[]</code> list</span><span lang="ruby">an options hash</span><span lang="php">an Associative Array</span> containing at a minimum a <code>key</code></span></i></dd>
 </dl>
 
@@ -477,7 +526,7 @@ Related types
 <h4>Static methods</h4>
 <h6 id="with-cipher-key">withCipherKey</h6>
 <blockquote class="definition">
-<p class="definition">public static ChannelOptions.withCipherKey(Byte[] or String key)</p>
+<p class="definition">static ChannelOptions.withCipherKey(Byte[] or String key)</p>
 </blockquote>
 <p>A helper method to generate a <code>ChannelOptions</code> for the simple case where you only specify a key.</p>
 <h4>Parameters</h4>
@@ -490,15 +539,36 @@ Related types
 
 </div> <!-- /end java language block -->
 
-<h3 id="paginated-result"><span lang='default'>PaginatedResult</span><span lang='objc,swift'>ARTPaginatedResult</span><span lang='ruby'>Ably::Models::PaginatedResult</span><span lang='php'>Ably\Models\PaginatedResult</span><span lang='java'>io.ably.lib.types.PaginatedResult</span></h3>
+<h3 id="data-request-query"><span lang='csharp'>DataRequestQuery</span></h3>
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>DataRequestQuery</code> is a type that encapsulates the parameters for a history queries. For example usage see <a href="/realtime/history#channel-history"><span lang="default"><code>Channel#history</code></span><span lang="csharp"><code>Channel#History</code></span></a>.</p>
+<h4>Members</h4>
+<dl>
+	<dt>Start</dt>
+	<dd><em>null</em> The start of the queried interval<br><i>Type: <code>DateTimeOffset</code></i></dd>
+	<dt>End</dt>
+	<dd><em>null</em> The end of the queried interval<br><i>Type: <code>DateTimeOffset</code></i></dd>
+	<dt>Limit</dt>
+	<dd><em>null</em> By default it is null. Limits the number of items returned by history or stats<br><i>Type: <code>Integer</code></i></dd>
+	<dt>Direction</dt>
+	<dd><em>Backwards</em> Enum which is either <code>Forwards</code> or <code>Backwards</code><br><i>Type: <code>Direction</code> enum</i></dd>
+	<dt>ExtraParameters</dt>
+	<dd>Optionally any extra query parameters that may be passed to the query. This is mainly used internally by the library to manage paging.<br><i>Type: <code>Dictionary&lt;string, string&gt;</code></i></dd>
+</dl>
+
+</div> <!-- /end csharp language block -->
+
+<h3 id="paginated-result"><span lang='default'>PaginatedResult</span><span lang='objc,swift'>ARTPaginatedResult</span><span lang='ruby'>Ably::Models::PaginatedResult</span><span lang='php'>Ably\Models\PaginatedResult</span><span lang='java'>io.ably.lib.types.PaginatedResult</span><span lang='csharp'>IO.Ably.PaginatedResult</span></h3>
 <p>A <code>PaginatedResult</code> is a type that represents a page of results for all message and presence history, stats and REST presence requests. The response from a <a href="/rest-api/#pagination">Ably REST API paginated query</a> is accompanied by metadata that indicates the relative queries available to the <code>PaginatedResult</code> object.</p>
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span><span lang='python'>Attributes</span></h4>
 <dl>
-	<dt>items</dt>
+	<dt><span lang="default">items</span><span lang="csharp">Items</span></dt>
 	<dd>contains a page of results (for example an Array of <a href="#message"><code>Message</code></a> or <a href="#presence-message"><code>PresenceMessage</code></a> objects for a channel history request)<br><span lang="default"><i>Type: <code>Array &lt;Message, Presence, Stats&gt;</code></i></span><span lang="python"><i>Type: <code>List &lt;Message, Presence, Stats&gt;</code></i></span></dd>
 </dl>
 <dl>
-	<dt><div lang="default">isLast</div></dt>
+	<dt><div lang="javascript,nodejs,java,swift,objc">isLast</div></dt>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="ruby">last?</div></dt>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
@@ -506,9 +576,9 @@ Related types
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="python">is_last()</div></dt>
 	<dd><code>True</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
-</dl>
-<dl>
 	<dt><div lang="default">hasNext</div></dt>
+	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
+	<dt><div lang="csharp">HasNext</div></dt>
 	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="ruby">has_next?</div></dt>
 	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
@@ -518,21 +588,21 @@ Related types
 	<dd><code>True</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
 </dl>
 <h4>Methods</h4>
-<h6>first</h6>
+<h6><span lang='default'>first</span><span lang='csharp'>First</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>first(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> first</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='java'>public <a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='swift,objc'>first(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
+<p class="definition"><span lang='default'>first(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> first</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='csharp'>Task&lt;PaginatedResult<T>&gt; FirstAsync()</span><span lang='java'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='swift,objc'>first(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
 </blockquote>
-<p>Returns a new <code>PaginatedResult</code> for the first page of results. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
-<h6>items</h6>
+<p>Returns a new <code>PaginatedResult</code> for the first page of results. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span><span lang="csharp">The method is asyncronous and returns a Task which needs to be awaited to get the <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
+<h6><span lang='default'>items</span><span lang='csharp'>Items</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>Object[] items()</span><span lang='python'>List items()</span><span lang='ruby'>Object[] items</span><span lang='java'>public Object[] items()</span><span lang='swift, objc'>items: [AnyObject]</span></p>
+<p class="definition"><span lang='default'>Object[] items()</span><span lang='python'>List items()</span><span lang='ruby'>Object[] items</span><span lang='java'>Object[] items()</span><span lang='csharp'>List<T> Items</span><span lang='swift, objc'>items: [AnyObject]</span></p>
 </blockquote>
-<p>Returns the current page of results as <span lang="default">an Array</span><span lang="python">a <code>List</code></span>. The type of the objects in the <span lang="default">array</span><span lang="python">list</span> is determined by the operation that provided the <code>PaginatedResult</code>. For example, a <a href="/realtime/channels-messages#history">Message#history</a> request will return <span lang="default">an array</span><span lang="python">a list</span> of <code>Message</code> objects.</p>
-<h6>next</h6>
+<p>Returns the current page of results as <span lang="default">an Array</span><span lang="csharp">a List</span><span lang="python">a <code>List</code></span>. The type of the objects in the <span lang="default">array</span><span lang="python,csharp">list</span> is determined by the operation that provided the <code>PaginatedResult</code>. For example, a <a href="/realtime/channels-messages#history"><span lang="default">Message.history()</span><span lang="csharp">Message.History()</span></a> request will return <span lang="default">an array</span><span lang="python,csharp">a list</span> of <code>Message</code> objects.</p>
+<h6><span lang='default'>next</span><span lang='csharp'>Next</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>next(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> next</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='java'>public <a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='swift,objc'>next(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
+<p class="definition"><span lang='default'>next(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> next</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='csharp'>Task&lt;<a href="/realtime/types#paginated-result">PaginatedResult</a><T>&gt; NextAsync()</span><span lang='java'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='swift,objc'>next(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
 </blockquote>
-<p>Returns a new <code>PaginatedResult</code> loaded with the next page of results. If there are no further pages, then <span lang="default"><code>null</code></span><span lang="java"><code>Null</code></span><span lang="python"><code>None</code></span><span lang="ruby,objc,swift"><code>nil</code></span> is returned. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
+<p>Returns a new <code>PaginatedResult</code> loaded with the next page of results. If there are no further pages, then <span lang="default"><code>null</code></span><span lang="csharp">a blank PaginatedResult will be returned</span><span lang="java"><code>Null</code></span><span lang="python"><code>None</code></span><span lang="ruby,objc,swift"><code>nil</code></span> is returned. <span lang="csharp">The method is asyncronous and return a Task which needs to be awaited to get the <code>PaginatedResult</code></span><span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
 <h4>Example</h4>
 <pre lang="javascript"><code lang="javascript">channel.history(function(err, paginatedResult) {
   console.log('Page 0 item 0:' + paginatedResult.items[0].data);
@@ -553,8 +623,17 @@ System.out.println("Page 0 item 0:" + firstPage.items[0].data);
 if (firstPage.hasNext) {
   PaginatedResult nextPage = firstPage.next();
   System.out.println("Page 1 item 1:" + nextPage.items[1].data);
-  System.out.println("More pages?:" + Strong.valueOf(nextpage.hasNext()));
-});</code></pre>
+  System.out.println("More pages?:" + Strong.valueOf(nextPage.hasNext()));
+};</code></pre>
+<pre lang="csharp"><code lang="csharp">PaginatedResult&lt;Message&gt; firstPage = await channel.HistoryAsync(null);
+Message firstMessage = firstPage.Items[0];
+Console.WriteLine("Page 0 item 0: " + firstMessage.data);
+if (firstPage.HasNext)
+{
+    var nextPage = await firstPage.NextAsync();
+    Console.WriteLine("Page 1 item 1:" + nextPage.Items[1].data);
+    Console.WriteLine("More pages?: " + nextPage.HasNext);
+}</code></pre>
 <pre lang="ruby"><code lang="ruby"># When using the REST sync library
 first_page = channel.history
 puts "Page 0 item 0: #{first_page.items[0].data}"
@@ -661,6 +740,7 @@ if ($firstPage-&gt;hasNext()) {
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

@@ -37,20 +37,20 @@
     <div class="fork-banner"><a href="https://github.com/ably/docs"><img src="/images/forkme.png" alt="Fork me on GitHub"></a></div>
 
   <div id="documentation">
-    <p>A <span lang="java"><code>io.ably.lib.realtime.ConnectionStateListener.ConnectionStateChange</code></span><span lang="ruby"><code>Ably::Models::ConnectionStateChange</code></span><span lang="swift,objc"><code>ARTConnectionStateChange</code></span><span lang="default"><code>ConnectionStateChange</code></span> is a type encapsulating state change information emitted by the <a href="/realtime/connection"><code>Connection</code></a> object. See <a href="/realtime/connection#on"><code>Connection#on</code></a> to register a listener for one or more events.</p>
+    <p>A <span lang="java"><code>io.ably.lib.realtime.ConnectionStateListener.ConnectionStateChange</code></span><span lang="ruby"><code>Ably::Models::ConnectionStateChange</code></span><span lang="swift,objc"><code>ARTConnectionStateChange</code></span><span lang="swift,objc"><code>IO.Ably.Realtime.ConnectionStateChangedEventArgs</code></span><span lang="default"><code>ConnectionStateChange</code></span> is a type encapsulating state change information emitted by the <a href="/realtime/connection"><code>Connection</code></a> object. See <a href="/realtime/connection#on"><code>Connection#on</code></a> to register a listener for one or more events.</p>
 <p>h4.<br />
   default: Properties<br />
   java:    Members<br />
   ruby:    Attributes</p>
 <dl>
-	<dt>previous</dt>
-	<dd>the previous state<br><i>Type: <span lang="default"><a href="/realtime/types#connection-state">State <code>String</code></a></span><span lang="ruby"><a href="/realtime/types#connection-state"><code>Connection::STATE</code></a></span><span lang="java"><a href="/realtime/types#connection-state"><code>ConnectionState</code></a></span></i></dd>
-	<dt>current</dt>
-	<dd>the new state<br><i>Type: <span lang="default"><a href="/realtime/types#connection-state">State <code>String</code></a></span><span lang="ruby"><a href="/realtime/types#connection-state"><code>Connection::STATE</code></a></span><span lang="java"><a href="/realtime/types#connection-state"><code>ConnectionState</code></a></span></i></dd>
-	<dt>reason</dt>
+	<dt><span lang="default">previous</span><span lang="csharp">Previous</span></dt>
+	<dd>the previous state<br><i>Type: <span lang="default"><a href="/realtime/types#connection-state">State <code>String</code></a></span><span lang="ruby"><a href="/realtime/types#connection-state"><code>Connection::STATE</code></a></span><span lang="java,csharp"><a href="/realtime/types#connection-state"><code>ConnectionState</code></a></span></i></dd>
+	<dt><span lang="default">current</span><span lang="csharp">Current</span></dt>
+	<dd>the new state<br><i>Type: <span lang="default"><a href="/realtime/types#connection-state">State <code>String</code></a></span><span lang="ruby"><a href="/realtime/types#connection-state"><code>Connection::STATE</code></a></span><span lang="java,csharp"><a href="/realtime/types#connection-state"><code>ConnectionState</code></a></span></i></dd>
+	<dt><span lang="default">reason</span><span lang="csharp">Reason</span></dt>
 	<dd>an <a href="#error-info"><code>ErrorInfo</code></a> containing any information relating to the transition<br><i>Type: <a href="/realtime/types#error-info"><code>ErrorInfo</code></a></i></dd>
-	<dt><span lang="default">retryIn</span><span lang="ruby">retry_in</span></dt>
-	<dd>Duration upon which the library will retry a connection where applicable, as <span lang="default">milliseconds</span><span lang="ruby">seconds</span><br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span></i></dd>
+	<dt><span lang="default">retryIn</span><span lang="ruby">retry_in</span><span lang="csharp">Retryin</span></dt>
+	<dd>Duration upon which the library will retry a connection where applicable, as <span lang="default">milliseconds</span><span lang="ruby">seconds</span><span lang="csharp">a <code>Timespan</code></span><br><i>Type: <span lang="default"><code>Integer</code></span><span lang="csharp"><code>Timespan</code></span><span lang="java"><code>Long Integer</code></span></i></dd>
 </dl>
   </div>
   <div id="sidebar">
@@ -90,6 +90,7 @@
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

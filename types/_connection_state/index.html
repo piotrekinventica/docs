@@ -65,6 +65,21 @@ closed,        // 6
 failed         // 7
 }
 ```
+<p>blang[csharp].<br />
+  <code>IO.Ably.Realtime.ConnectionState</code> is an enum representing all the <a href="/realtime/connection#connection-states"><code>Realtime Connection</code> states</a>.</p>
+```[csharp]
+public enum ConnectionState
+{
+Initialized,    //0
+Connecting,     //1
+Connected,      //2
+Disconnected,   //3
+Suspended,      //4
+Closing,        //5
+Closed,         //6
+Failed          //7
+};
+```
 <p>blang[ruby].<br />
   <code>Ably::Realtime::Connection::STATE</code> is an enum-like value representing all the <a href="/realtime/connection#connection-states"><code>Realtime Connection</code> states</a>. <code>STATE</code> can be represented interchangeably as either symbols or constants.</p>
 h4. Symbol states
@@ -168,6 +183,7 @@ case Failed
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

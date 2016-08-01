@@ -38,15 +38,15 @@
 
   <div id="documentation">
     <dl>
-	<dt><span lang="default">queueMessages</span><span lang="ruby">:queue_messages</span></dt>
+	<dt><span lang="default">queueMessages</span><span lang="csharp">QueueMessages</span><span lang="ruby">:queue_messages</span></dt>
 	<dd><em>true</em> If false, this disables the default behaviour whereby the library queues messages on a connection in the disconnected or connecting states. The default behaviour allows applications to submit messages immediately upon instancing the library without having to wait for the connection to be established. Applications may use this option to disable queuing if they wish to have application-level control over the queueing under those conditions<br><i>Type: <code>Boolean</code></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">echoMessages</span><span lang="ruby">:echo_messages</span></dt>
+	<dt><span lang="default">echoMessages</span><span lang="csharp">EchoMessages</span><span lang="ruby">:echo_messages</span></dt>
 	<dd><em>true</em> If false, prevents messages originating from this connection being echoed back on the same connection<br><i>Type: <code>Boolean</code></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">autoConnect</span><span lang="ruby">:auto_connect</span></dt>
+	<dt><span lang="default">autoConnect</span><span lang="csharp">AutoConnect</span><span lang="ruby">:auto_connect</span></dt>
 	<dd><em>true</em> By default as soon as the client library is instanced it will connect to Ably. You can optionally set this to false and explicitly connect to Ably when require using the <a href="/realtime/usage/#connect"><code>connect</code></a> method<br><i>Type: <code>Boolean</code></i></dd>
 </dl>
 <dl>
@@ -55,26 +55,26 @@
 </dl>
 <dl>
 	<dt><div lang="javascript">closeOnUnload</div></dt>
-	<dd>When true, the client library will automatically send a close request to Ably whenever the <code>window beforeunload</code> event fires. By enabling this option, the close request sent to Ably ensures the connection state will not be retained and all channels associated with the channel will be detached. This is commonly used by developers who want presence leave events to fire immediately i.e. if a user navigates to another page or closes their browser, then enabling this option will result in the presence member leaving immediately. Without this option or an explicit call to the <a href="/realtime/connection#close"><code>close</code></a> method of the <a href="/realtime/connection"><code>Connection object</code></a>, Ably expects that the abruptly disconnected connection could later be recovered and therefore does not immediately remove the user from presence. Instead, to avoid &#8220;twitchy&#8221; presence behaviour an abruptly disconnected client is removed from channels in which they are present after 15 seconds, and the connection state is retained for two minutes<br><i>Type: <code>Boolean</code></i></dd>
+	<dd><em>false</em> When true, the client library will automatically send a close request to Ably whenever the <code>window beforeunload</code> event fires. By enabling this option, the close request sent to Ably ensures the connection state will not be retained and all channels associated with the channel will be detached. This is commonly used by developers who want presence leave events to fire immediately i.e. if a user navigates to another page or closes their browser, then enabling this option will result in the presence member leaving immediately. Without this option or an explicit call to the <a href="/realtime/connection#close"><code>close</code></a> method of the <a href="/realtime/connection"><code>Connection object</code></a>, Ably expects that the abruptly disconnected connection could later be recovered and therefore does not immediately remove the user from presence. Instead, to avoid &#8220;twitchy&#8221; presence behaviour an abruptly disconnected client is removed from channels in which they are present after 15 seconds, and the connection state is retained for two minutes<br><i>Type: <code>Boolean</code></i></dd>
 </dl>
 <dl>
-	<dt><div lang="java,ruby,nodejs,objc,swift"><span lang="default">recover</span><span lang="ruby">:recover</span></div></dt>
+	<dt><div lang="java,ruby,nodejs,objc,swift,csharp"><span lang="default">recover</span><span lang="csharp">Recover</span><span lang="ruby">:recover</span></div></dt>
 	<dd>This option allows a connection to inherit the state of a previous connection that may have existed under a different instance of the library by providing that connection&#8217;s <span lang="default"><a href="/realtime/connection#recovery-key"><code>recoveryKey</code></a></span><span lang="ruby"><a href="/realtime/connection#recovery-key"><code>recovery_key</code></a></span>. This might typically be used by clients of an app to ensure connection state can be preserved following a reload. See <a href="/realtime/connection/#connection-state-recovery">connection state recovery</a> for further information and example code<br><i>Type: <code>String</code></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">queryTime</span><span lang="ruby">:query_time</span></dt>
+	<dt><span lang="default">queryTime</span><span lang="csharp">QueryTime</span><span lang="ruby">:query_time</span></dt>
 	<dd><em>false</em> If true, the library will query the Ably servers for the current time instead of relying on a locally-available time of day<br><i>Type: <code>Boolean</code></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">defaultTokenParams</span><span lang="ruby">:default_token_params</span></dt>
+	<dt><span lang="default">defaultTokenParams</span><span lang="csharp">DefaultTokenParams</span><span lang="ruby">:default_token_params</span></dt>
 	<dd>When a <a href="/realtime/types#token-params">TokenParams</a> object is provided, it will override the client library defaults when issuing new tokens or token requests<br><i>Type: <a href="/realtime/types#token-params"><code>TokenParams</code></a></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">disconnectedRetryTimeout</span><span lang="ruby">:disconnected_retry_timeout</span></dt>
+	<dt><span lang="default">disconnectedRetryTimeout</span><span lang="csharp">DisconnectedRetryTimeout</span><span lang="ruby">:disconnected_retry_timeout</span></dt>
 	<dd><em><span lang="default">15,000ms</span><span lang="ruby">15s</span></em> When the connection enters the <code>DISCONNECTED</code> state, after this delay <span lang="default">in milliseconds</span><span lang="ruby">in seconds</span><span lang="objc,swift">as a <code>NSTimeInterval</code></span>, if the state is still <code>DISCONNECTED</code>, the client library will attempt to reconnect automatically<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="objc,swift"><code>NSTimeInterval</code></span></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">suspendedRetryTimeout</span><span lang="ruby">:suspended_retry_timeout</span></dt>
+	<dt><span lang="default">suspendedRetryTimeout</span><span lang="csharp">SuspendedRetryTimoeut</span><span lang="ruby">:suspended_retry_timeout</span></dt>
 	<dd><em><span lang="default">30,000ms</span><span lang="ruby">30s</span></em> When the connection enters the <code>SUSPENDED</code> state, after this delay <span lang="default">in milliseconds</span><span lang="ruby">in seconds</span><span lang="objc,swift">as a <code>NSTimeInterval</code></span>, if the state is still <code>SUSPENDED</code>, the client library will attempt to reconnect automatically<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="objc,swift"><code>NSTimeInterval</code></span></i></dd>
 </dl>
   </div>
@@ -115,6 +115,7 @@
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

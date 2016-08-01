@@ -23,7 +23,7 @@
     <script src="/javascripts/application.js" type="text/javascript"></script>
     <script src="/javascripts/lang-manager.js" type="text/javascript"></script>
 
-    <script type="text/javascript">window.NavLangs=["javascript","nodejs","ruby","java","swift","objc"];</script>
+    <script type="text/javascript">window.NavLangs=["javascript","nodejs","ruby","java","swift","objc","csharp"];</script>
 
     <!-- you don't need to keep this, but it's cool for stats! -->
     <meta name="generator" content="nanoc 3.7.5">
@@ -111,10 +111,16 @@ Channel channel = realtime.channels.get("{{RANDOM_CHANNEL_NAME}}");
 channel.subscribe(new MessageListener() {
   @Override
   public void onMessage(Message message) {
-    System.out.println(messages.length + " new messages arrived");
+    System.out.println("New messages arrived. " + message.name);
   }
 });
 channel.publish("example", "message data");</code></pre>
+<pre lang="csharp"><code lang="csharp">AblyRealtime realtime = new AblyRealtime("{{API_KEY}}");
+var channel = realtime.Channels.Get("{{RANDOM_CHANNEL_NAME}}");
+channel.Subscribe(message =&gt; {
+  Console.WriteLine($"Message: {message.name}:{message.data} received")
+});
+channel.Publish("example", "message data");</code></pre>
 <pre lang="objc"><code lang="objc">ARTRealtime *realtime = [[ARTRealtime alloc] initWithKey:@"{{API_KEY}}"];
 ARTRealtimeChannel *channel = [realtime.channels get:@"{{RANDOM_CHANNEL_NAME}}"];
 [channel subscribe:^(ARTMessage *message) {
@@ -130,10 +136,11 @@ channel.publish("example", data: "message data")</code></pre>
 <h2 id="channels">Channels</h2>
 <p>In order to publish, subscribe to, or be present on a channel, you must first obtain a channel instance and then attach to that channel. In most instances, as a convenience, it is unnecessary to explicitly attach a channel as it will implicitly attached when performing any operation on the channel such as publishing or subscribing.</p>
 <h3>Obtaining a channel instance</h3>
-<p>A <code>Channel</code> object is a reference to a single channel. A channel instance is obtained from the <a href="/realtime/usage/#channels"><code>channels</code> collection</a> of the <span lang="ruby"><code>Realtime::Client</code></span><span lang="default"><code>Realtime</code></span><span lang="objc,swift"><code>ARTRealtime</code></span> instance, and is uniquely identified by its unicode string name. Find out more about <a href="https://support.ably.io/solution/articles/3000046824-what-restrictions-exist-for-the-name-field-of-a-channel">channel naming</a></p>
+<p>A <code>Channel</code> object is a reference to a single channel. A channel instance is obtained from the <a href="/realtime/usage/#channels"><code>channels</code> collection</a> of the <span lang="ruby"><code>Realtime::Client</code></span><span lang="default"><code>Realtime</code></span><span lang="objc,swift"><code>ARTRealtime</code></span><span lang="csharp"><code>AblyRealtime</code></span> instance, and is uniquely identified by its unicode string name. Find out more about <a href="https://support.ably.io/solution/articles/3000046824-what-restrictions-exist-for-the-name-field-of-a-channel">channel naming</a></p>
 <pre class="code-editor open-jsbin open-jsbin-agorop" lang="javascript"><code class="code-editor open-jsbin open-jsbin-agorop" lang="javascript">var channel = realtime.channels.get('channelName');</code></pre>
 <pre class="code-editor open-jsbin open-jsbin-agorop" lang="nodejs"><code class="code-editor open-jsbin open-jsbin-agorop" lang="nodejs">var channel = realtime.channels.get('channelName');</code></pre>
 <pre lang="java"><code lang="java">Channel channel = realtime.channels.get("channelName");</code></pre>
+<pre lang="csharp"><code lang="csharp">var channel = realtime.Channels.Get("channelName");</code></pre>
 <pre lang="ruby"><code lang="ruby">channel = realtime.channels.get('channelName')</code></pre>
 <pre lang="objc"><code lang="objc">ARTRealtimeChannel *channel = [realtime.channels get:@"channelName"];</code></pre>
 <pre lang="swift"><code lang="swift">let channel = realtime.channels.get("channelName")</code></pre>
@@ -150,7 +157,11 @@ channel.publish("example", data: "message data")</code></pre>
 <pre lang="java"><code lang="java">CipherParams params = Crypto.getDefaultParams(key);
 ChannelOptions options = new ChannelOptions();
 options.cipher = params;
-Channel channel = realtime.channels.get("channelName", channelOpts);</code></pre>
+Channel channel = realtime.channels.get("channelName", options);</code></pre>
+<pre lang="csharp"><code lang="csharp">byte[] key = Crypto.GetRandomKey();
+var cipherParams = Crypto.GetDefaultParams(key);
+var channelOpts = new ChannelOptions(cipherParams);
+var encryptedChannel = realtime.Channels.Get("channelName", channelOpts);</code></pre>
 <pre lang="ruby"><code lang="ruby">key = Ably::Util::Crypto.generate_random_key
 options = { cipher: { key: key } }
 channel = realtime.channels.get('channelName', options)</code></pre>
@@ -183,11 +194,15 @@ channel.on(new ChannelStateListener() {
     }
   }
 });</code></pre>
+<pre lang="csharp"><code lang="csharp">var channel = realtime.Channels.Get("chatroom");
+channel.Attach((success, error) =&gt; {
+  Console.WriteLine("'chatroom' exists and is now available globally");
+});</code></pre>
 <pre lang="objc"><code lang="objc">[[realtime.channels get:@"chatroom" options:options] attach:^(ARTErrorInfo *error) {
-    NSLog(@"'chatroom' exists and is now available globally in every data centre");
+  NSLog(@"'chatroom' exists and is now available globally in every data centre");
 }];</code></pre>
 <pre lang="swift"><code lang="swift">realtime.channels.get("chatroom").attach { error in
-    print("'chatroom' exists and is now available globally in every data centre")
+  print("'chatroom' exists and is now available globally in every data centre")
 }</code></pre>
 <p>Clients attach to a channel in order to participate on that channel in any way (either to publish, subscribe, or be present on the channel).</p>
 <h3>Implicit attach</h3>
@@ -216,6 +231,9 @@ channel.subscribe(new MessageListener() {
   }
 });
 channel.publish("action", "boom!");</code></pre>
+<pre lang="csharp"><code lang="csharp">var channel = realtime.Channels.Get("chatroom");
+channel.Subscribe(message =&gt; Console.WriteLine("Message received:" + message.data));
+channel.Publish("action", "boom");</code></pre>
 <pre lang="objc"><code lang="objc">ARTRealtimeChannel *channel = [realtime.channels get:@"chatroom" options:options];
 [channel subscribe:@"action" callback:^(ARTMessage *message) {
     NSLog(@"Message received: %@", message.data);
@@ -269,11 +287,15 @@ end</code></pre>
     System.out.println("channel " + channel.name + " is now attached");
   }
 });</code></pre>
+<pre lang="csharp"><code lang="csharp">var channel = realtime.Channels.Get("chatroom");
+channel.On(ChannelState.Attached, args =&gt; {
+  Console.WriteLine("channel " + channel.Name + " is now attached")
+});</code></pre>
 <pre lang="objc"><code lang="objc">[channel on:ARTChannelEventAttached call:^(ARTErrorInfo *error) {
-    NSLog(@"channel %@ is now attached", channel.name);
+  NSLog(@"channel %@ is now attached", channel.name);
 }];</code></pre>
 <pre lang="swift"><code lang="swift">channel.on(.Attached) { error in
-    print("channel \(channel.name) is now attached")
+  print("channel \(channel.name) is now attached")
 }</code></pre>
 <p>Alternatively a listener may be registered so that it receives all state change events.</p>
 <pre class="code-editor open-jsbin open-jsbin-aqotuc" lang="javascript"><code class="code-editor open-jsbin open-jsbin-aqotuc" lang="javascript">var myListener = function() {
@@ -293,6 +315,7 @@ end</code></pre>
     System.out.println("channel state is " + ChannelState.values()[state]);
   }
 });</code></pre>
+<pre lang="csharp"><code lang="csharp">channel.On(args =&gt; Console.WriteLine("channel state is " + channel.State));</code></pre>
 <pre lang="objc"><code lang="objc">ARTEventListener *listener = [channel on:^(ARTErrorInfo *error) {
     NSLog(@"channel state is %@", channel.state);
 }];</code></pre>
@@ -320,6 +343,11 @@ channel.off(ChannelState.attached, channelStateListener);
 
 /* remove the listener registered for all events */
 channel.off(channelStateListener);</code></pre>
+<pre lang="csharp"><code lang="csharp">// remove the listener registered for a single event
+channel.Off(ChannelState.Attached, channelStateListener);
+
+// remove the listener registered for all events
+channel.Off(channelStateListener);</code></pre>
 <pre lang="objc"><code lang="objc">// remove the listener registered for a single event
 [channel off:ARTChannelEventAttached listener:listener];
 
@@ -358,6 +386,13 @@ channel.on(new ChannelStateListener() {
     }
   }
 });</code></pre>
+<pre lang="csharp"><code lang="csharp">var privateChannel = realtime.Channels.Get("private:chatroom");
+privateChannel.Attach((_, error) =&gt; {
+    if (error != null)
+    {
+        Console.WriteLine("Attach failed: " + error.message);
+    }
+});</code></pre>
 <pre lang="objc"><code lang="objc">[[realtime.channels get:@"private:chatroom"] attach:^(ARTErrorInfo *error) {
     if (error) {
         NSLog(@"Attach failed: %@", error);
@@ -380,7 +415,7 @@ channel.on(new ChannelStateListener() {
 <p>For customers who want to ensure that all channels are attached when a connection is available, regardless of whether messages may have been missed, we recommend the following approach:</p>
 <ul>
 	<li>Add a listener on the connection object for all <code>connected</code> events</li>
-	<li>Reattach all channels you have created. If a channel is already attached, and you call the <a href="/realtime/channels-messages/#attach"><code>channel#attach</code></a> method, the channel will simply remain attached. It is therefore safe to simply attach all channels every time the connection becomes <code>connected</code></li>
+	<li>Reattach all channels you have created. If a channel is already attached, and you call the <a href="/realtime/channels-messages/#attach"><span lang="default"><code>channel#attach</code></span><span lang="csharp"><code>channel#Attach</code></span></a> method, the channel will simply remain attached. It is therefore safe to simply attach all channels every time the connection becomes <code>connected</code></li>
 </ul>
 <p>The following Javascript example demonstrates a trivial way to ensure all channels are attached when the client becomes connected or the channel becomes detached:</p>
 <pre lang="javascript"><code lang="javascript">function reattach(channel) {
@@ -426,6 +461,8 @@ channel.on('detached', function() {
 A client can register for messages on a channel by implementing <a href="#message-listener">MessageListener</a> and calling the <code>subscribe(MessageListener listener)</code> or <code>subscribe(String name, MessageListener listener)</code> method. The listener is passed an array of one or more <a href="#message"><code>Message</code></a> objects when messages are received.</p>
 <p></div><div lang="ruby"><br />
 A client can subscribe to all messages on a channel by passing a block to the <code>subscribe</code> method. The block is passed a <a href="#message"><code>Message</code></a> object for each message are received.</p>
+<p></div><div lang="csharp"><br />
+A client can subscribe to all messages on a channel by passing a lambda expression to the <code>Subscribe</code> method. The lambda is passed a <a href="#message"><code>Message</code></a> object for each message are received.</p>
 </div>
 <pre class="code-editor open-jsbin open-jsbin-owecul" lang="javascript"><code class="code-editor open-jsbin open-jsbin-owecul" lang="javascript">channel.subscribe(function(message) {
   console.log('message received for event ' + message.name);
@@ -440,6 +477,11 @@ A client can subscribe to all messages on a channel by passing a block to the <c
   public void onMessage(Message message) {
     System.out.println("Message received: " + message.data);
   }
+});</code></pre>
+<pre lang="csharp"><code lang="csharp">channel.Subscribe(message =&gt;
+{
+    Console.WriteLine($"message received for event {message.name}");
+    Console.WriteLine($"message data: {message.data}");
 });</code></pre>
 <pre lang="ruby"><code lang="ruby">channel.subscribe do |message|
   puts "message received for event #{message.name}"
@@ -467,6 +509,11 @@ end</code></pre>
   public void onMessage(Message message) {
     System.out.println("Message received: " + message.data);
   }
+});</code></pre>
+<pre lang="csharp"><code lang="csharp">channel.Subscribe("myEvent", message =&gt;
+{
+    Console.WriteLine($"message received for event {message.name}");
+    Console.WriteLine($"message data: {message.data}");
 });</code></pre>
 <pre lang="ruby"><code lang="ruby">channel.subscribe('myEvent') do |message|
   puts "message received for event #{message.name}"
@@ -496,6 +543,11 @@ channel.unsubscribe(myListener);
 
 /* remove the listener registered for all events */
 channel.unsubscribe("myEvent", myListener);</code></pre>
+<pre lang="csharp"><code lang="csharp">/* remove a single listener */
+channel.Unsubscribe(myHandler);
+
+/* remove the listener registered for all events */
+channel.Unsubscribe("myEvent", myHandler);</code></pre>
 <pre lang="ruby"><code lang="ruby"># remove the listener proc registered for a single event
 channel.unsubscribe("myEvent", &amp;my_proc)
 
@@ -512,7 +564,7 @@ channel.unsubscribe("myEvent", listener: listener)
 // remove the listener registered for all events
 channel.unsubscribe(listener)</code></pre>
 <h3 id="message-publish">Publishing messages</h3>
-<p>Channels expose a <code>publish</code> method whereby a client can publish either a single message or an array of messages to a channel. A listener optionally passed in to the <code>publish</code> method enables the client to know whether or not the operation succeeded.</p>
+<p>Channels expose a <span lang="default"><code>publish</code></span><span lang="csharp"><code>Publish</code></span> method whereby a client can publish either a single message or an array of messages to a channel. A listener optionally passed in to the <span lang="default"><code>publish</code></span><span lang="csharp"><code>Publish</code></span> method enables the client to know whether or not the operation succeeded.</p>
 <pre class="code-editor open-jsbin open-jsbin-owecul" lang="javascript"><code class="code-editor open-jsbin open-jsbin-owecul" lang="javascript">channel.publish('event', 'This is my payload', function(err) {
   if(err) {
     console.log('Unable to publish message; err = ' + err.message);
@@ -543,22 +595,43 @@ end</code></pre>
     System.out.println("Message successfully sent");
   }
 });</code></pre>
+<pre lang="csharp"><code lang="csharp">channel.Publish("event", "payload", (success, error) =&gt;
+{
+  if (error != null) {
+    Console.WriteLine("Unable to publish message. Reason: " + error.message);
+  } else {
+    Console.WriteLine("Message published sucessfully");
+  }
+});</code></pre>
 <pre lang="objc"><code lang="objc">[channel publish:@"event" data:@"This is my payload" callback:^(ARTErrorInfo *error) {
-    if (error) {
-        NSLog(@"Unable to publish message; err = %@", error.message);
-    } else {
-        NSLog(@"Message successfully sent");
-    }
+  if (error) {
+    NSLog(@"Unable to publish message; err = %@", error.message);
+  } else {
+    NSLog(@"Message successfully sent");
+  }
 }];</code></pre>
 <pre lang="swift"><code lang="swift">channel.publish("event", data: "This is my payload") { error in
-    if let error = error {
-        print("Unable to publish message; err = \(error.message)")
-    } else {
-        print("Message successfully sent")
-    }
+  if let error = error {
+    print("Unable to publish message; err = \(error.message)")
+  } else {
+    print("Message successfully sent")
+  }
 }</code></pre>
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p>Channels also expose an async version <code>PublishAsync</code> of the <code>Publish</code> call which resumes execution once the message is confirmed received. It is purely for convenience.</p>
+<pre lang="csharp"><code lang="csharp">var result = await channel.PublishAsync("event", "payload");
+if(result.IsFailure) {
+  Console.WriteLine("Unable to publish message. Reason: " + result.Error.message);
+} else {
+  Console.WriteLine("Message published sucessfully");
+}</code></pre>
+
+</div> <!-- /end csharp language block -->
+
 <h3 id="message-history">Retrieving message history</h3>
-<p>Channels expose a <a href="#history"><code>history</code></a> method providing a means for clients to obtain messages previously sent on the channel. Channel history can be used to return continuous message history up to the exact point a realtime channel was attached.</p>
+<p>Channels expose a <a href="#history"><span lang="default"><code>history</code></span><span lang="csharp"><code>History</code></span></a> method providing a means for clients to obtain messages previously sent on the channel. Channel history can be used to return continuous message history up to the exact point a realtime channel was attached.</p>
 <p>History provides access to instantaneous &#8220;live&#8221; history as well as the longer term persisted history for attached channels. If <a href="/realtime/history#persisted-history">persisted history</a> is enabled for the channel, then messages will <a href="https://support.ably.io/solution/articles/3000030059-how-long-are-messages-stored-for">typically be stored for 24 &#8211; 72 hours</a>. If persisted history is not enabled, Ably retains the last two minutes of message history in memory.</p>
 <p>The following example retrieves the first two pages of historical messages published up until the point the channel was attached.</p>
 <pre lang="javascript"><code lang="javascript">channel.attach(function() {
@@ -591,6 +664,13 @@ System.out.println(resultPage.items().length + " messages received in first page
 if(resultPage.hasNext()) {
   PaginatedResult&lt;Message&gt; nextPage = resultPage.next();
   System.out.println(nextPage.items().length + " messages received in second page");
+}</code></pre>
+<pre lang="csharp"><code lang="csharp">var history = await channel.HistoryAsync(untilAttached: true);
+Console.WriteLine($"{history.Items.Count} messages received in the first page");
+if (history.HasNext)
+{
+  var nextPage = await history.NextAsync();
+  Console.WriteLine($"{nextPage.Items.Count} messages received in the second page");
 }</code></pre>
 <pre lang="ruby"><code lang="ruby">channel.attach do
   channel.history(until_attach: true) do |result_page|
@@ -625,9 +705,9 @@ end</code></pre>
         }
     }
 }</code></pre>
-<p>See the <a href="/realtime/history">history</a> documentation for further details of the supported query parameters.</p>
+<p>See the <a href="/realtime/history">history documentation</a> for further details of the supported query parameters.</p>
 <h2>Presence</h2>
-<p>Channels expose a <code>presence</code> member which a client can use to obtain channel presence information and to enter and leave the presence channel itself. See the <a href="/realtime/presence">presence</a> documentation for details.</p>
+<p>Channels expose a <span lang="default"><code>presence</code></span><span lang="csharp"><code>Presence</code></span> member which a client can use to obtain channel presence information and to enter and leave the presence channel itself. See the <a href="/realtime/presence">presence documentation</a> for details.</p>
 <h1>Channel API Reference</h1>
 <div class="inline-toc">
 <ul><li>Channel reference
@@ -680,25 +760,25 @@ Related types
 </li>
 </ul>
 </li></ul>
-</div><h2 id="properties"><span lang='default'>Channel Properties</span><span lang='objc,swift'>ARTRealtimeChannel Properties</span><span lang='ruby'>Ably::Realtime::Channel Attributes</span><span lang='java'>io.ably.lib.realtime.Channel Members</span></h2>
+</div><h2 id="properties"><span lang='default'>Channel Properties</span><span lang='objc,swift'>ARTRealtimeChannel Properties</span><span lang='ruby'>Ably::Realtime::Channel Attributes</span><span lang='java'>io.ably.lib.realtime.Channel Members</span><span lang='csharp'>IO.Ably.Realtime.RealtimeChannel Properties</span></h2>
 <p>The <code>Channel</code> object exposes the following public <span lang="default">properties</span><span lang="ruby">attributes</span><span lang="java">members</span>:</p>
-<h6 id="state">state</h6>
-<p>The current <span lang="java"><a href="#channel-state"><code>io.ably.lib.realtime.ChannelState</code></a> <code>state</code></span><span lang="ruby"><a href="#channel-state"><code>Ably::Realtime::Channel::STATE</code></a> <code>state</code></span><span lang="objc,swift"><a href="#channel-state"><code>ARTRealtimeChannelState</code></a></span><span lang="default"><a href="#channel-state"><code>ChannelState</code></a></span> of this <code>Channel</code>. See the supported <a href="#channel-states">channel states</a> for more information.</p>
-<h6 id="error-reason"><span lang='default'>errorReason</span><span lang='java'>reason</span><span lang='ruby'>error_reason</span></h6>
-<p>When a channel failure occurs this <span lang="default,ruby">attribute</span><span lang="java">member</span><span lang="javascript,nodejs,,objc,swift">property</span> contains the <span lang="java,ruby"><a href="/realtime/types#ably-exception"><code>AblyException</code></a></span><span lang="default"><a href="/realtime/types#error-info"><code>ErrorInfo</code></a></span>.</p>
-<h6 id="name">name</h6>
-<p>The name String unique to this channel.</p>
-<h6 id="presence">presence</h6>
+<h6 id="state"><span lang='default'>state</span><span lang='csharp'>State</span></h6>
+<p>The current <span lang="java"><a href="#channel-state"><code>io.ably.lib.realtime.ChannelState</code></a> <code>state</code></span><span lang="csharp"><a href="#channel-state"><code>IO.Ably.Realtime.ChannelState</code></a> <code>state</code></span><span lang="ruby"><a href="#channel-state"><code>Ably::Realtime::Channel::STATE</code></a> <code>state</code></span><span lang="objc,swift"><a href="#channel-state"><code>ARTRealtimeChannelState</code></a></span><span lang="default"><a href="#channel-state"><code>ChannelState</code></a></span> of this <code>Channel</code>. See the supported <a href="#channel-states">channel states</a> for more information.</p>
+<h6 id="error-reason"><span lang='default'>errorReason</span><span lang='java'>reason</span><span lang='ruby'>error_reason</span><span lang='csharp'>ErrorReason</span></h6>
+<p>When a channel failure occurs this <span lang="default,ruby">attribute</span><span lang="java">member</span><span lang="javascript,nodejs,,objc,swift,csharp">property</span> contains the <span lang="java,ruby"><a href="/realtime/types#ably-exception"><code>AblyException</code></a></span><span lang="default"><a href="/realtime/types#error-info"><code>ErrorInfo</code></a></span>.</p>
+<h6 id="name"><span lang='default'>name</span><span lang='csharp'>Name</span></h6>
+<p>The name <code>String</code> unique to this channel.</p>
+<h6 id="presence"><span lang='default'>presence</span><span lang='csharp'>Presence</span></h6>
 <p>Provides access to the <a href="/realtime/presence">Presence</a> object for this channel which can be used to access members present on the channel, or participate in presence.</p>
 <h2>Methods</h2>
-<h6 id="publish">publish</h6>
+<h6 id="publish"><span lang='default'>publish</span><span lang='csharp'>Publish</span></h6>
 <p>There are two overloaded versions of this method:</p>
 <blockquote class="definition" id="publish-data">
-<p class="definition" id="publish-data"><span lang='default'>publish(String name, Object data, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> publish(String name, Object data) &#8594; yields</span><span lang='java'>public void publish(String name, Object data, <a href="#completion-listener">CompletionListener</a> listener)</span><span lang='objc,swift'>publish(name: String?, data: AnyObject?, callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
+<p class="definition" id="publish-data"><span lang='default'>publish(String name, Object data, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> publish(String name, Object data) &#8594; yields</span><span lang='java'>void publish(String name, Object data, <a href="#completion-listener">CompletionListener</a> listener)</span><span lang='csharp'>void Publish(string name, object data, Action&lt;bool, ErrorInfo&gt; callback = null, string clientId = null)</span><span lang='objc,swift'>publish(name: String?, data: AnyObject?, callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
 </blockquote>
 <p>Publish a single message on this channel based on a given event name and payload. A <span lang="default">callback</span><span lang="java">listener</span> may optionally be passed in to this call to be notified of success <span lang="default">or failure</span><span lang="ruby"></span> of the operation.</p>
 <blockquote class="definition" id="publish-msg-array">
-<p class="definition" id="publish-msg-array"><span lang='default'>publish(Object[] messages, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> publish(Message[] messages) &#8594; yields</span><span lang='java'>public void publish(Message[] messages, <a href="#completion-listener">CompletionListener</a> listener)</span><span lang='objc,swift'>publish(messages: [ <a href="#message">ARTMessage</a> ], callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
+<p class="definition" id="publish-msg-array"><span lang='default'>publish(Object[] messages, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> publish(Message[] messages) &#8594; yields</span><span lang='java'>void publish(Message[] messages, <a href="#completion-listener">CompletionListener</a> listener)</span><span lang='csharp'>void Publish(IEnumerable&lt;<a href="#message">Message</a>&gt; messages, Action&lt;bool, <a href="/realtime/types#error-info">ErrorInfo</a>&gt; callback = null)</span><span lang='objc,swift'>publish(messages: [ <a href="#message">ARTMessage</a> ], callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
 </blockquote>
 <p>Publish several messages on this channel. A <span lang="default">callback</span><span lang="java">listener</span><span lang="ruby">block</span> may optionally be passed in to this call to be notified of success <span lang="default">or failure</span><span lang="ruby"></span> of the operation.</p>
 <h4>Parameters</h4>
@@ -711,6 +791,8 @@ Related types
 	<dd>data payload for the message. The supported payload types are Strings, JSON objects and arrays, buffers containing arbitrary binary data, and null.<br><i>Type: <code>Object</code></i></dd>
 	<dt><div lang="java">data</div></dt>
 	<dd>data payload for the message. The supported payload types are Strings, JsonObject, binary data as byte arrays, and null.<br><i>Type: <code>Object</code></i></dd>
+	<dt><div lang="csharp">data</div></dt>
+	<dd>data payload for the message. The supported payload types are Strings, binary data as byte arrays, any plain c# class that can be serialised to Json, and null.<br><i>Type: <code>Object</code></i></dd>
 	<dt><div lang="ruby">data</div></dt>
 	<dd>data payload for the message. The supported payload types are Strings, Hash or Array objects that can be serialised to JSON using <code>to_json</code>, binary data as <code>ASCII-8BIT</code> byte arrays, and null.<br><i>Type: <code>Object</code></i></dd>
 	<dt><div lang="objc,swift">data</div></dt>
@@ -725,6 +807,8 @@ Related types
 	<dd>is a function of the form <code>function(err)</code> which is called upon completion</dd>
 	<dt><div lang="java">listener</div></dt>
 	<dd>Listener to be notified on completion<br><i>Type: <a href="#completion-listener"><code>CompletionListener</code></a></i></dd>
+	<dt><div lang="csharp">callback</div></dt>
+	<dd>is an action of the form <code>Action&lt;bool, ErrorInfo&gt;</code> which is called upon completion</dd>
 	<dt><div lang="ruby">&amp;block</div></dt>
 	<dd>yields upon successfully publishing the message</dd>
 	<dt><div lang="objc,swift">callback</div></dt>
@@ -737,6 +821,14 @@ Related types
 <p>On successful publish of the message, <code>err</code> is null. On failure to publish the message, <code>err</code> contains an <a href="#error-info"><code>ErrorInfo</code></a> object describing the failure reason.</p>
 
 </div> <!-- /end javascript,nodejs,,swift,objc language block -->
+
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<h4>Callback result</h4>
+<p>On successful publish of the message, <code>error</code> is null. On failure to publish the message, <code>error</code> contains an <a href="#error-info"><code>ErrorInfo</code></a> object describing the failure reason.</p>
+
+</div> <!-- /end csharp language block -->
 
 
 
@@ -755,19 +847,19 @@ Related types
 
 </div> <!-- /end ruby language block -->
 
-<h6 id="subscribe">subscribe</h6>
-<p>There are three overloaded versions of this method:</p>
+<h6 id="subscribe"><span lang='default'>subscribe</span><span lang='csharp'>Subscribe</span></h6>
+<p>There are overloaded versions of this method:</p>
 <blockquote class="definition" id="subscribe-listener">
-<p class="definition" id="subscribe-listener"><span lang='default'>subscribe(listener(<a href="#message">Message</a>))</span><span lang='java'>public void subscribe(<a href="#message-listener">MessageListener</a> listener)</span><span lang='ruby'>subscribe → yields <a href="#message">Message</a></span><span lang='objc,swift'>subscribe(callback: (<a href="#message">ARTMessage</a>) &#8594; Void) &#8594; ARTEventListener?</span></p>
+<p class="definition" id="subscribe-listener"><span lang='default'>subscribe(listener(<a href="#message">Message</a>))</span><span lang='java'>void subscribe(<a href="#message-listener">MessageListener</a> listener)</span><span lang='csharp'>void Subscribe(Action&lt;<a href="#message">Message</a>&gt; handler)</span><span lang='ruby'>subscribe → yields <a href="#message">Message</a></span><span lang='objc,swift'>subscribe(callback: (<a href="#message">ARTMessage</a>) &#8594; Void) &#8594; ARTEventListener?</span></p>
 </blockquote>
-<p>Subscribe to messages on this channel. The caller supplies <span lang="default">a listener function</span><span lang="java">an implementation of the <a href="#message-listener">MessageListener</a> interface</span><span lang="ruby">a block</span>, which is called each time one or more messages arrives on the channel.</p>
+<p>Subscribe to messages on this channel. The caller supplies <span lang="default">a listener function</span><span lang="csharp">a lambda expression</span><span lang="java">an implementation of the <a href="#message-listener">MessageListener</a> interface</span><span lang="ruby">a block</span>, which is called each time one or more messages arrives on the channel.</p>
 <blockquote class="definition" id="subscribe-event">
-<p class="definition" id="subscribe-event"><span lang='default'>subscribe(String name, listener(<a href="#message">Message</a>))</span><span lang='java'>public void subscribe(String name, <a href="#message-listener">MessageListener</a> listener)</span><span lang='ruby'>subscribe(String name) → yields <a href="#message">Message</a></span><span lang='objc,swift'>subscribe(name: String, callback: (<a href="#message">ARTMessage</a>) &#8594; Void) &#8594; ARTEventListener?</span></p>
+<p class="definition" id="subscribe-event"><span lang='default'>subscribe(String name, listener(<a href="#message">Message</a>))</span><span lang='java'>void subscribe(String name, <a href="#message-listener">MessageListener</a> listener)</span><span lang='csharp'>void Subscribe(string name, Action&lt;<a href="#message">Message</a>&gt; handler)</span><span lang='ruby'>subscribe(String name) → yields <a href="#message">Message</a></span><span lang='objc,swift'>subscribe(name: String, callback: (<a href="#message">ARTMessage</a>) &#8594; Void) &#8594; ARTEventListener?</span></p>
 </blockquote>
-<p>Subscribe to messages with a given event <code>name</code> on this channel. The caller supplies <span lang="default">a listener function</span><span lang="java">an implementation of the <a href="#message-listener">MessageListener</a> interface</span><span lang="ruby">a block</span>, which is called each time one or more matching messages arrives on the channel.</p>
-<div lang="objc,swift"></div><div lang="default">
+<p>Subscribe to messages with a given event <code>name</code> on this channel. The caller supplies <span lang="default">a listener function</span><span lang="csharp">a lambda expression</span><span lang="java">an implementation of the <a href="#message-listener">MessageListener</a> interface</span><span lang="ruby">a block</span>, which is called each time one or more matching messages arrives on the channel.</p>
+<div lang="objc,swift,csharp"></div><div lang="default">
 <blockquote class="definition" id="subscribe-event-array">
-<p class="definition" id="subscribe-event-array"><span lang='default'>subscribe(String[] names, listener(<a href="#message">Message</a>))</span><span lang='java'>public void subscribe(String[] names, <a href="#message-listener">MessageListener</a> listener)</span><span lang='ruby'>subscribe(String *names) → yields <a href="#message">Message</a></span></p>
+<p class="definition" id="subscribe-event-array"><span lang='default'>subscribe(String[] names, listener(<a href="#message">Message</a>))</span><span lang='java'>void subscribe(String[] names, <a href="#message-listener">MessageListener</a> listener)</span><span lang='ruby'>subscribe(String *names) → yields <a href="#message">Message</a></span></p>
 </blockquote>
 <p>Subscribe a single listener to messages on this channel for multiple event <code>name</code> values.</p>
 </div>
@@ -776,7 +868,7 @@ Related types
 	<dt>name</dt>
 	<dd>The event name to subscribe to<br><i>Type: <code>String</code></i></dd>
 </dl>
-<div lang="objc,swift"></div><div lang="default">
+<div lang="objc,swift,csharp"></div><div lang="default">
 <dl>
 	<dt>names</dt>
 	<dd>An <span lang="ruby">argument</span> array of event names to subscribe to<br><i>Type: <span lang="default"><code>String[]</code> </span><span lang="ruby"><code>*argument</code></span></i><br />
@@ -791,19 +883,21 @@ Related types
 	<dd>yields each matching message when received on the channel</dd>
 	<dt><div lang="swift,objc">callback</div></dt>
 	<dd>called with each matching <a href="#message"><code>message</code></a> when received on the channel</dd>
+	<dt><div lang="csharp">handler</div></dt>
+	<dd>called with each matching <a href="#message"><code>message</code></a> when received on the channel</dd>
 </dl>
-<h6 id="unsubscribe">unsubscribe</h6>
+<h6 id="unsubscribe"><span lang='default'>unsubscribe</span><span lang='csharp'>Unsubscribe</span></h6>
 <p>There are three overloaded versions of this method:</p>
 <blockquote class="definition" id="unsubscribe-event">
-<p class="definition" id="unsubscribe-event"><span lang='default'>unsubscribe(String name, listenerCallback)</span><span lang='java'>public void unsubscribe(String name, <a href="#message-listener">MessageListener</a> listener)</span><span lang='ruby'>unsubscribe(String name, &amp;listener_proc)</span><span lang='objc,swift'>unsubscribe(name: String, listener: ARTEventListener)</span></p>
+<p class="definition" id="unsubscribe-event"><span lang='default'>unsubscribe(String name, listenerCallback)</span><span lang='java'>void unsubscribe(String name, <a href="#message-listener">MessageListener</a> listener)</span><span lang='csharp'>bool Unsubscribe(string eventName, Action&lt;<a href="#message">Message</a>&gt; handler)</span><span lang='ruby'>unsubscribe(String name, &amp;listener_proc)</span><span lang='objc,swift'>unsubscribe(name: String, listener: ARTEventListener)</span></p>
 </blockquote>
 <p>Unsubscribe to messages on this channel for the specified event name. This removes an earlier event-specific subscription.</p>
 <blockquote class="definition" id="unsubscribe-listener">
-<p class="definition" id="unsubscribe-listener"><span lang='default'>unsubscribe(listenerCallback)</span><span lang='java'>public void unsubscribe(<a href="#message-listener">MessageListener</a> listener)</span><span lang='ruby'>unsubscribe(&amp;listener_proc)</span><span lang='objc,swift'>unsubscribe(listener: ARTEventListener)</span></p>
+<p class="definition" id="unsubscribe-listener"><span lang='default'>unsubscribe(listenerCallback)</span><span lang='java'>void unsubscribe(<a href="#message-listener">MessageListener</a> listener)</span><span lang='csharp'>bool Unsubscribe(Action&lt;<a href="#message">Message</a>&gt; handler)</span><span lang='ruby'>unsubscribe(&amp;listener_proc)</span><span lang='objc,swift'>unsubscribe(listener: ARTEventListener)</span></p>
 </blockquote>
 <p>Unsubscribe to messages on this channel. This removes an earlier subscription.</p>
 <blockquote class="definition" id="unsubscribe-all">
-<p class="definition" id="unsubscribe-all"><span lang='default'>unsubscribe()</span><span lang='java'>public void unsubscribe()</span><span lang='objc,swift'>unsubscribe()</span></p>
+<p class="definition" id="unsubscribe-all"><span lang='default'>unsubscribe()</span><span lang='java'>void unsubscribe()</span><span lang='csharp'>void Unsubscribe()</span><span lang='objc,swift'>unsubscribe()</span></p>
 </blockquote>
 <p>Unsubscribes all listeners to messages on this channel. This removes all earlier subscriptions.</p>
 <h4>Parameters</h4>
@@ -820,16 +914,18 @@ Related types
 	<dd>previously registered listener block</dd>
 	<dt><div lang="swift,objc">listener</div></dt>
 	<dd>previous return value from a <code>subscribe</code> call</dd>
+	<dt><div lang="csharp">handler</div></dt>
+	<dd>is the lambda expression that was previously subscribed</dd>
 </dl>
-<h6 id="history">history</h6>
+<h6 id="history"><span lang='default'>history</span><span lang='csharp'>History</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>history(Object options, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; resultPage))</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> history(Hash options) &#8594; yields <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt;</span><span lang='java'>public <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(<a href="#param">Param []</a> options)</span><span lang='objc,swift'>history(query: ARTRealtimeHistoryQuery?, callback: (<a href="#paginated-result">ARTPaginatedResult</a>&lt;<a href="#message">ARTMessage</a>&gt;?, ARTErrorInfo?) &#8594; Void) throws</span></p>
+<p class="definition"><span lang='default'>history(Object options, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; resultPage))</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> history(Hash options) &#8594; yields <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt;</span><span lang='java'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#message">Message</a>&gt; history(<a href="#param">Param []</a> options)</span><span lang='csharp'>Task&lt;<a href="#paginated-result">PaginatedResult<Message></a>&gt; HistoryAsync(<a href="#data-request-query">DataRequestQuery</a> dataQuery, bool untilAttached = false)</span><span lang='objc,swift'>history(query: ARTRealtimeHistoryQuery?, callback: (<a href="#paginated-result">ARTPaginatedResult</a>&lt;<a href="#message">ARTMessage</a>&gt;?, ARTErrorInfo?) &#8594; Void) throws</span></p>
 </blockquote>
 <p>Gets a <a href="#paginated-result">paginated</a> set of historical messages for this channel. If the <a href="https://support.ably.io/support/solutions/articles/3000030059-how-long-are-messages-stored-for">channel is configured to persist messages to disk</a>, then message history will <a href="https://support.ably.io/solution/articles/3000030059-how-long-are-messages-stored-for">typically be available for 24 &#8211; 72 hours</a>. If not, messages are only retained in memory by the Ably service for two minutes.</p>
 <h4>Parameters</h4>
 <dl>
-	<dt><span lang="default">options</span><span lang="objc,swift">query</span></dt>
-	<dd><span lang="default">an optional object containing the query parameters</span><span lang="ruby">an optional set of key value pairs containing the query parameters</span>, as specified in the <a href="/realtime/history#channel-history">message history API documentation</a>.<br><i>Type: <span lang="default"><code>Object</code></span><span lang="objc,swift"><code>ARTRealtimeHistoryQuery</code></span><span lang="ruby"><code>Hash</code></span><span lang="java"><a href="#param"><code>Param []</code></a></span></i></dd>
+	<dt><span lang="default">options</span><span lang="objc,swift">query</span><span lang="csharp">dataQuery</span></dt>
+	<dd><span lang="default">an optional object containing the query parameters</span><span lang="ruby">an optional set of key value pairs containing the query parameters</span>, as specified in the <a href="/realtime/history#channel-history">message history API documentation</a>.<br><i>Type: <span lang="default"><code>Object</code></span><span lang="objc,swift"><code>ARTRealtimeHistoryQuery</code></span><span lang="csharp"><code>DataRequestQuery</code></span><span lang="ruby"><code>Hash</code></span><span lang="java"><a href="#param"><code>Param []</code></a></span></i></dd>
 </dl>
 <dl>
 	<dt><div lang="javascript,nodejs">callback</div></dt>
@@ -860,6 +956,16 @@ Related types
 
 
 
+<div lang="csharp"> <!-- start csharp language block -->
+<h4>Returns</h4>
+<p>The return value is <code>Task&lt;PaginatedResult&lt;Message&gt;&gt;</code> which needs to be awaited.</p>
+<p>On success, the returned <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulates an array of <a href="#message"><code>Message</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>NextAsync</code></a> and <a href="#paginated-result"><code>FirstAsync</code></a> methods.</p>
+<p>Failure to retrieve the message history will raise an <a href="/realtime/types/#ably-exception"><code>AblyException</code></a></p>
+
+</div> <!-- /end csharp language block -->
+
+
+
 <div lang="ruby"> <!-- start ruby language block -->
 <h4>Returns</h4>
 <p>A <a href="/realtime/types#deferrable"><code>Deferrable</code></a> object is returned from the method.</p>
@@ -868,18 +974,20 @@ Related types
 
 </div> <!-- /end ruby language block -->
 
-<h6 id="attach">attach</h6>
+<h6 id="attach"><span lang='default'>attach</span><span lang='csharp'>Attach</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>attach(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='java'>public void attach()</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> attach &#8594; yields</span><span lang='objc,swift'>attach(callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
+<p class="definition"><span lang='default'>attach(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='java'>void attach()</span><span lang='csharp'>void Attach(Action&lt;TimeSpan, <a href="/realtime/types#error-info">ErrorInfo</a>?&gt; callback = null)</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> attach &#8594; yields</span><span lang='objc,swift'>attach(callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
 </blockquote>
-<p>Attach to this channel ensuring the channel is created in the Ably system and all messages published on the channel will be received by any channel listeners registered using <code>subscribe()</code>. Any resulting channel state change will be emitted to any listeners registered using the <a href="#on"><code>on</code></a> or <a href="#once"><code>once</code></a> methods.</p>
-<p>As a convenience, <code>attach()</code> will be called implicitly if either <a href="#publish"><code>publish()</code></a> or <a href="#subscribe"><code>subscribe()</code></a> for the <code>Channel</code> is called, or <a href="/realtime/presence#enter"><code>enter</code></a> or <a href="/realtime/presence#subscribe"><code>subscribe</code></a> is called on the <a href="/realtime/presence"><code>Presence</code></a> for this <code>Channel</code>.</p>
+<p>Attach to this channel ensuring the channel is created in the Ably system and all messages published on the channel will be received by any channel listeners registered using <span lang="default"><code>subscribe()</code></span><span lang="csharp"><code>Subscribe()</code></span><span lang="ruby"><code>subscribe</code></span>. Any resulting channel state change will be emitted to any listeners registered using the <a href="#on"><span lang="default"><code>on</code></span><span lang="csharp"><code>On</code></span></a> or <a href="#once"><span lang="default"><code>once</code></span><span lang="csharp"><code>Once</code></span></a> methods.</p>
+<p>As a convenience, <span lang="default"><code>attach()</code></span><span lang="csharp"><code>Attach()</code></span><span lang="ruby"><code>attach</code></span> will be called implicitly if either <a href="#publish"><span lang="default"><code>publish()</code></span><span lang="csharp"><code>Publish()</code></span><span lang="ruby"><code>publish</code></span></a> or <a href="#subscribe"><span lang="default"><code>subscribe()</code></span><span lang="csharp"><code>Subscribe()</code></span><span lang="ruby"><code>subscribe</code></span></a> for the <code>Channel</code> is called, or <a href="/realtime/presence#enter"><span lang="default"><code>enter()</code></span><span lang="csharp"><code>Enter()</code></span><span lang="ruby"><code>enter</code></span></a> or <a href="/realtime/presence#subscribe"><span lang="default"><code>subscribe()</code></span><span lang="csharp"><code>Subscribe()</code></span><span lang="ruby"><code>subscribe</code></span></a> is called on the <a href="/realtime/presence"><code>Presence</code></a> for this <code>Channel</code>.</p>
 <h4>Parameters</h4>
 <dl>
 	<dt><div lang="javascript,nodejs">callback</div></dt>
 	<dd>is a function of the form <code>function(err)</code> and is called once the channel attach succeeds or fails</dd>
 	<dt><div lang="ruby">&amp;block</div></dt>
 	<dd>yields once the channel becomes attached</dd>
+	<dt><div lang="csharp">callback</div></dt>
+	<dd>is a lambda expression of the form <code>Action&lt;TimeSpan, ErrorInfo&gt;</code> and is called once the channel attach succeds or fails</dd>
 	<dt><div lang="swift,objc">callback</div></dt>
 	<dd>called once the channel becomes attached or if an error occurs</dd>
 </dl>
@@ -892,16 +1000,18 @@ Related types
 
 </div> <!-- /end ruby language block -->
 
-<h6 id="detach">detach</h6>
+<h6 id="detach"><span lang='default'>detach</span><span lang='csharp'>Detach</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>detach(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='java'>public void detach()</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> detach &#8594; yields</span><span lang='objc,swift'>detach(callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
+<p class="definition"><span lang='default'>detach(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err))</span><span lang='java'>void detach()</span><span lang='csharp'>void Detach(Action&lt;TimeSpan, ErrorInfo&gt; callback = null)</span><span lang='ruby'><a href="/realtime/types#deferrable">Deferrable</a> detach &#8594; yields</span><span lang='objc,swift'>detach(callback: ((<a href="/realtime/types#error-info">ARTErrorInfo</a>?) &#8594; Void)?)</span></p>
 </blockquote>
-<p>Detach from this channel. Any resulting channel state change will be emitted to any listeners registered using the <a href="#on"><code>on</code></a> or <a href="#once"><code>once</code></a> methods.</p>
+<p>Detach from this channel. Any resulting channel state change will be emitted to any listeners registered using the <a href="#on"><span lang="default"><code>on</code></span><span lang="csharp"><code>On</code></span></a> or <a href="#once"><span lang="default"><code>once</code></span><span lang="csharp"><code>Once</code></span></a> methods.</p>
 <p>Please note: Once all clients globally have detached from the channel, the channel will be released in the Ably service within two minutes.</p>
 <h4>Parameters</h4>
 <dl>
 	<dt><div lang="javascript,nodejs">callback</div></dt>
 	<dd>is a function of the form <code>function(err)</code> and is called once the channel detach succeeds or fails</dd>
+	<dt><div lang="csharp">callback</div></dt>
+	<dd>is a lambda expression in the form <code>Action&lt;TimeSpan, ErrorInfo&gt;</code> and is called once the channel detach succeeds or fails</dd>
 	<dt><div lang="ruby">&amp;block</div></dt>
 	<dd>yields once the channel becomes detached</dd>
 	<dt><div lang="swift,objc">callback</div></dt>
@@ -916,23 +1026,25 @@ Related types
 
 </div> <!-- /end ruby language block -->
 
-<h6 id="on">on</h6>
+<h6 id="on"><span lang='default'>on</span><span lang='csharp'>On</span></h6>
 <p>There are two overloaded versions of this method:</p>
 <blockquote class="definition" id="on-state-listener">
-<p class="definition" id="on-state-listener"><span lang='default'>on(String state, listener())</span><span lang='ruby'>on(<a href="#channel-state">ChannelState</a> *state) &#8594; yields <a href="#channel-state-change">ChannelStateChange</a></span><span lang='java'>public void on(<a href="#channel-state">ChannelState</a> state, <a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='objc,swift'>on(event: <a href="#channel-event">ARTChannelEvent</a>, call: (<a href="#error-info">ARTErrorInfo</a>?) &#8594; Void) &#8594; ARTEventListener</span></p>
+<p class="definition" id="on-state-listener"><span lang='default'>on(String state, listener())</span><span lang='ruby'>on(<a href="#channel-state">ChannelState</a> *state) &#8594; yields <a href="#channel-state-change">ChannelStateChange</a></span><span lang='java'>void on(<a href="#channel-state">ChannelState</a> state, <a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='csharp'>void On(<a href="#channel-state">ChannelState</a> event, Action<ChannelStateChangedEventArgs> action)</span><span lang='objc,swift'>on(event: <a href="#channel-event">ARTChannelEvent</a>, call: (<a href="#error-info">ARTErrorInfo</a>?) &#8594; Void) &#8594; ARTEventListener</span></p>
 </blockquote>
-<p>Register the given listener <span lang="ruby">block</span><span lang="swift,objc">function</span> for the specified <a href="#channel-state">ChannelState</a> <span lang="default"><code>state</code></span><span lang="ruby"><code>state(s)</code></span><span lang="java"><code>state</code></span> changes on the <code>Channel</code>.<br />
-<span class="default">The listener is passed the current state<span lang="javascript,nodejs"> as the <code>event</code> property of <code>this</code></span>.</span><span lang="ruby">The listener is passed a <a href="#channel-state">ChannelState</a> object that contains the current state, previous state, and an optional reason for the state change</span><span lang="objc,swift">The listener is passed an optional reason for the state change</span>.</p>
+<p>Register the given listener <span lang="ruby">block</span><span lang="swift,objc">function</span> for the specified <a href="#channel-state">ChannelState</a> <span lang="default"><code>state</code></span><span lang="ruby"><code>state(s)</code></span> changes on the <code>Channel</code>.<br />
+<span class="default">The listener is passed the current state<span lang="javascript,nodejs"> as the <code>event</code> property of <code>this</code></span></span><span lang="ruby">The listener is passed a <a href="#channel-state">ChannelState</a> object that contains the current state, previous state, and an optional reason for the state change</span><span lang="objc,swift">The listener is passed an optional reason for the state change</span>.</p>
 <blockquote class="definition" id="on-listener">
-<p class="definition" id="on-listener"><span lang='default'>on(listener())</span><span lang='ruby'>on &#8594; yields <a href="#channel-state-change">ChannelStateChange</a></span><span lang='java'>public void on(<a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='objc,swift'>on(call: (ARTErrorInfo?) &#8594; Void) &#8594; ARTEventListener</span></p>
+<p class="definition" id="on-listener"><span lang='default'>on(listener())</span><span lang='ruby'>on &#8594; yields <a href="#channel-state-change">ChannelStateChange</a></span><span lang='csharp'>void On(Action<ChannelStateChangedEventArgs> listener)</span><span lang='java'>void on(<a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='objc,swift'>on(call: (ARTErrorInfo?) &#8594; Void) &#8594; ARTEventListener</span></p>
 </blockquote>
-<p>Register the given listener <span lang="ruby">block</span><span lang="swift,objc">function</span> for all <a href="#channel-state">ChannelState</a> changes on the <code>Channel</code>, plus when an error happens when attaching, detaching, or encoding or decoding a message.<br />
+<p>Register the given listener <span lang="ruby">block</span><span lang="swift,objc">function</span><span lang="csharp">lambda expression</span> for all <a href="#channel-state">ChannelState</a> changes on the <code>Channel</code>, plus when an error happens when attaching, detaching, or encoding or decoding a message.<br />
 <span class="default">The listener is passed the current state<span lang="javascript,nodejs"> as the <code>event</code> property of <code>this</code></span>.</span><span lang="ruby">The listener is passed a <a href="#channel-state">ChannelState</a> object that contains the current state, previous state, and an optional reason for the state change</span><span lang="objc,swift">The callback is passed an optional reason for the state change or error</span>.</p>
 <h4>Parameters</h4>
 <dl>
 	<dt><div lang="javascript,nodejs">state</div></dt>
 	<dd>the channel state to subscribe to, see <a href="#channel-state">ChannelState</a> for supported channel states<br><i>Type: <code>String</code></i></dd>
 	<dt><div lang="java">state</div></dt>
+	<dd>the channel state to subscribe to<br><i>Type: <a href="#channel-state"><code>ChannelState</code></a></i></dd>
+	<dt><div lang="csharp">event</div></dt>
 	<dd>the channel state to subscribe to<br><i>Type: <a href="#channel-state"><code>ChannelState</code></a></i></dd>
 	<dt><div lang="ruby">state</div></dt>
 	<dd>the channel state as a Symbol such as <code>:attached</code> or a <code>ChannelState</code> object to subscribe to<br><i>Type: <a href="#channel-state"><code>ChannelState</code></a></i></dd>
@@ -944,6 +1056,8 @@ Related types
 	<dd>is a function of the form <code>function()</code> to be notified for matching state changes. The current state is available as <code>this.event</code></dd>
 	<dt><div lang="java">listener</div></dt>
 	<dd>listener to be notified for matching state changes<br><i>Type: <a href="#channel-state-listener"><code>ChannelStateListener</code></a></i></dd>
+	<dt><div lang="csharp">action</div></dt>
+	<dd>lambda expression to be notified for matching state changes<br><i>Type: <a href="#channel-state-listener"><code>ChannelStateChangedEventArgs</code></a></i></dd>
 	<dt><div lang="ruby">&amp;block</div></dt>
 	<dd>listener block that is yielded to for matching state changes</dd>
 	<dt><div lang="swift,objc">call</div></dt>
@@ -951,23 +1065,25 @@ Related types
 </dl>
 <h4>Example</h4>
 <p><a href="https://jsbin.ably.io:443/aqotuc/1/edit?javascript,live" target="_blank">Browser <code>ChannelState</code> change example</a></p>
-<h6 id="once">once</h6>
+<h6 id="once"><span lang='default'>once</span><span lang='csharp'>Once</span></h6>
 <p>There are two overloaded versions of this method:</p>
 <blockquote class="definition" id="once-state-listener">
-<p class="definition" id="once-state-listener"><span lang='default'>once(String state, listener())</span><span lang='ruby'>once(<a href="#channel-state">ChannelState</a> *state) &#8594; yields <a href="#channel-state-change">ChannelStateChange</a></span><span lang='java'>public void once(<a href="#channel-state">ChannelState</a> state, <a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='objc,swift'>once(event: <a href="#channel-event">ARTChannelEvent</a>, call: (<a href="#error-info">ARTErrorInfo</a>?) &#8594; Void) &#8594; ARTEventListener</span></p>
+<p class="definition" id="once-state-listener"><span lang='default'>once(String state, listener())</span><span lang='ruby'>once(<a href="#channel-state">ChannelState</a> *state) &#8594; yields <a href="#channel-state-change">ChannelStateChange</a></span><span lang='java'>void once(<a href="#channel-state">ChannelState</a> state, <a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='csharp'>void Once(<a href="#channel-state">ChannelState</a> event, Action<ChannelStateChangedEventArgs> action)</span><span lang='objc,swift'>once(event: <a href="#channel-event">ARTChannelEvent</a>, call: (<a href="#error-info">ARTErrorInfo</a>?) &#8594; Void) &#8594; ARTEventListener</span></p>
 </blockquote>
-<p>Register the given listener <span lang="ruby">block</span><span lang="swift,objc">function</span> for a single occurence of the specified <a href="#channel-state">ChannelState</a> <span lang="default"><code>state</code></span><span lang="ruby"><code>state(s)</code></span><span lang="java"><code>state</code></span> change on the <code>Channel</code>. Once the listener has been called, it is removed as a registered listener and will not be called again.<br />
-<span class="default">The listener is passed the current state<span lang="javascript,nodejs"> as the <code>event</code> property of <code>this</code></span>.</span><span lang="ruby">The listener is passed a <a href="#channel-state">ChannelState</a> object that contains the current state, previous state, and an optional reason for the state change</span><span lang="objc,swift">The listener is passed an optional reason for the state change</span>.</p>
+<p>Register the given listener <span lang="ruby">block</span><span lang="swift,objc">function</span><span lang="csharp">lambda expression</span> for a single occurence of the specified <a href="#channel-state">ChannelState</a> <span lang="default"><code>state</code></span><span lang="ruby"><code>state(s)</code></span><span lang="java"><code>state</code></span> change on the <code>Channel</code>. Once the listener has been called, it is removed as a registered listener and will not be called again.<br />
+<span class="default">The listener is passed the current state<span lang="javascript,nodejs"> as the <code>event</code> property of <code>this</code></span></span><span lang="ruby">The listener is passed a <a href="#channel-state">ChannelState</a> object that contains the current state, previous state, and an optional reason for the state change</span><span lang="objc,swift">The listener is passed an optional reason for the state change</span>.</p>
 <blockquote class="definition" id="once-listener">
-<p class="definition" id="once-listener"><span lang='default'>once(listener())</span><span lang='ruby'>once &#8594; yields <a href="#channel-state-change">ChannelStateChange</a></span><span lang='java'>public void once(<a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='objc,swift'>once(call: (ARTErrorInfo?) &#8594; Void) &#8594; ARTEventListener</span></p>
+<p class="definition" id="once-listener"><span lang='default'>once(listener())</span><span lang='ruby'>once &#8594; yields <a href="#channel-state-change">ChannelStateChange</a></span><span lang='java'>void once(<a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='csharp'>void Once(Action<ChannelStateChangedEventArgs> listener)</span><span lang='objc,swift'>once(call: (ARTErrorInfo?) &#8594; Void) &#8594; ARTEventListener</span></p>
 </blockquote>
-<p>Register the given listener <span lang="ruby">block</span><span lang="swift,objc">function</span> for a single occurence of any <a href="#channel-state">ChannelState</a> change on the <code>Channel</code>. Once the listener has been called, it is removed as a registered listener and will not be called again.<br />
-<span class="default">The listener is passed the current state<span lang="javascript,nodejs"> as the <code>event</code> property of <code>this</code></span>.</span><span lang="ruby">The listener is passed a <a href="#channel-state">ChannelState</a> object that contains the current state, previous state, and an optional reason for the state change</span><span lang="objc,swift">The callback is passed an optional reason for the state change or error</span>.</p>
+<p>Register the given listener <span lang="ruby">block</span><span lang="swift,objc">function</span><span lang="csharp">lambda expression</span> for a single occurence of any <a href="#channel-state">ChannelState</a> change on the <code>Channel</code>. Once the listener has been called, it is removed as a registered listener and will not be called again.<br />
+<span class="default">The listener is passed the current state<span lang="javascript,nodejs"> as the <code>event</code> property of <code>this</code></span></span><span lang="ruby">The listener is passed a <a href="#channel-state">ChannelState</a> object that contains the current state, previous state, and an optional reason for the state change</span><span lang="objc,swift">The listener is passed an optional reason for the state change</span>.</p>
 <h4>Parameters</h4>
 <dl>
 	<dt><div lang="javascript,nodejs">state</div></dt>
 	<dd>the channel state to subscribe to, see <a href="#channel-state">ChannelState</a> for supported channel states<br><i>Type: <code>String</code></i></dd>
 	<dt><div lang="java">state</div></dt>
+	<dd>the channel state to subscribe to<br><i>Type: <a href="#channel-state"><code>ChannelState</code></a></i></dd>
+	<dt><div lang="csharp">event</div></dt>
 	<dd>the channel state to subscribe to<br><i>Type: <a href="#channel-state"><code>ChannelState</code></a></i></dd>
 	<dt><div lang="ruby">state</div></dt>
 	<dd>the channel state as a Symbol such as <code>:attached</code> or a <code>ChannelState</code> object to subscribe to<br><i>Type: <a href="#channel-state"><code>ChannelState</code></a></i></dd>
@@ -981,17 +1097,19 @@ Related types
 	<dd>listener to be notified for a single occurence of a matching state change<br><i>Type: <a href="#channel-state-listener"><code>ChannelStateListener</code></a></i></dd>
 	<dt><div lang="ruby">&amp;block</div></dt>
 	<dd>listener block that is yielded to for a single occurence of a matching state change</dd>
+	<dt><div lang="csharp">listener</div></dt>
+	<dd>listener lambda expression that is notified only once for a matching state change</dd>
 	<dt><div lang="swift,objc">call</div></dt>
 	<dd>called possibly with an <a href="#error-info"><code>ErrorInfo</code></a></dd>
 </dl>
-<h6 id="off">off</h6>
+<h6 id="off"><span lang='default'>off</span><span lang='csharp'>Off</span></h6>
 <p>There are two overloaded versions of this method:</p>
 <blockquote class="definition" id="off-state-listener">
-<p class="definition" id="off-state-listener"><span lang='default'>off(String state, listener)</span><span lang='ruby'>off(<a href="#channel-state">ChannelState</a> *state, &amp;block)</span><span lang='java'>public void off(<a href="#channel-state">ChannelState</a> state, <a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='objc,swift'>off(event: <a href="#channel-event">ARTChannelEvent</a>, listener: ARTEventListener)</span></p>
+<p class="definition" id="off-state-listener"><span lang='default'>off(String state, listener)</span><span lang='ruby'>off(<a href="#channel-state">ChannelState</a> *state, &amp;block)</span><span lang='java'>void off(<a href="#channel-state">ChannelState</a> state, <a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='csharp'>void Off(<a href="#channel-state">ChannelState</a> event, Action<ChannelStateChangedEventArgs> listener)</span><span lang='objc,swift'>off(event: <a href="#channel-event">ARTChannelEvent</a>, listener: ARTEventListener)</span></p>
 </blockquote>
-<p>Remove the given listener <span lang="ruby">block</span> for the <a href="#channel-state">ChannelState</a> <span lang="default"><code>state</code></span><span lang="ruby"><code>state(s)</code></span><span lang="java"><code>state</code></span>.</p>
+<p>Remove the given listener <span lang="ruby">block</span> for the <a href="#channel-state">ChannelState</a> <span lang="default"><code>state</code></span><span lang="ruby"><code>state(s)</code></span>.</p>
 <blockquote class="definition" id="off-listener">
-<p class="definition" id="off-listener"><span lang='default'>off(listener)</span><span lang='ruby'>off(&amp;block)</span><span lang='java'>public void off(<a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='objc,swift'>off(listener: ARTEventListener)</span></p>
+<p class="definition" id="off-listener"><span lang='default'>off(listener)</span><span lang='ruby'>off(&amp;block)</span><span lang='java'>void off(<a href="#channel-state-listener">ChannelStateListener</a> listener)</span><span lang='csharp'>void Off(Action<ChannelStateChangedEventArgs> listener)</span><span lang='objc,swift'>off(listener: ARTEventListener)</span></p>
 </blockquote>
 <p>Remove the given listener <span lang="ruby">block</span> for all <a href="#channel-state">ChannelState</a> states.</p>
 <h4>Parameters</h4>
@@ -999,6 +1117,8 @@ Related types
 	<dt><div lang="javascript,nodejs">state</div></dt>
 	<dd>the channel state to unsubscribe from<br><i>Type: <code>String</code></i></dd>
 	<dt><div lang="java">state</div></dt>
+	<dd>the channel state to unsubscribe from<br><i>Type: <a href="#channel-state"><code>ChannelState</code></a></i></dd>
+	<dt><div lang="csharp">event</div></dt>
 	<dd>the channel state to unsubscribe from<br><i>Type: <a href="#channel-state"><code>ChannelState</code></a></i></dd>
 	<dt><div lang="ruby">state</div></dt>
 	<dd>the channel state as a Symbol such as <code>:detached</code> or a <code>ChannelState</code> object to unsubscribe from<br><i>Type: <a href="#channel-state"><code>ChannelState</code></a></i></dd>
@@ -1010,13 +1130,15 @@ Related types
 	<dd>is the listener function to be removed</dd>
 	<dt><div lang="java">listener</div></dt>
 	<dd>is the listener to be removed<br><i>Type: <a href="#channel-state-listener">@ChannelStateListener</a></i></dd>
+	<dt><div lang="csharp">listener</div></dt>
+	<dd>is the listener function to be removed</dd>
 	<dt><div lang="ruby">&amp;block</div></dt>
 	<dd>is the listener block to be removed</dd>
 	<dt><div lang="swift,objc">listener</div></dt>
 	<dd>previous return value from a <code>on</code> or <code>once</code> call</dd>
 </dl>
 <h2 id="related-types">Related types</h2>
-<h3 id="channel-state"><span lang='default'>ChannelState</span><span lang='objc,swift'>ARTRealtimeChannelState</span><span lang='ruby'>Channel::STATE Enum</span><span lang='java'>io.ably.lib.realtime.ChannelState Enum</span></h3>
+<h3 id="channel-state"><span lang='default'>ChannelState</span><span lang='objc,swift'>ARTRealtimeChannelState</span><span lang='ruby'>Channel::STATE Enum</span><span lang='java'>io.ably.lib.realtime.ChannelState Enum</span><span lang='csharp'>IO.Ably.Realtime.ChannelState Enum</span></h3>
 
 
 <div lang="javascript,nodejs"> <!-- start javascript,nodejs language block -->
@@ -1046,6 +1168,22 @@ Related types
 }</code></pre>
 
 </div> <!-- /end java language block -->
+
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>IO.Ably.Realtime.ChannelState</code> is an enum representing all the <a href="/realtime/channel#channel-states"><code>Realtime Channel</code> states</a>.</p>
+<pre lang="csharp"><code lang="csharp">public enum ChannelState
+{
+    Initialized = 0,
+    Attaching = 1,
+    Attached = 2,
+    Detaching= 3,
+    Detached = 4,
+    Failed = 5
+};</code></pre>
+
+</div> <!-- /end csharp language block -->
 
 
 
@@ -1089,7 +1227,7 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
     ARTRealtimeChannelDetached,
     ARTRealtimeChannelFailed
 };</code></pre>
-<pre lang="swift"><code lang="swift">public enum ARTRealtimeChannelState : UInt {    
+<pre lang="swift"><code lang="swift">public enum ARTRealtimeChannelState : UInt {
     case Initialized
     case Attaching
     case Attached
@@ -1100,7 +1238,7 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
 
 </div> <!-- /end objc,swift language block -->
 
-<h3 id="message"><span lang='default'>Message</span><span lang='objc,swift'>ARTMessage</span><span lang='ruby'>Ably::Models::Message</span><span lang='java'>io.ably.lib.types.Message</span></h3>
+<h3 id="message"><span lang='default'>Message</span><span lang='objc,swift'>ARTMessage</span><span lang='ruby'>Ably::Models::Message</span><span lang='java'>io.ably.lib.types.Message</span><span lang='csharp'>IO.Ably.Message</span></h3>
 <p>A <code>Message</code> represents an individual message that is sent to or received from Ably.</p>
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span><span lang='python'>Attributes</span></h4>
 <dl>
@@ -1112,6 +1250,8 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
 	<dd>The message payload, if provided<br><i>Type: <code>String</code>, <code>StringBuffer</code>, <code>JSON Object</code></i></dd>
 	<dt><div lang="java">data</div></dt>
 	<dd>The message payload, if provided<br><i>Type: <code>String</code>, <code>ByteArray</code>, <code>JSONObject</code>, <code>JSONArray</code></i></dd>
+	<dt><div lang="csharp">data</div></dt>
+	<dd>The message payload, if provided<br><i>Type: <code>String</code>, <code>byte[]</code>, plain C# object that can be serialized to Json</i></dd>
 	<dt><div lang="ruby">data</div></dt>
 	<dd>The message payload, if provided<br><i>Type: <code>String</code>, <code>Binary</code> (ASCII-8BIT String), <code>Hash</code>, <code>Array</code></i></dd>
 	<dt><div lang="python">data</div></dt>
@@ -1137,13 +1277,13 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
 </dl>
 <dl>
 	<dt>timestamp</dt>
-	<dd>Timestamp when the presence update was received by the Ably the realtime service, as <span lang="default">milliseconds since the epoch</span><span lang="ruby">a <code>Time</code> object</span><br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
+	<dd>Timestamp when the presence update was received by the Ably the realtime service, as <span lang="default">milliseconds since the epoch</span><span lang="ruby">a <code>Time</code> object</span><br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="csharp"><code>DateTimeOffset</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
 </dl>
 <dl>
 	<dt>encoding</dt>
 	<dd>This will typically be empty as all messages received from Ably are automatically decoded client-side using this value. However, if the message encoding cannot be processed, this attribute will contain the remaining transformations not applied to the <code>data</code> payload<br><i>Type: <code>String</code></i></dd>
 </dl>
-<h3 id="channel-options"><span lang='default'>ChannelOptions Object</span><span lang='objc,swift'>ARTChannelOptions</span><span lang='ruby'>ChannelOptions Hash</span><span lang='java'>io.ably.lib.types.ChannelOptions</span></h3>
+<h3 id="channel-options"><span lang='default'>ChannelOptions Object</span><span lang='objc,swift'>ARTChannelOptions</span><span lang='ruby'>ChannelOptions Hash</span><span lang='java'>io.ably.lib.types.ChannelOptions</span><span lang='csharp'>IO.Ably.Rest.ChannelOptions</span></h3>
 <p>Currently the supported channel options are only used for <a href="/realtime/encryption">configuring encryption</a>.</p>
 
 
@@ -1173,9 +1313,16 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
 
 </div> <!-- /end java,swift,objc language block -->
 
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>IO.Ably.ChannelOptions</code> may optionally be specified when instancing a <a href="/realtime/channels-messages"><code>Channel</code></a>, and this may be used to specify channel-specific options.</p>
+
+</div> <!-- /end csharp language block -->
+
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span></h4>
 <dl>
-	<dt><span lang="default">cipher</span><span lang="ruby">:cipher</span></dt>
+	<dt><span lang="default">cipher</span><span lang="ruby">:cipher</span><span lang="csharp">CipherParams</span></dt>
 	<dd>Requests encryption for this channel when not null, and specifies encryption-related parameters (such as algorithm, chaining mode, key length and key). See <a href="/realtime/encryption#getting-started">an example</a><br><i>Type: <a href="/realtime/encryption#cipher-params"><code>CipherParams</code></a><span lang="javascript,nodejs,,java,ruby,php"> or <span lang="javascript,nodejs">an options object</span><span lang="java">a <code>Param[]</code> list</span><span lang="ruby">an options hash</span><span lang="php">an Associative Array</span> containing at a minimum a <code>key</code></span></i></dd>
 </dl>
 
@@ -1184,7 +1331,7 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
 <h4>Static methods</h4>
 <h6 id="with-cipher-key">withCipherKey</h6>
 <blockquote class="definition">
-<p class="definition">public static ChannelOptions.withCipherKey(Byte[] or String key)</p>
+<p class="definition">static ChannelOptions.withCipherKey(Byte[] or String key)</p>
 </blockquote>
 <p>A helper method to generate a <code>ChannelOptions</code> for the simple case where you only specify a key.</p>
 <h4>Parameters</h4>
@@ -1267,6 +1414,27 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
 
 </div> <!-- /end java language block -->
 
+<h3 id="data-request-query"><span lang='csharp'>DataRequestQuery</span></h3>
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>DataRequestQuery</code> is a type that encapsulates the parameters for a history queries. For example usage see <a href="/realtime/history#channel-history"><span lang="default"><code>Channel#history</code></span><span lang="csharp"><code>Channel#History</code></span></a>.</p>
+<h4>Members</h4>
+<dl>
+	<dt>Start</dt>
+	<dd><em>null</em> The start of the queried interval<br><i>Type: <code>DateTimeOffset</code></i></dd>
+	<dt>End</dt>
+	<dd><em>null</em> The end of the queried interval<br><i>Type: <code>DateTimeOffset</code></i></dd>
+	<dt>Limit</dt>
+	<dd><em>null</em> By default it is null. Limits the number of items returned by history or stats<br><i>Type: <code>Integer</code></i></dd>
+	<dt>Direction</dt>
+	<dd><em>Backwards</em> Enum which is either <code>Forwards</code> or <code>Backwards</code><br><i>Type: <code>Direction</code> enum</i></dd>
+	<dt>ExtraParameters</dt>
+	<dd>Optionally any extra query parameters that may be passed to the query. This is mainly used internally by the library to manage paging.<br><i>Type: <code>Dictionary&lt;string, string&gt;</code></i></dd>
+</dl>
+
+</div> <!-- /end csharp language block -->
+
 <h3 id="message-listener"><span lang='java'>io.ably.lib.realtime.Channel.MessageListener</span></h3>
 
 
@@ -1279,15 +1447,15 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
 
 </div> <!-- /end java language block -->
 
-<h3 id="paginated-result"><span lang='default'>PaginatedResult</span><span lang='objc,swift'>ARTPaginatedResult</span><span lang='ruby'>Ably::Models::PaginatedResult</span><span lang='java'>io.ably.lib.types.PaginatedResult</span></h3>
+<h3 id="paginated-result"><span lang='default'>PaginatedResult</span><span lang='objc,swift'>ARTPaginatedResult</span><span lang='ruby'>Ably::Models::PaginatedResult</span><span lang='java'>io.ably.lib.types.PaginatedResult</span><span lang='csharp'>IO.Ably.PaginatedResult</span></h3>
 <p>A <code>PaginatedResult</code> is a type that represents a page of results for all message and presence history, stats and REST presence requests. The response from a <a href="/rest-api/#pagination">Ably REST API paginated query</a> is accompanied by metadata that indicates the relative queries available to the <code>PaginatedResult</code> object.</p>
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span><span lang='python'>Attributes</span></h4>
 <dl>
-	<dt>items</dt>
+	<dt><span lang="default">items</span><span lang="csharp">Items</span></dt>
 	<dd>contains a page of results (for example an Array of <a href="#message"><code>Message</code></a> or <a href="#presence-message"><code>PresenceMessage</code></a> objects for a channel history request)<br><span lang="default"><i>Type: <code>Array &lt;Message, Presence, Stats&gt;</code></i></span><span lang="python"><i>Type: <code>List &lt;Message, Presence, Stats&gt;</code></i></span></dd>
 </dl>
 <dl>
-	<dt><div lang="default">isLast</div></dt>
+	<dt><div lang="javascript,nodejs,java,swift,objc">isLast</div></dt>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="ruby">last?</div></dt>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
@@ -1295,9 +1463,9 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="python">is_last()</div></dt>
 	<dd><code>True</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
-</dl>
-<dl>
 	<dt><div lang="default">hasNext</div></dt>
+	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
+	<dt><div lang="csharp">HasNext</div></dt>
 	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="ruby">has_next?</div></dt>
 	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
@@ -1307,21 +1475,21 @@ Ably::Realtime::Channel::STATE.Attached == :attached # =&gt; true</code></pre>
 	<dd><code>True</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
 </dl>
 <h4>Methods</h4>
-<h6>first</h6>
+<h6><span lang='default'>first</span><span lang='csharp'>First</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>first(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> first</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='java'>public <a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='swift,objc'>first(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
+<p class="definition"><span lang='default'>first(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> first</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='csharp'>Task&lt;PaginatedResult<T>&gt; FirstAsync()</span><span lang='java'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='swift,objc'>first(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
 </blockquote>
-<p>Returns a new <code>PaginatedResult</code> for the first page of results. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
-<h6>items</h6>
+<p>Returns a new <code>PaginatedResult</code> for the first page of results. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span><span lang="csharp">The method is asyncronous and returns a Task which needs to be awaited to get the <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
+<h6><span lang='default'>items</span><span lang='csharp'>Items</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>Object[] items()</span><span lang='python'>List items()</span><span lang='ruby'>Object[] items</span><span lang='java'>public Object[] items()</span><span lang='swift, objc'>items: [AnyObject]</span></p>
+<p class="definition"><span lang='default'>Object[] items()</span><span lang='python'>List items()</span><span lang='ruby'>Object[] items</span><span lang='java'>Object[] items()</span><span lang='csharp'>List<T> Items</span><span lang='swift, objc'>items: [AnyObject]</span></p>
 </blockquote>
-<p>Returns the current page of results as <span lang="default">an Array</span><span lang="python">a <code>List</code></span>. The type of the objects in the <span lang="default">array</span><span lang="python">list</span> is determined by the operation that provided the <code>PaginatedResult</code>. For example, a <a href="/realtime/channels-messages#history">Message#history</a> request will return <span lang="default">an array</span><span lang="python">a list</span> of <code>Message</code> objects.</p>
-<h6>next</h6>
+<p>Returns the current page of results as <span lang="default">an Array</span><span lang="csharp">a List</span><span lang="python">a <code>List</code></span>. The type of the objects in the <span lang="default">array</span><span lang="python,csharp">list</span> is determined by the operation that provided the <code>PaginatedResult</code>. For example, a <a href="/realtime/channels-messages#history"><span lang="default">Message.history()</span><span lang="csharp">Message.History()</span></a> request will return <span lang="default">an array</span><span lang="python,csharp">a list</span> of <code>Message</code> objects.</p>
+<h6><span lang='default'>next</span><span lang='csharp'>Next</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>next(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> next</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='java'>public <a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='swift,objc'>next(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
+<p class="definition"><span lang='default'>next(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> next</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='csharp'>Task&lt;<a href="/realtime/types#paginated-result">PaginatedResult</a><T>&gt; NextAsync()</span><span lang='java'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='swift,objc'>next(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
 </blockquote>
-<p>Returns a new <code>PaginatedResult</code> loaded with the next page of results. If there are no further pages, then <span lang="default"><code>null</code></span><span lang="java"><code>Null</code></span><span lang="python"><code>None</code></span><span lang="ruby,objc,swift"><code>nil</code></span> is returned. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
+<p>Returns a new <code>PaginatedResult</code> loaded with the next page of results. If there are no further pages, then <span lang="default"><code>null</code></span><span lang="csharp">a blank PaginatedResult will be returned</span><span lang="java"><code>Null</code></span><span lang="python"><code>None</code></span><span lang="ruby,objc,swift"><code>nil</code></span> is returned. <span lang="csharp">The method is asyncronous and return a Task which needs to be awaited to get the <code>PaginatedResult</code></span><span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
 <h4>Example</h4>
 <pre lang="javascript"><code lang="javascript">channel.history(function(err, paginatedResult) {
   console.log('Page 0 item 0:' + paginatedResult.items[0].data);
@@ -1342,8 +1510,17 @@ System.out.println("Page 0 item 0:" + firstPage.items[0].data);
 if (firstPage.hasNext) {
   PaginatedResult nextPage = firstPage.next();
   System.out.println("Page 1 item 1:" + nextPage.items[1].data);
-  System.out.println("More pages?:" + Strong.valueOf(nextpage.hasNext()));
-});</code></pre>
+  System.out.println("More pages?:" + Strong.valueOf(nextPage.hasNext()));
+};</code></pre>
+<pre lang="csharp"><code lang="csharp">PaginatedResult&lt;Message&gt; firstPage = await channel.HistoryAsync(null);
+Message firstMessage = firstPage.Items[0];
+Console.WriteLine("Page 0 item 0: " + firstMessage.data);
+if (firstPage.HasNext)
+{
+    var nextPage = await firstPage.NextAsync();
+    Console.WriteLine("Page 1 item 1:" + nextPage.Items[1].data);
+    Console.WriteLine("More pages?: " + nextPage.HasNext);
+}</code></pre>
 <pre lang="ruby"><code lang="ruby"># When using the REST sync library
 first_page = channel.history
 puts "Page 0 item 0: #{first_page.items[0].data}"
@@ -1450,6 +1627,7 @@ if ($firstPage-&gt;hasNext()) {
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

@@ -422,10 +422,10 @@ blang[ruby].
 <pre lang="text"><code lang="text">bq(definition#anchor).
   default:    send(message, options)
   javascript: send(message, options)
-  java:       public void send(Message message, Options options)</code></pre>
+  java:       void send(Message message, Options options)</code></pre>
 <p>will render as:</p>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>send(message, options)</span><span lang='javascript'>send(message, options)</span><span lang='java'>public void send(Message message, Options options)</span></p>
+<p class="definition"><span lang='default'>send(message, options)</span><span lang='javascript'>send(message, options)</span><span lang='java'>void send(Message message, Options options)</span></p>
 </blockquote>
 <h2 id="inline-toc">Inline Table of Contents</h2>
 <p>Inline Table of Contents are typically used at the start of a new section (such as API reference) to provide a form of navigation to the user.  The Inline Table of Contents is also beneficial from a usability perspective as users can quickly get an overview of the content structure and scope.  A custom textile tag has been created for this, <code>inline-toc</code>.  An <code>inline-toc</code> tag can appear anywhere in a document as long as there is white space before it, the YAML within the tag appears directly after the tag, and the tag and YAML ends with white space.  Here is example Textile markup:</p>
@@ -531,6 +531,7 @@ Methods
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

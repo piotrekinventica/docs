@@ -38,22 +38,22 @@
 
   <div id="documentation">
     <p>A <code>CipherParams</code> contains configuration options for a channel cipher, including algorithm, mode, key length and key. Ably client libraries currently support AES with CBC, PKCS#7 with a default key length of 256 bits. All implementations also support AES128.</p>
-<p>Individual client libraries may support either instancing a <code>CipherParams</code> directly, using <span lang="default"><a href="/realtime/encryption#get-default-params"><code>Crypto.getDefaultParams()</code></a></span><span lang="ruby"><a href="/realtime/encryption#get-default-params"><code>Crypto.get_default_params()</code></a></span>, or generating one automatically when initializing a channel, as in <a href="/realtime/encryption#getting-started">this example</a>.</p>
+<p>Individual client libraries may support either instancing a <code>CipherParams</code> directly, using <span lang="default"><a href="/realtime/encryption#get-default-params"><code>Crypto.getDefaultParams()</code></a></span><span lang="Default"><a href="/realtime/encryption#get-default-params"><code>Crypto.GetDefaultParams()</code></a></span><span lang="ruby"><a href="/realtime/encryption#get-default-params"><code>Crypto.get_default_params()</code></a></span>, or generating one automatically when initializing a channel, as in <a href="/realtime/encryption#getting-started">this example</a>.</p>
 <p>h4.<br />
   default: Properties<br />
   java:    Members<br />
   ruby:    Attributes</p>
 <dl>
-	<dt><div lang="jsall,ruby,objc,swift"><span lang="ruby">:</span>key</div></dt>
-	<dd>A binary (<span lang="java"><code>byte[]</code></span><span lang="javascript"><code>ArrayBuffer</code> or <code>WordArray</code></span><span lang="nodejs"><code>Buffer</code></span><span lang="ruby">byte array</span><span lang="objc,swift"><code>NSData</code></span>) containing the secret key used for encryption and decryption</dd>
+	<dt><div lang="jsall,ruby,objc,swift,csharp"><span lang="default">key</span><span lang="csharp">Key</span><span lang="ruby">:key</span></div></dt>
+	<dd>A binary (<span lang="java,csharp"><code>byte[]</code></span><span lang="javascript"><code>ArrayBuffer</code> or <code>WordArray</code></span><span lang="nodejs"><code>Buffer</code></span><span lang="ruby">byte array</span><span lang="objc,swift"><code>NSData</code></span>) containing the secret key used for encryption and decryption</dd>
 </dl>
 <dl>
-	<dt><span lang="ruby">:</span>algorithm</dt>
+	<dt><span lang="default">algorithm</span><span lang="ruby">:algorithm</span><span lang="csharp">Algorithm</span></dt>
 	<dd><em>AES</em> The name of the algorithm in the default system provider, or the lower-cased version of it; eg &#8220;aes&#8221; or &#8220;AES&#8221;<br><i>Type: <code>String</code></i></dd>
-	<dt><span lang="python">key_length</span><span lang="ruby">:key_length</span><span lang="default">keyLength</span></dt>
+	<dt><span lang="python">key_length</span><span lang="ruby">:key_length</span><span lang="default">keyLength</span><span lang="csharp">KeyLength</span></dt>
 	<dd><em>256</em> The key length in bits of the cipher, either 128 or 256<br><i>Type: <code>Integer</code></i></dd>
-	<dt><span lang="ruby">:</span>mode</dt>
-	<dd><em>CBC</em> The cipher mode<br><i>Type: <code>String</code></i></dd>
+	<dt><span lang="default">mode</span><span lang="ruby">:mode</span><span lang="csharp">Mode</span></dt>
+	<dd><em>CBC</em> The cipher mode<br><i>Type: <span lang="default"><code>String</code></span><span lang="csharp"><code>CipherMode</code></span></i></dd>
 </dl>
 <dl>
 	<dt><div lang="java">keySpec</div></dt>
@@ -97,6 +97,7 @@
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

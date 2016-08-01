@@ -44,21 +44,25 @@
   ruby:    Attributes<br />
   python:  Attributes</p>
 <dl>
-	<dt>items</dt>
+	<dt><span lang="default">items</span><span lang="csharp">Items</span></dt>
 	<dd>contains a page of results (for example an Array of <a href="#message"><code>Message</code></a> or <a href="#presence-message"><code>PresenceMessage</code></a> objects for a channel history request)<br><span lang="default"><i>Type: <code>Array &lt;Message, Presence, Stats&gt;</code></i></span><span lang="python"><i>Type: <code>List &lt;Message, Presence, Stats&gt;</code></i></span></dd>
 </dl>
 <dl>
-	<dt><div lang="default">isLast</div></dt>
+	<dt><div lang="javascript,nodejs,java,swift,objc">isLast</div></dt>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="ruby">last?</div></dt>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="php">isLast()</div></dt>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="python">is_last()</div></dt>
-	<dd><code>True</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
+	<dd><code>True</code> if this page is the last page<br><i>Type: <code>Boolean</code></i><br />
+&lt;!&#8212; TODO: Add in when supported &#8211; <div lang="csharp">is_last()</div></dd>
+	<dd><code>True</code> if this page is the last page<br><i>Type: <code>Boolean</code></i> &#8212;&gt;</dd>
 </dl>
 <dl>
 	<dt><div lang="default">hasNext</div></dt>
+	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
+	<dt><div lang="csharp">HasNext</div></dt>
 	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="ruby">has_next?</div></dt>
 	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
@@ -68,32 +72,41 @@
 	<dd><code>True</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
 </dl>
 <h4>Methods</h4>
-<h6>first</h6>
+<p>h6.<br />
+  default: first<br />
+  csharp: First</p>
 <p>bq(definition).<br />
   default:  first(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))<br />
   ruby:     <a href="/realtime/types#paginated-result">PaginatedResult</a> first<br />
   php:      <a href="/realtime/types#paginated-result">PaginatedResult</a> first()<br />
   python:   <a href="/realtime/types#paginated-result">PaginatedResult</a> first()<br />
-  java:     public <a href="/realtime/types#paginated-result">PaginatedResult</a> first()<br />
+  csharp:   Task&lt;PaginatedResult<T>&gt; FirstAsync()<br />
+  java:     <a href="/realtime/types#paginated-result">PaginatedResult</a> first()<br />
   swift,objc: first(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</p>
-<p>Returns a new <code>PaginatedResult</code> for the first page of results. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
-<h6>items</h6>
+<p>Returns a new <code>PaginatedResult</code> for the first page of results. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span><span lang="csharp">The method is asyncronous and returns a Task which needs to be awaited to get the <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
+<p>h6.<br />
+  default: items<br />
+  csharp: Items</p>
 <p>bq(definition).<br />
   default:  Object[] items()<br />
   python:   List items()<br />
   ruby:     Object[] items<br />
-  java:     public Object[] items()<br />
+  java:     Object[] items()<br />
+  csharp:   List<T> Items<br />
   swift, objc: items: [AnyObject]</p>
-<p>Returns the current page of results as <span lang="default">an Array</span><span lang="python">a <code>List</code></span>. The type of the objects in the <span lang="default">array</span><span lang="python">list</span> is determined by the operation that provided the <code>PaginatedResult</code>. For example, a <a href="/realtime/channels-messages#history">Message#history</a> request will return <span lang="default">an array</span><span lang="python">a list</span> of <code>Message</code> objects.</p>
-<h6>next</h6>
+<p>Returns the current page of results as <span lang="default">an Array</span><span lang="csharp">a List</span><span lang="python">a <code>List</code></span>. The type of the objects in the <span lang="default">array</span><span lang="python,csharp">list</span> is determined by the operation that provided the <code>PaginatedResult</code>. For example, a <a href="/realtime/channels-messages#history"><span lang="default">Message.history()</span><span lang="csharp">Message.History()</span></a> request will return <span lang="default">an array</span><span lang="python,csharp">a list</span> of <code>Message</code> objects.</p>
+<p>h6.<br />
+  default: next<br />
+  csharp: Next</p>
 <p>bq(definition).<br />
   default:  next(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))<br />
   ruby:     <a href="/realtime/types#paginated-result">PaginatedResult</a> next<br />
   php:      <a href="/realtime/types#paginated-result">PaginatedResult</a> next()<br />
   python:   <a href="/realtime/types#paginated-result">PaginatedResult</a> next()<br />
-  java:     public <a href="/realtime/types#paginated-result">PaginatedResult</a> next()<br />
+  csharp:   Task&lt;<a href="/realtime/types#paginated-result">PaginatedResult</a><T>&gt; NextAsync()<br />
+  java:     <a href="/realtime/types#paginated-result">PaginatedResult</a> next()<br />
   swift,objc: next(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</p>
-<p>Returns a new <code>PaginatedResult</code> loaded with the next page of results. If there are no further pages, then <span lang="default"><code>null</code></span><span lang="java"><code>Null</code></span><span lang="python"><code>None</code></span><span lang="ruby,objc,swift"><code>nil</code></span> is returned. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
+<p>Returns a new <code>PaginatedResult</code> loaded with the next page of results. If there are no further pages, then <span lang="default"><code>null</code></span><span lang="csharp">a blank PaginatedResult will be returned</span><span lang="java"><code>Null</code></span><span lang="python"><code>None</code></span><span lang="ruby,objc,swift"><code>nil</code></span> is returned. <span lang="csharp">The method is asyncronous and return a Task which needs to be awaited to get the <code>PaginatedResult</code></span><span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
 <h4>Example</h4>
 <p>```[jsall]<br />
 channel.history(function(err, paginatedResult) {<br />
@@ -103,17 +116,28 @@ channel.history(function(err, paginatedResult) {<br />
     console.log(&#8217;Last page?: &#8217; + nextPage.isLast;<br />
   });<br />
 });<br />
-```<br />
-```[java]<br />
+```</p>
+<p>```[java]<br />
 PaginatedResult firstPage = channel.history();<br />
 System.out.println(&#8220;Page 0 item 0:&#8221; + firstPage.items<sup class="footnote" id="fnr0"><a href="#fn0">0</a></sup>.data);<br />
 if (firstPage.hasNext) {<br />
   PaginatedResult nextPage = firstPage.next();<br />
   System.out.println(&#8220;Page 1 item 1:&#8221; + nextPage.items<sup class="footnote" id="fnr1"><a href="#fn1">1</a></sup>.data);<br />
-  System.out.println(&#8220;More pages?:&#8221; + Strong.valueOf(nextpage.hasNext()));<br />
-});<br />
-```<br />
-```[ruby]</p>
+  System.out.println(&#8220;More pages?:&#8221; + Strong.valueOf(nextPage.hasNext()));<br />
+};<br />
+```</p>
+<p>```[csharp]<br />
+PaginatedResult<Message> firstPage = await channel.HistoryAsync(null);<br />
+Message firstMessage = firstPage.Items<sup class="footnote" id="fnr0"><a href="#fn0">0</a></sup>;<br />
+Console.WriteLine(&quot;Page 0 item 0: &quot; + firstMessage.data);<br />
+if (firstPage.HasNext)<br />
+{<br />
+    var nextPage = await firstPage.NextAsync();<br />
+    Console.WriteLine(&#8220;Page 1 item 1:&#8221; + nextPage.Items<sup class="footnote" id="fnr1"><a href="#fn1">1</a></sup>.data);<br />
+    Console.WriteLine(&quot;More pages?: &quot; + nextPage.HasNext);<br />
+}<br />
+```</p>
+<p>```[ruby]</p>
 <ol>
 	<li>When using the REST sync library<br />
 first_page = channel.history<br />
@@ -212,6 +236,7 @@ channel.history { paginatedResult, error in<br />
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

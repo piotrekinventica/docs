@@ -289,7 +289,10 @@ X-Ably-ErrorMessage: &lt;string, equivalent to error.message&gt;</code></pre>
 <p>The request body contains message details and is an object of the form:</p>
 <pre lang="json"><code lang="json">{
   name: &lt;event name&gt;,
-  data: &lt;message payload&gt;
+  data: &lt;message payload&gt;,
+  encoding: &lt;optional encoding&gt;,
+  clientId: &lt;optional explicit client identifier&gt;,
+  connectionKey: &lt;optional private connection key&gt;
 }</code></pre>
 <p>In JSON format, the accepted types for the <code>data</code> payload are:</p>
 <ul>
@@ -297,6 +300,7 @@ X-Ably-ErrorMessage: &lt;string, equivalent to error.message&gt;</code></pre>
 	<li>any JSON-encodable Array or Object.</li>
 </ul>
 <p>MessagePack additionally <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-bin">supports byte arrays</a></p>
+<p>A message may be published over REST on behalf of an existing realtime connection when a valid <code>connectionKey</code> is present. For example, if you want to publish a message using the REST API so that it appears to come from an existing connected realtime client, then the connection&#8217;s <a href="/realtime/connection#key">private (secret) connection key</a> must be included. See a <a href="https://jsbin.ably.io:443/aqanoy/1/edit?javascript,live">publish on behalf of a realtime client example</a>.</p>
 <p>Example request:</p>
 <pre lang="sh"><code lang="sh">curl -X POST https://rest.ably.io/channels/rest-example/messages \
  -u "{{API_KEY}}" \
@@ -314,7 +318,7 @@ X-Ably-ErrorMessage: &lt;string, equivalent to error.message&gt;</code></pre>
 	<dd>yes (<a href="#basic-authentication">basic</a> or <a href="#token-authentication">token</a>)</dd>
 </dl>
 <h5>Returns</h5>
-<p>Nothing</p>
+<p>Nothing when successful, else returns an error.</p>
 <h3 id="message-history">Retrieve message history for a channel</h3>
 <h6>GET rest.ably.io/channels/<code>&lt;channel id&gt;</code>/messages</h6>
 <p>If a channel is <a href="http://support.ably.io/support/solutions/articles/3000030057-what-are-channel-rules-and-how-can-i-use-them-in-my-app">configured to persist messages</a>, then all messages on that channel, within <a href="http://support.ably.io/solution/articles/3000030059-how-long-are-messages-stored-for">your account retention period</a>, are available via this API endpoint.  If persistence is not configured, then there are no guarantees as to how many historical messages will be available for the chanenl.  <a href="http://support.ably.io/solution/articles/3000030059-how-long-are-messages-stored-for">Find out more about message persistence</a>.</p>
@@ -545,6 +549,7 @@ X-Ably-ErrorMessage: &lt;string, equivalent to error.message&gt;</code></pre>
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

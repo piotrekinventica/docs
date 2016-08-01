@@ -77,7 +77,7 @@
 	<li>all of the configured capabilities of the key are implicitly possible in any request, and clients that legitimately obtain this key may then abuse the rights for that key</li>
 	<li>clients are permitted to use any client ID in all operations with Ably. As such, a client ID in messages and presence cannot be trusted as any client using Basic Authentication can masquerade with any client ID</li>
 </ul>
-<p>These issues are addressed with <a href="#token-authentication">token-based authentication</a>. Tokens are authentication credentials that are short-lived, and therefore they may more readily be distributed to clients where there is a risk of compromise. Tokens may also be issued with a particular scope &#8211; such as a limited set of <a href="#capabilities-explained">access rights or capabilities</a> or being limited to use by a specific <a href="/realtime/authentication#identified-clients"><code>clientId</code> identity</a> &#8211; and therefore token-based authentication provides the flexibility to implement access and identity control policies in the application. Tokens may be obtained using the <a href="/rest/authentication">client library authentication API</a> or directly from the Ably <a href="/rest-api/#requestToken">REST API tokenRequest endpoint</a>.</p>
+<p>These issues are addressed with <a href="#token-authentication">token-based authentication</a>. Tokens are authentication credentials that are short-lived, and therefore they may more readily be distributed to clients where there is a risk of compromise. Tokens may also be issued with a particular scope &#8211; such as a limited set of <a href="#capabilities-explained">access rights or capabilities</a> or being limited to use by a specific <a href="/realtime/authentication#identified-clients"><span lang="default"><code>clientId</code></span><span lang="csharp"><code>ClientId</code></span> identity</a> &#8211; and therefore token-based authentication provides the flexibility to implement access and identity control policies in the application. Tokens may be obtained using the <a href="/rest/authentication">client library authentication API</a> or directly from the Ably <a href="/rest-api/#requestToken">REST API tokenRequest endpoint</a>.</p>
 <p>See <a href="#capabilities-explained">capabilities and token security explained</a> below for examples that use token authenticaiton to control which channels a client can attach to and which operations they can perform.</p>
 <h2 id="selecting-auth">Selecting an authentication mechanism</h2>
 <p>The following guidance aims to help you choose which system to use in any given situation. When deciding, it is recommended to bear in mind the <a href="http://en.wikipedia.org/wiki/Principle_of_least_privilege">principle of least privilege</a>: a client should ideally only possess the credentials and rights that it needs to accomplish what it wants; this way, if the credentials are compromised, the rights that can be abused by an attacker are minimised.</p>
@@ -107,10 +107,10 @@
 <h3 id="token-authentication">Token Authentication explained</h3>
 <p>Token authentication is the default authentication scheme when a client library is instanced with any of the following options:</p>
 <ul>
-	<li>a <a href="/realtime/types#client-options"><code>token</code></a> or <a href="/realtime/types#client-options"><code>tokenDetails</code></a> is provided;</li>
-	<li>an <a href="/realtime/types#client-options"><code>authUrl</code></a> or <a href="/realtime/types#client-options"><code>authCallback</code></a> is provided that returns a token or token request;</li>
-	<li>a <a href="/realtime/types#client-options"><code>clientId</code></a> is provided;</li>
-	<li><a href="/realtime/types#client-options"><code>useTokenAuth</code></a> is true</li>
+	<li>a <a href="/realtime/types#client-options"><span lang="default"><code>token</code></span><span lang="csharp"><code>Token</code></span></a> or <a href="/realtime/types#client-options"><span lang="default"><code>tokenDetails</code></span><span lang="csharp"><code>TokenDetails</code></span></a> is provided;</li>
+	<li>an <a href="/realtime/types#client-options"><span lang="default"><code>authUrl</code></span><span lang="csharp"><code>AuthUrl</code></span></a> or <a href="/realtime/types#client-options"><span lang="default"><code>authCallback</code></span><span lang="csharp"><code>AuthCallback</code></span></a> is provided that returns a token or token request;</li>
+	<li>a <a href="/realtime/types#client-options"><span lang="default"><code>clientId</code></span><span lang="csharp"><code>ClientId</code></span></a> is provided;</li>
+	<li><a href="/realtime/types#client-options"><span lang="default"><code>useTokenAuth</code></span><span lang="csharp"><code>UseTokenAuth</code></span></a> is true</li>
 </ul>
 <p>Token authentication is typically done in one of two ways:</p>
 <h4>Signed token request is created by your servers and passed to clients</h4>
@@ -208,15 +208,15 @@ ably.requestToken({ clientId: 'client@example.com' }, function(err, token) {
 <p><code>TokenDetails</code> is a type providing details of the token string and its associated metadata.</p>
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span></h4>
 <dl>
-	<dt>token</dt>
+	<dt><span lang="default">token</span><span lang="csharp">Token</span></dt>
 	<dd>The token itself. A typical token string may appear like <code>{{TOKEN}}</code><br><i>Type: <code>String</code></i></dd>
-	<dt>expires</dt>
-	<dd><span lang="default">The time (in milliseconds since the epoch)</span><span lang="ruby,objc,swift">The time</span> at which this token expires<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
-	<dt>issued</dt>
-	<dd><span lang="default">The time (in milliseconds since the epoch)</span><span lang="ruby,objc,swift">The time</span> at which this token was issued<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
-	<dt>capability</dt>
-	<dd>The capability associated with this token. The capability is a a JSON stringified canonicalised representation of the resource paths and associated operations. <a href="/general/authentication/#capabilities-explained">Read more about authentication and capabilities</a><br><i>Type: <code>String</code></i></dd>
-	<dt><span lang="default">clientId</span><span lang="ruby,python">client_id</span></dt>
+	<dt><span lang="default">expires</span><span lang="csharp">Expires</span></dt>
+	<dd><span lang="default">The time (in milliseconds since the epoch)</span><span lang="ruby,objc,swift">The time</span> at which this token expires<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="csharp"><code>DateTimeOffset</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
+	<dt><span lang="default">issued</span><span lang="csharp">Issued</span></dt>
+	<dd><span lang="default">The time (in milliseconds since the epoch)</span><span lang="ruby,objc,swift">The time</span> at which this token was issued<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="csharp"><code>DateTimeOffset</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
+	<dt><span lang="default">capability</span><span lang="csharp">Capability</span></dt>
+	<dd>The capability associated with this token. The capability is a a JSON stringified canonicalised representation of the resource paths and associated operations. <a href="/general/authentication/#capabilities-explained">Read more about authentication and capabilities</a><br><i>Type: <span lang="default"><code>String</code></span><span lang="csharp"><code>Capability</code></span></i></dd>
+	<dt><span lang="default">clientId</span><span lang="ruby,python">client_id</span><span lang="csharp">ClientId</span></dt>
 	<dd>The client ID, if any, bound to this token. If a client ID is included, then the token authenticates its bearer as that client ID, and the token may only be used to perform operations on behalf of that client ID. The client is then considered to be an <a href="/realtime/authentication#identified-clients">identified client</a><br><i>Type: <code>String</code></i></dd>
 </dl>
 
@@ -240,6 +240,17 @@ ably.requestToken({ clientId: 'client@example.com' }, function(err, token) {
 </dl>
 
 </div> <!-- /end python language block -->
+
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<h3>Methods</h3>
+<dl>
+	<dt>IsValidToken()</dt>
+	<dd>True if the token has not expired<br><i>Type: <code>Boolean</code></i></dd>
+</dl>
+
+</div> <!-- /end csharp language block -->
 
 <h2 id="token-request-spec">Token request spec</h2>
 <p>The <a href="https://www.ably.io/download/">Ably REST and Realtime client libraries</a> aim to make things as simple as possible so it is not necessary to understand all of the details of token requests to interact with the service and issue tokens for clients. If you wish to issue tokens or token requests, we recommend you start with the <a href="/rest/authentication">client library authentication documentation</a>.</p>
@@ -294,7 +305,7 @@ with the following constraints:<br />
 <li>operations are listed in forward lexicographic order;</li><br />
 <li>there is no trailing comma on any list of array or object elements;</li><br />
 <li>all strings are quoted and escaped as per the JSON standard;</li><br />
-<li>for channel paths, the wildcard character <code>*</code> has special meaning. When the channel path is exactly <code>"*"</code>, then all channels are matched. If however, a channel path ends with <code>*</code>, then the path before the <code>*</code> is used to match all channels in that namespace. For example, the channel path <code>"user:*"</code> matches all channels in the <code>user</code> namespace such as <code>"user:john"</code> and <code>"user:matt"</code>. <a href="/general/channels-rules-namespaces">Find out more about channel namespaces</a>;</li><br />
+<li>for channel paths, the wildcard character <code>*</code> has special meaning. When the channel path is exactly <code>"*"</code>, then all channels are matched. If however, a channel path ends with <code>*</code>, then the path before the <code>*</code> is used to match all channels in that namespace. For example, the channel path <code>"user:*"</code> matches all channels in the <code>user</code> namespace such as <code>"user:john"</code> and <code>"user:matt"</code>. <a href="/realtime/channels-messages#channel-namespaces">Find out more about channel namespaces</a>;</li><br />
 <li>for operations, the wildcard character <code>*</code> has special meaning. When the operation is exactly <code>"*"</code>, then <a href="#capability-operations">all operations</a> are supported. Otherwise, a <a href="#capability-operations">permitted operation</a> string must be provided<br />
 </ul></dd>
 	<dt>clientId</dt>
@@ -430,6 +441,7 @@ Note that a newline character is added for each field, including any empty clien
 <li class='selected'><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

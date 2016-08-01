@@ -61,6 +61,19 @@ detached,     // 4
 failed        // 5
 }
 ```
+<p>blang[csharp].<br />
+  <code>IO.Ably.Realtime.ChannelState</code> is an enum representing all the <a href="/realtime/channel#channel-states"><code>Realtime Channel</code> states</a>.</p>
+```[csharp]
+public enum ChannelState
+{
+Initialized = 0,
+Attaching = 1,
+Attached = 2,
+Detaching= 3,
+Detached = 4,
+Failed = 5
+};
+```
 <p>blang[ruby].<br />
   <code>Ably::Realtime::Channel::STATE</code> is an enum-like value representing all the <a href="/realtime/channel#channel-states"><code>Realtime Channel</code> states</a>. <code>STATE</code> can be represented interchangeably as either symbols or constants.</p>
 h4. Symbol states
@@ -108,7 +121,6 @@ ARTRealtimeChannelDetached,
 ARTRealtimeChannelFailed
 };
 ```
-
 ```[swift]
 public enum ARTRealtimeChannelState : UInt {
 case Initialized
@@ -157,6 +169,7 @@ case Failed
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

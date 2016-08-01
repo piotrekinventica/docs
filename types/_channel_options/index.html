@@ -46,18 +46,20 @@
   <code>ChannelOptions</code>, an Associative Array, may optionally be specified when instancing a <a href="/realtime/channels-messages"><code>Channel</code></a>, and this may be used to specify channel-specific options. The following named keys and values can be added to the Associated Array:</p>
 <p>blang[java,swift,objc].<br />
   <span lang="swift,objc"><code>ART</code></span><span lang="java"><code>io.ably.lib.types.</code></span><code>ChannelOptions</code> may optionally be specified when instancing a <a href="/realtime/channels-messages"><code>Channel</code></a>, and this may be used to specify channel-specific options.</p>
+<p>blang[csharp].<br />
+  <code>IO.Ably.ChannelOptions</code> may optionally be specified when instancing a <a href="/realtime/channels-messages"><code>Channel</code></a>, and this may be used to specify channel-specific options.</p>
 <p>h4.<br />
   default: Properties<br />
   java:    Members<br />
   ruby:    Attributes</p>
 <dl>
-	<dt><span lang="default">cipher</span><span lang="ruby">:cipher</span></dt>
+	<dt><span lang="default">cipher</span><span lang="ruby">:cipher</span><span lang="csharp">CipherParams</span></dt>
 	<dd>Requests encryption for this channel when not null, and specifies encryption-related parameters (such as algorithm, chaining mode, key length and key). See <a href="/realtime/encryption#getting-started">an example</a><br><i>Type: <a href="/realtime/encryption#cipher-params"><code>CipherParams</code></a><span lang="jsall,java,ruby,php"> or <span lang="jsall">an options object</span><span lang="java">a <code>Param[]</code> list</span><span lang="ruby">an options hash</span><span lang="php">an Associative Array</span> containing at a minimum a <code>key</code></span></i></dd>
 </dl>
 <p>blang[java].<br />
   h4. Static methods</p>
 h6(#with-cipher-key). withCipherKey
-bq(definition). public static ChannelOptions.withCipherKey(Byte[] or String key)
+bq(definition). static ChannelOptions.withCipherKey(Byte[] or String key)
 A helper method to generate a <code>ChannelOptions</code> for the simple case where you only specify a key.
 h4. Parameters
 - key := A binary <code>Byte[]</code> array or a base64-encoded <code>String</code>.
@@ -101,6 +103,7 @@ On success, the method returns a complete <code>ChannelOptions</code> object. Fa
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

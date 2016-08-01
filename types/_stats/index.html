@@ -45,27 +45,27 @@
   ruby:    Attributes<br />
   python:  Keyword arguments</p>
 <dl>
-	<dt>all</dt>
+	<dt><span lang="default">all</span><span lang="csharp">All</span></dt>
 	<dd>aggregate count of both <code>inbound</code> and <code>outbound</code> message stats<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/MessageTypes"><code>MessageTypes</code></a></i></dd>
-	<dt><span lang="default">apiRequests</span><span lang="ruby,python">api_requests</span></dt>
+	<dt><span lang="default">apiRequests</span><span lang="ruby,python">api_requests</span><span lang="csharp">ApiRequests</span></dt>
 	<dd>breakdown of API requests received via the Ably REST API<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/RequestCount">RequestCount</a></i></dd>
-	<dt>channels</dt>
+	<dt><span lang="default">channels</span><span lang="csharp">Channels</span></dt>
 	<dd>breakdown of channel related stats such as min, mean and peak channels<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/ResourceCount"><code>ResourceCount</code></a></i></dd>
-	<dt>connections</dt>
+	<dt><span lang="default">connections</span><span lang="csharp">Connections</span></dt>
 	<dd>breakdown of connection related stats such as min, mean and peak channels for TLS and non-TLS connections<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/ConnectionTypes"><code>ConnectionTypes</code></a></i></dd>
-	<dt>inbound</dt>
+	<dt><span lang="default">inbound</span><span lang="csharp">Inbound</span></dt>
 	<dd>statistics such as count and data for all inbound messages received over REST and Realtime connection, broken down by normal channel messages or presence messages<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/MessageTraffic"><code>MessageTraffic</code></a></i></dd>
-	<dt><div lang="ruby,python">interval_granularity</div></dt>
-	<dd>A <span lang="ruby"><a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats#GRANULARITY-constant"><code>GRANULARITY</code></a> constant</span><span lang="python">value</span> representing the granularity (interval) of this statistic such as <span lang="ruby"><code>:minute</code>, <code>:hour</code>, <code>:day</code>, <code>:month</code></span><span lang="python"><code>'minute'</code>, <code>'hour'</code>, <code>'day'</code>, <code>'month'</code></span>.<br><span lang="ruby"><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats#GRANULARITY-constant"><code>Stats::GRANULARITY</code></a></i></span><span lang="python"><i>Type: <code>String</code></i></span></dd>
-	<dt><span lang="default">intervalId</span><span lang="ruby,python">interval_id</span></dt>
+	<dt><div lang="ruby,python,csharp"><span lang="default">interval_granularity</span><span lang="csharp">IntervalGranularity</span></div></dt>
+	<dd>A <span lang="ruby"><a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats#GRANULARITY-constant"><code>GRANULARITY</code></a> constant</span><span lang="python">value</span><span lang="csharp"><code>Enum</code></span> representing the granularity (interval) of this statistic such as <span lang="ruby"><code>:minute</code>, <code>:hour</code>, <code>:day</code>, <code>:month</code></span><span lang="python"><code>'minute'</code>, <code>'hour'</code>, <code>'day'</code>, <code>'month'</code></span><span lang="csharp"><code>Minute</code>, <code>Hour</code>, <code>Day</code>, <code>Month</code></span>.<br><i>Type: <span lang="ruby"><a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats#GRANULARITY-constant"><code>Stats::GRANULARITY</code></a></span><span lang="python"><code>String</code></span><span lang="csharp"><code>StatsIntervalGranularity enum</code></span></i></dd>
+	<dt><span lang="default">intervalId</span><span lang="ruby,python">interval_id</span><span lang="csharp">IntervalId</span></dt>
 	<dd>the interval ID provides both the time from which the interval starts as well as the length of time that this statistic covers i.e. the period of time which the stats are aggregated for. For example, an interval ID value of &#8220;2016-03-01:10:02&#8221; represents a single minute interval for the UTC time presented in the string. However, an interval ID of &#8220;2016-03&#8221; represents a month interval for the entire month of March 2016 based on UTC time.<br><i>Type: <code>String</code></i></dd>
-	<dt><div lang="ruby,python">interval_time</div></dt>
-	<dd>A <span lang="ruby"><code>Time</code></span><span lang="python"><code>DateTime</code></span> object representing the start of the interval<br><i>Type: <span lang="ruby"><code>Time</code></span><span lang="python"><code>DateTime</code></span></i></dd>
-	<dt>outbound</dt>
+	<dt><div lang="ruby,python,csharp"><span lang="default">interval_time</span><span lang="csharp">IntervalTime</span></div></dt>
+	<dd>A <span lang="ruby"><code>Time</code></span><span lang="python"><code>DateTime</code></span><span lang="csharp"><code>DateTimeOffset</code></span> object representing the start of the interval<br><i>Type: <span lang="ruby"><code>Time</code></span><span lang="python"><code>DateTime</code></span><span lang="csharp"><code>DateTimeOffset</code></span></i></dd>
+	<dt><span lang="default">outbound</span><span lang="csharp">Outbound</span></dt>
 	<dd>statistics such as count and data for all oubound messages retrieved via REST history requests, received over Realtime connections, or pushed with WebHooks, broken down by normal channel messages or presence messages<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/MessageTraffic"><code>MessageTraffic</code></a></i></dd>
-	<dt>persisted</dt>
+	<dt><span lang="default">persisted</span><span lang="csharp">Persisted</span></dt>
 	<dd>messages persisted and later retrieved via the <a href="/realtime/history">history API</a><br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/MessageTypes"><code>MessageTypes</code></a></i></dd>
-	<dt><span lang="default">tokenRequests</span><span lang="ruby,python">token_requests</span></dt>
+	<dt><span lang="default">tokenRequests</span><span lang="ruby,python">token_requests</span><span lang="csharp">TokenRequests</span></dt>
 	<dd>breakdown of Token requests received via the Ably REST API.<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/RequestCount"><code>RequestCount</code></a></i></dd>
 </dl>
   </div>
@@ -106,6 +106,7 @@
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

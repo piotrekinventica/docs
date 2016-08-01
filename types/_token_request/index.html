@@ -43,19 +43,19 @@
   java:    Members<br />
   ruby:    Attributes</p>
 <dl>
-	<dt><span lang="default">keyName</span><span lang="ruby,python">key_name</span></dt>
+	<dt><span lang="default">keyName</span><span lang="ruby,python">key_name</span><span lang="csharp">KeyName</span></dt>
 	<dd>The key name of the key against which this request is made. The key name is public, whereas the key secret is private<br><i>Type: <code>String</code></i></dd>
-	<dt>ttl</dt>
-	<dd>Requested time to live for the token in <span lang="default">milliseconds</span><span lang="ruby">seconds</span>. If the token request is successful, the TTL of the returned token will be less than or equal to this value depending on application settings and the attributes of the issuing key.<br><i>Type: <code>Integer</code></i></dd>
-	<dt>timestamp</dt>
-	<dd>The timestamp of this request<span lang="default"> in milliseconds</span><span lang="ruby"></span><br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span></i></dd>
-	<dt>capability</dt>
+	<dt><span lang="default">ttl</span><span lang="csharp">Ttl</span></dt>
+	<dd>Requested time to live for the token <span lang="default">in milliseconds</span><span lang="ruby">in seconds</span><span lang="csharp">as a <code>TimeSpan</code></span>. If the token request is successful, the TTL of the returned token will be less than or equal to this value depending on application settings and the attributes of the issuing key.<br><span lang="default"><i>Type: <span lang="default"><code>Integer</code></span><span lang="csharp"><code>TimeSpan</code></span></i></dd>
+	<dt><span lang="default">timestamp</span><span lang="csharp">Timestamp</span></dt>
+	<dd>The timestamp of this request<span lang="default"> in milliseconds</span><span lang="ruby,csharp"></span><br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="csharp"><code>DateTimeOffset</code></span></i></dd>
+	<dt><span lang="default">capability</span><span lang="csharp">Capability</span></dt>
 	<dd>Capability of the token. If the token request is successful, the capability of the returned token will be the intersection of this capability with the capability of the issuing key. The capability is a a JSON stringified canonicalised representation of the resource paths and associated operations. <a href="/realtime/authentication">Read more about authentication and capabilities</a><br><i>Type: <code>String</code></i></dd>
-	<dt><span lang="default">clientId</span><span lang="ruby,python">client_id</span></dt>
+	<dt><span lang="default">clientId</span><span lang="ruby,python">client_id</span><span lang="csharp">ClientId</span></dt>
 	<dd>The client ID to associate with this token. When provided, the token may only be used to perform operations on behalf of that client ID<br><i>Type: <code>String</code></i></dd>
-	<dt>nonce</dt>
+	<dt><span lang="default">nonce</span><span lang="csharp">Nonce</span></dt>
 	<dd>An opaque nonce string of at least 16 characters<br><i>Type: <code>String</code></i></dd>
-	<dt>mac</dt>
+	<dt><span lang="default">mac</span><span lang="csharp">Mac</span></dt>
 	<dd>The Message Authentication Code for this request<br><i>Type: <code>String</code></i></dd>
 </dl>
   </div>
@@ -96,6 +96,7 @@
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

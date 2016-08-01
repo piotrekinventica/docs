@@ -94,6 +94,10 @@ $channel-&gt;publish('unencrypted', 'encrypted secret payload');</code></pre>
 <pre lang="java"><code lang="java">ChannelOptions options = ChannelOptions.withCipherKey(&lt;key&gt;);
 Channel channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options);
 channel.publish("unencrypted", "encrypted secret payload");</code></pre>
+<pre lang="csharp"><code lang="csharp">var key = Crypto.GenerateRandomKey();
+var options = new ChannelOptions(key);
+var channel = rest.Channels.Get("{{RANDOM_CHANNEL_NAME}}", options);
+await channel.PublishAsync("unencrypted", "encrypted secret payload");</code></pre>
 <pre lang="objc"><code lang="objc">ARTChannelOptions *options = [[ARTChannelOptions alloc] initWithCipherKey:&lt;key&gt;];
 ARTRestChannel *channel = [rest.channels get:@"{{RANDOM_CHANNEL_NAME}}" options:options];
 [channel publish:@"unencrypted" data:@"encrypted secret payload"];</code></pre>
@@ -113,7 +117,7 @@ channel.publish("unencrypted", data: "encrypted secret payload")</code></pre>
 <p>The client library support for encryption supports symmetric encryption only, and requires each participating client to each specify the correct <a href="#cipher-params"><code>CipherParams</code></a> secret <code>key</code> when creating a <code>Channel</code> instance. Clients that do not specify a key will be delivered the still-encrypted message payloads that they may then still wish to decrypt offline.</p>
 <p>The client libraries are designed to be extensible, but initially only support the AES algorithm (with a default key length of 256 bits) and CBC mode. These defaults are intended to ensure that encryption support can be provided in all target environments and platforms.</p>
 <p>Encryption is supported for the <code>data</code> attribute (payload) of <a href="/rest/types#messages">published messages</a> and <a href="/rest/types#presence-message">presence member messages</a> on a channel, over both REST and realtime publish operations. Decryption is supported in realtime <a href="/rest/channels-messages">message</a> and <a href="/rest/presence">presence message</a> subscriptions and in <a href="/rest/history">REST history</a>, <a href="/rest/get">REST presence get</a>&quot;, and <a href="/rest/presence#history">REST presence history</a> operations.</p>
-<p>All other attributes of <a href="/rest/types#messages">messages</a> and <a href="/rest/types#presence-message">presence messages</a>, such as event <code>name</code> or <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span> remain unencrypted. All sensitive data, when using the library&#8217;s symmetric encryption, must be placed in the <code>data</code> attribute to ensure it is encypted before it is transmitted to Ably.</p>
+<p>All other attributes of <a href="/rest/types#messages">messages</a> and <a href="/rest/types#presence-message">presence messages</a>, such as event <code>name</code> or <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span><span lang="csharp"><code>ClientId</code></span> remain unencrypted. All sensitive data, when using the library&#8217;s symmetric encryption, must be placed in the <code>data</code> attribute to ensure it is encypted before it is transmitted to Ably.</p>
 <p>The key in use at any given time is known by the client library, but the Ably service has no visibility of the key; it knows only that a given message payload was encrypted. When accessing messages via the <a href="/rest/history">history API</a>, it is the caller&#8217;s responsibility to ensure that the correct key is configured for the channel before the history request is made.</p>
 <p>Encryption options (algorithm, key, etc) are specified on a per-channel basis; it is expected that apps may wish to have both unencrypted and encrypted channels on a single connection.</p>
 <h1>Crypto API Reference</h1>
@@ -136,18 +140,18 @@ Related types
 </li>
 </ul>
 </li></ul>
-</div><p>The <span lang="default"><code>Ably.Rest.Crypto</code></span><span lang="ruby"><code>Ably::Util::Crypto</code></span><span lang="php"><code>Ably\Utils\Crypto</code></span><span lang="python"><code>ably.util.crypto</code></span><span lang="java"><code>io.ably.lib.util.crypto</code></span><span lang="swift,objc"><code>ARTCrypto</code></span> object exposes the following public methods:</p>
+</div><p>The <span lang="default"><code>Ably.Rest.Crypto</code></span><span lang="ruby"><code>Ably::Util::Crypto</code></span><span lang="php"><code>Ably\Utils\Crypto</code></span><span lang="python"><code>ably.util.crypto</code></span><span lang="java"><code>io.ably.lib.util.crypto</code></span><span lang="swift,objc"><code>ARTCrypto</code></span><span lang="csharp"> <code>IO.Ably.Encryption.Crypto</code></span> object exposes the following public methods:</p>
 <h2 id="methods">Methods</h2>
-<h6 id="get-default-params"><span lang='default'>getDefaultParams</span><span lang='ruby'>get_default_params</span><span lang='python'>get_default_params</span></h6>
+<h6 id="get-default-params"><span lang='default'>getDefaultParams</span><span lang='ruby'>get_default_params</span><span lang='python'>get_default_params</span><span lang='csharp'>GetDefaultParams</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='javascript,nodejs'><a href="#cipher-params">CipherParams</a> Crypto.getDefaultParams(Object params)</span><span lang='ruby'><a href="#cipher-params">CipherParams</a> Crypto.get_default_params(Hash params)</span><span lang='python'><a href="#cipher-params">CipherParams</a> Crypto.get_default_params(Dict params)</span><span lang='php'><a href="#cipher-params">CipherParams</a> Crypto.getDefaultParam(Array params)</span><span lang='java'>public <a href="#cipher-params">CipherParams</a> Crypto.getDefaultParams(Param[] params)</span><span lang='swift,objc'>getDefaultParams(values: [NSObject : AnyObject]) &#8594; <a href="#cipher-params">ARTCipherParams</a></span></p>
+<p class="definition"><span lang='javascript,nodejs'><a href="#cipher-params">CipherParams</a> Crypto.getDefaultParams(Object params)</span><span lang='ruby'><a href="#cipher-params">CipherParams</a> Crypto.get_default_params(Hash params)</span><span lang='python'><a href="#cipher-params">CipherParams</a> Crypto.get_default_params(Dict params)</span><span lang='php'><a href="#cipher-params">CipherParams</a> Crypto.getDefaultParam(Array params)</span><span lang='java'><a href="#cipher-params">CipherParams</a> Crypto.getDefaultParams(Param[] params)</span><span lang='csharp'><a href="#cipher-params">CipherParams</a> GetDefaultParams(byte[] key = null, byte[] iv = null, CipherMode? mode = null)</span><span lang='swift,objc'>getDefaultParams(values: [NSObject : AnyObject]) &#8594; <a href="#cipher-params">ARTCipherParams</a></span></p>
 </blockquote>
-<p>This call obtains a <a href="#cipher-params"><code>CipherParams</code></a> object using the values passed in (which must be a subset of <code>CipherParams</code> fields that at a minimum includes a <code>key</code>), filling in any unspecified fields with default values, and checks that the result is a valid and self-consistent.</p>
+<p><span lang="default">This call obtains a <a href="#cipher-params"><code>CipherParams</code></a> object using the values passed in (which must be a subset of <code>CipherParams</code> fields that at a minimum includes a <code>key</code>), filling in any unspecified fields with default values, and checks that the result is a valid and self-consistent.</span><span lang="csharp">This call takes a key, an initialisation vector (iv) and a Cipher mode. There is also on override which accepts the <code>key</code> and <code>iv</code> as base64 encoded strings. It will validate the passed values and generate <code>CipherParams</code></span></p>
 <p>You will rarely need to call this yourself, since the client library will handle it for you if you specify <code>cipher</code> params when initializing a channel (as in the example <a href="#getting-started">at the top</a>)<span lang="javascript,nodejs"> or when setting channel options with <code>channel#setOptions</code></span>.</p>
 <h4>Parameters</h4>
 <dl>
-	<dt>params</dt>
-	<dd>The cipher params that you want to specify. It must at a minimum include a <code>key</code>, which should be either a binary (<span lang="java"><code>byte[]</code></span><span lang="javascript"><code>ArrayBuffer</code> or <code>WordArray</code></span><span lang="nodejs"><code>Buffer</code></span><span lang="python"><code>bytearray</code> or <code>bytes</code></span><span lang="ruby">byte array</span><span lang="php">binary string</span><span lang="objc,swift"><code>NSData</code></span>) or a base64-encoded <code>String</code>.<span lang="python"> If you are using Python 2 and you wish to pass in a base64-encoded key, make sure you pass it in as a <code>unicode</code> string, not a <code>str</code>, or the library will interpret it as a binary.</span></dd>
+	<dt><span lang="default">params</span><span lang="csharp">arguments</span></dt>
+	<dd>The cipher <span lang="default">params</span><span lang="csharp">arguments</span> that you want to specify. It must at a minimum include a <code>key</code>, which should be either a binary (<span lang="java,csharp"><code>byte[]</code></span><span lang="javascript"><code>ArrayBuffer</code> or <code>WordArray</code></span><span lang="nodejs"><code>Buffer</code></span><span lang="ruby">byte array</span><span lang="objc,swift"><code>NSData</code></span>) or a base64-encoded <span lang="objc"><code>NS</code></span><code>String</code>.</dd>
 </dl>
 <h4>Returns</h4>
 <p>On success, the method returns a complete <a href="#cipher-params"><code>CipherParams</code></a> object. Failure will raise an <span lang="php,ruby,java,python"><a href="/rest/types/#ably-exception"><code>AblyException</code></a> </span><span lang="default">exception</span>.</p>
@@ -170,23 +174,25 @@ $channel = $rest-&gt;channels-&gt;get('{{RANDOM_CHANNEL_NAME}}', $channelOpts);<
 ChannelOptions options = new ChannelOptions();
 options.cipher = params;
 Channel channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options);</code></pre>
+<pre lang="csharp"><code lang="csharp">CipherParams cipherParams = Crypto.GetDefaultParams(&lt;key&gt;);
+var channel = rest.Channels.Get("{{RANDOM_CHANNEL_NAME}}", new ChannelOptions(cipherParams));</code></pre>
 <pre lang="objc"><code lang="objc">ARTCipherParams *params = [ARTCrypto getDefaultParams:@{@"key": &lt;key&gt;}];
 ARTChannelOptions *options = [[ARTChannelOptions alloc] initWithCipher:params];
 ARTRealtimeChannel *channel = [rest.channels get:@"{{RANDOM_CHANNEL_NAME}}" options:options];</code></pre>
 <pre lang="swift"><code lang="swift">let params = ARTCrypto.getDefaultParams(["key": &lt;key&gt;])
 let options = ARTChannelOptions(cipher: params)
 let channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options: options)</code></pre>
-<h6 id="generate-random-key"><span lang='default'>generateRandomKey</span><span lang='ruby'>generate_random_key</span><span lang='python'>generate_random_key</span></h6>
+<h6 id="generate-random-key"><span lang='default'>generateRandomKey</span><span lang='ruby'>generate_random_key</span><span lang='python'>generate_random_key</span><span lang='csharp'>GenerateRandomKey</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>Crypto.generateRandomKey(Int keyLength?, callback(<a href="/rest/types#error-info">ErrorInfo</a> err, <code>Buffer</code> key))</span><span lang='ruby'>byte array Crypto.generate_random_key(Int key_length?)</span><span lang='python'>byte array Crypto.generate_random_key(Int key_length?)</span><span lang='php'>string Crypto.generateRandomKey(Int keyLength?)</span><span lang='java'><code>byte[]</code> Crypto.generateRandomKey(Int keyLength?)</span><span lang='objc,swift'>generateRandomKey(length?: UInt) &#8594; NSData</span></p>
+<p class="definition"><span lang='default'>Crypto.generateRandomKey(Int keyLength?, callback(<a href="/rest/types#error-info">ErrorInfo</a> err, <code>Buffer</code> key))</span><span lang='ruby'>byte array Crypto.generate_random_key(Int key_length?)</span><span lang='python'>byte array Crypto.generate_random_key(Int key_length?)</span><span lang='php'>string Crypto.generateRandomKey(Int keyLength?)</span><span lang='java'><code>byte[]</code> Crypto.generateRandomKey(Int keyLength?)</span><span lang='csharp'>byte[] GenerateRandomKey(int? keyLength = null, CipherMode? mode = null)</span><span lang='objc,swift'>generateRandomKey(length?: UInt) &#8594; NSData</span></p>
 </blockquote>
-<p>This call obtains a randomly-generated binary key of the specified key length.</p>
+<p>This call obtains a randomly-generated binary key of the specified key length<span lang="csharp"> and optional CipherMode</span>.</p>
 <h4>Parameters</h4>
 <dl>
 	<dt><span lang="default">keyLength</span><span lang="ruby,python">key_length</span></dt>
-	<dd>Optional <code>Int</code> with the length of key to generate. For AES, this should be either 128 or 256. If unspecified, defaults to 256.</dd>
-</dl>
-<dl>
+	<dd>Optional <code>Int</code> with the length of key to generate. For AES, this should be either 128 or 256. If unspecified, defaults to 256.<br />
+<span lang="csharp">- mode</dd>
+	<dd>Optional AES <code>CipherMode</code> which is used when the key is generated</span></dd>
 	<dt><div lang="javascript,nodejs">callback</div></dt>
 	<dd>is a function of the form <code>function(err, key)</code> which is called upon completion</dd>
 </dl>
@@ -200,11 +206,11 @@ let channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options: options)</co
 
 
 
-<div lang="java,ruby,objc,swift,php,python"> <!-- start java,ruby,objc,swift,php,python language block -->
+<div lang="java,ruby,objc,swift,php,python,csharp"> <!-- start java,ruby,objc,swift,php,python,csharp language block -->
 <h4>Returns</h4>
 <p>On success, the method returns the generated key as a <span lang="java"><code>byte[]</code> array</span><span lang="python"><code>bytes</code></span><span lang="ruby">byte array</span><span lang="php">binary string</span><span lang="objc,swift"><code>NSData</code></span>. Failure will raise an <a href="/rest/types/#ably-exception"><code>AblyException</code></a> .</p>
 
-</div> <!-- /end java,ruby,objc,swift,php,python language block -->
+</div> <!-- /end java,ruby,objc,swift,php,python,csharp language block -->
 
 <h4>Example</h4>
 <pre lang="javascript"><code lang="javascript">Ably.Rest.Crypto.generateRandomKey(128, function(err, key) {
@@ -230,6 +236,9 @@ $channel = $rest-&gt;channels-&gt;get('{{RANDOM_CHANNEL_NAME}}', array('cipher' 
 <pre lang="java"><code lang="java">byte[] key = Crypto.generateRandomKey(128);
 ChannelOptions options = ChannelOptions.withCipher(key);
 Channel channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options);</code></pre>
+<pre lang="csharp"><code lang="csharp">byte[] key = Crypto.GenerateRandomKey(128);
+ChannelOptions options = new ChannelOptions(key);
+var channel = rest.Channels.Get("{{RANDOM_CHANNEL_NAME}}", options);</code></pre>
 <pre lang="objc"><code lang="objc">NSData *key = [ARTCrypto generateRandomKey:128];
 ARTChannelOptions *options = [[ARTChannelOptions alloc] initWithCipherKey:key];
 ARTRealtimeChannel *channel = [rest.channels get:@"{{RANDOM_CHANNEL_NAME}}" options:options];</code></pre>
@@ -237,7 +246,7 @@ ARTRealtimeChannel *channel = [rest.channels get:@"{{RANDOM_CHANNEL_NAME}}" opti
 let options = ARTChannelOptions(cipherWithKey: key)
 let channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options: options)</code></pre>
 <h2 id="related-types">Related types</h2>
-<h3 id="channel-options"><span lang='default'>ChannelOptions Object</span><span lang='objc,swift'>ARTChannelOptions</span><span lang='ruby'>ChannelOptions Hash</span><span lang='python'>ChannelOptions Dict</span><span lang='php'>ChannelOptions Array</span><span lang='java'>io.ably.lib.types.ChannelOptions</span></h3>
+<h3 id="channel-options"><span lang='default'>ChannelOptions Object</span><span lang='objc,swift'>ARTChannelOptions</span><span lang='ruby'>ChannelOptions Hash</span><span lang='python'>ChannelOptions Dict</span><span lang='php'>ChannelOptions Array</span><span lang='csharp'>IO.Ably.ChannelOptions</span><span lang='java'>io.ably.lib.types.ChannelOptions</span></h3>
 <p>Currently the supported channel options are only used for <a href="/realtime/encryption">configuring encryption</a>.</p>
 
 
@@ -267,9 +276,16 @@ let channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options: options)</co
 
 </div> <!-- /end java,swift,objc language block -->
 
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>IO.Ably.ChannelOptions</code> may optionally be specified when instancing a <a href="/realtime/channels-messages"><code>Channel</code></a>, and this may be used to specify channel-specific options.</p>
+
+</div> <!-- /end csharp language block -->
+
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span></h4>
 <dl>
-	<dt><span lang="default">cipher</span><span lang="ruby">:cipher</span></dt>
+	<dt><span lang="default">cipher</span><span lang="ruby">:cipher</span><span lang="csharp">CipherParams</span></dt>
 	<dd>Requests encryption for this channel when not null, and specifies encryption-related parameters (such as algorithm, chaining mode, key length and key). See <a href="/realtime/encryption#getting-started">an example</a><br><i>Type: <a href="/realtime/encryption#cipher-params"><code>CipherParams</code></a><span lang="javascript,nodejs,,java,ruby,php"> or <span lang="javascript,nodejs">an options object</span><span lang="java">a <code>Param[]</code> list</span><span lang="ruby">an options hash</span><span lang="php">an Associative Array</span> containing at a minimum a <code>key</code></span></i></dd>
 </dl>
 
@@ -278,7 +294,7 @@ let channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options: options)</co
 <h4>Static methods</h4>
 <h6 id="with-cipher-key">withCipherKey</h6>
 <blockquote class="definition">
-<p class="definition">public static ChannelOptions.withCipherKey(Byte[] or String key)</p>
+<p class="definition">static ChannelOptions.withCipherKey(Byte[] or String key)</p>
 </blockquote>
 <p>A helper method to generate a <code>ChannelOptions</code> for the simple case where you only specify a key.</p>
 <h4>Parameters</h4>
@@ -291,21 +307,21 @@ let channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options: options)</co
 
 </div> <!-- /end java language block -->
 
-<h3 id="cipher-params"><span lang='default'>CipherParams</span><span lang='objc,swift'>ARTCipherParams</span><span lang='ruby'>CipherParams Hash</span><span lang='python'>CipherParams Dict</span><span lang='php'>CipherParams Array</span><span lang='java'>io.ably.lib.util.Crypto.CipherParams</span></h3>
+<h3 id="cipher-params"><span lang='default'>CipherParams</span><span lang='objc,swift'>ARTCipherParams</span><span lang='ruby'>CipherParams Hash</span><span lang='python'>CipherParams Dict</span><span lang='php'>CipherParams Array</span><span lang='csharp'>IO.Ably.CipherParams</span><span lang='java'>io.ably.lib.util.Crypto.CipherParams</span></h3>
 <p>A <code>CipherParams</code> contains configuration options for a channel cipher, including algorithm, mode, key length and key. Ably client libraries currently support AES with CBC, PKCS#7 with a default key length of 256 bits. All implementations also support AES128.</p>
-<p>Individual client libraries may support either instancing a <code>CipherParams</code> directly, using <span lang="default"><a href="/realtime/encryption#get-default-params"><code>Crypto.getDefaultParams()</code></a></span><span lang="ruby"><a href="/realtime/encryption#get-default-params"><code>Crypto.get_default_params()</code></a></span>, or generating one automatically when initializing a channel, as in <a href="/realtime/encryption#getting-started">this example</a>.</p>
+<p>Individual client libraries may support either instancing a <code>CipherParams</code> directly, using <span lang="default"><a href="/realtime/encryption#get-default-params"><code>Crypto.getDefaultParams()</code></a></span><span lang="Default"><a href="/realtime/encryption#get-default-params"><code>Crypto.GetDefaultParams()</code></a></span><span lang="ruby"><a href="/realtime/encryption#get-default-params"><code>Crypto.get_default_params()</code></a></span>, or generating one automatically when initializing a channel, as in <a href="/realtime/encryption#getting-started">this example</a>.</p>
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span></h4>
 <dl>
-	<dt><div lang="javascript,nodejs,,ruby,objc,swift"><span lang="ruby">:</span>key</div></dt>
-	<dd>A binary (<span lang="java"><code>byte[]</code></span><span lang="javascript"><code>ArrayBuffer</code> or <code>WordArray</code></span><span lang="nodejs"><code>Buffer</code></span><span lang="ruby">byte array</span><span lang="objc,swift"><code>NSData</code></span>) containing the secret key used for encryption and decryption</dd>
+	<dt><div lang="javascript,nodejs,,ruby,objc,swift,csharp"><span lang="default">key</span><span lang="csharp">Key</span><span lang="ruby">:key</span></div></dt>
+	<dd>A binary (<span lang="java,csharp"><code>byte[]</code></span><span lang="javascript"><code>ArrayBuffer</code> or <code>WordArray</code></span><span lang="nodejs"><code>Buffer</code></span><span lang="ruby">byte array</span><span lang="objc,swift"><code>NSData</code></span>) containing the secret key used for encryption and decryption</dd>
 </dl>
 <dl>
-	<dt><span lang="ruby">:</span>algorithm</dt>
+	<dt><span lang="default">algorithm</span><span lang="ruby">:algorithm</span><span lang="csharp">Algorithm</span></dt>
 	<dd><em>AES</em> The name of the algorithm in the default system provider, or the lower-cased version of it; eg &#8220;aes&#8221; or &#8220;AES&#8221;<br><i>Type: <code>String</code></i></dd>
-	<dt><span lang="python">key_length</span><span lang="ruby">:key_length</span><span lang="default">keyLength</span></dt>
+	<dt><span lang="python">key_length</span><span lang="ruby">:key_length</span><span lang="default">keyLength</span><span lang="csharp">KeyLength</span></dt>
 	<dd><em>256</em> The key length in bits of the cipher, either 128 or 256<br><i>Type: <code>Integer</code></i></dd>
-	<dt><span lang="ruby">:</span>mode</dt>
-	<dd><em>CBC</em> The cipher mode<br><i>Type: <code>String</code></i></dd>
+	<dt><span lang="default">mode</span><span lang="ruby">:mode</span><span lang="csharp">Mode</span></dt>
+	<dd><em>CBC</em> The cipher mode<br><i>Type: <span lang="default"><code>String</code></span><span lang="csharp"><code>CipherMode</code></span></i></dd>
 </dl>
 <dl>
 	<dt><div lang="java">keySpec</div></dt>
@@ -352,6 +368,7 @@ let channel = rest.channels.get("{{RANDOM_CHANNEL_NAME}}", options: options)</co
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

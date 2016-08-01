@@ -45,6 +45,8 @@
 <dl>
 	<dt><div lang="java">action</div></dt>
 	<dd>the event signified by a PresenceMessage. See <a href="/realtime/types#presence-action"><code>PresenceMessage.action</code></a><br><i>Type: <code>enum { ABSENT, PRESENT, ENTER, LEAVE, UPDATE }</code></i></dd>
+	<dt><div lang="java">action</div></dt>
+	<dd>the event signified by a PresenceMessage. See <a href="/realtime/types#presence-action"><code>PresenceMessage.action</code></a><br><i>Type: <code>enum { Absent, Present, Enter, Leave, Update }</code></i></dd>
 	<dt><div lang="jsall">action</div></dt>
 	<dd>the event signified by a PresenceMessage. See <a href="/realtime/types#presence-action"><code>Presence action</code></a><br><i>Type: <code>int enum { ABSENT, PRESENT, ENTER, LEAVE, UPDATE }</code></i></dd>
 	<dt><div lang="python">action</div></dt>
@@ -59,6 +61,8 @@
 <dl>
 	<dt><div lang="java">data</div></dt>
 	<dd>The presence update payload, if provided<br><i>Type: <code>String</code>, <code>ByteArray</code>, <code>JSONObject</code>, <code>JSONArray</code></i></dd>
+	<dt><div lang="csharp">data</div></dt>
+	<dd>The presence update payload, if provided<br><i>Type: <code>String</code>, <code>byte[]</code>, plain C# object that can be converted to Json</i></dd>
 	<dt><div lang="jsall">data</div></dt>
 	<dd>The presence update payload, if provided<br><i>Type: <code>String</code>, <code>StringBuffer</code>, <code>JSON Object</code></i></dd>
 	<dt><div lang="ruby">data</div></dt>
@@ -86,7 +90,7 @@
 </dl>
 <dl>
 	<dt>timestamp</dt>
-	<dd>Timestamp when the presence update was received by the Ably the realtime service<span lang="default">, as milliseconds since the epoch</span><span lang="ruby,objc,swift"></span>.<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
+	<dd>Timestamp when the presence update was received by the Ably the realtime service<span lang="default">, as milliseconds since the epoch</span><span lang="ruby,objc,swift"></span>.<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="csharp"><code>DateTimeOffset</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
 </dl>
 <dl>
 	<dt>encoding</dt>
@@ -130,6 +134,7 @@
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

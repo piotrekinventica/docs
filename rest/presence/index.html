@@ -71,7 +71,7 @@
 <h2 id="presence">Presence</h2>
 <p>Using the <a href="/rest-api">Ably REST API</a> it is possible to obtain the set of members currently present on a channel, or obtain the presence history for the channel, if persistence is enabled for that channel.</p>
 <p>Since the <a href="/rest-api">Ably REST API</a> is stateless, and REST clients do not have realtime connections to the Ably service, it is not possible to enter or leave a channel via the REST API. Find out more about <a href="/realtime/presence">using presence with the Realtime API</a>.</p>
-<p>A single <span lang="default"><a href="/rest/usage#client-id"><code>clientId</code></a></span><span lang="ruby,python"><a href="/rest/usage#client-id"><code>client_id</code></a></span> may be present multiple times on the same channel via different client connections. As far as Ably is concerned, these are different members of the presence set for the channel, however they will be differentiated by their unique <span lang="default"><a href="/realtime/connection#id"><code>connectionId</code></a></span><span lang="ruby,python"><a href="/realtime/connection/#id"><code>connection_id</code></a></span>. For example, if a client with ID &#8220;Sarah&#8221; is connected to a chat channel on both a desktop and a mobile device simultaneously, &#8220;Sarah&#8221; will be present twice in the presence member set with the same client ID, yet will have two unique connection IDs. A member of the presence set is therefore unique by the combination of the <span lang="default"><a href="/rest/usage#client-id"><code>clientId</code></a></span><span lang="ruby,python"><a href="/rest/usage#client-id"><code>client_id</code></a></span> and <span lang="default"><a href="/realtime/connection#id"><code>connectionId</code></a></span><span lang="ruby,python"><a href="/realtime/connection/#id"><code>connection_id</code></a></span> strings.</p>
+<p>A single <span lang="default"><a href="/rest/usage#client-id"><code>clientId</code></a></span><span lang="ruby,python"><a href="/rest/usage#client-id"><code>client_id</code></a></span><span lang="csharp"><a href="/rest/usage#client-id"><code>ClientId</code></a></span> may be present multiple times on the same channel via different client connections. As far as Ably is concerned, these are different members of the presence set for the channel, however they will be differentiated by their unique <a href="/realtime/connection/#id"><span lang="default"><code>connectionId</code></span><span lang="csharp"><code>ConnectionId</code></span><span lang="ruby"><code>connection_id</code></span></a>. For example, if a client with ID &#8220;Sarah&#8221; is connected to a chat channel on both a desktop and a mobile device simultaneously, &#8220;Sarah&#8221; will be present twice in the presence member set with the same client ID, yet will have two unique connection IDs. A member of the presence set is therefore unique by the combination of the <span lang="default"><a href="/rest/usage#client-id"><code>clientId</code></a></span><span lang="ruby,python"><a href="/rest/usage#client-id"><code>client_id</code></a></span><span lang="csharp"><a href="/rest/usage#client-id"><code>ClientId</code></a></span> and <a href="/realtime/connection/#id"><span lang="default"><code>connectionId</code></span><span lang="csharp"><code>ConnectionId</code></span><span lang="ruby"><code>connection_id</code></span></a> strings.</p>
 <h3 id="presence-states">Presence states and events</h3>
 <p>Whenever a member enters or leaves a channel, or updates <a href="#member-data">their member data</a>, a presence event is emitted to all presence subscribers on that channel. Subscribing to presence events makes it incredibly easy to build an app that shows, in real time, any changes to clients connected to Ably and present on a channel.</p>
 <p>The following presence events are emitted:</p>
@@ -93,10 +93,10 @@
 </dl>
 <p><a href="https://jsbin.ably.io:443/ovavik/1/edit?javascript,live">View a realtime presence states and events example</a></p>
 <h3 id="member-data">Member data</h3>
-<p>In addition to the <span lang="default"><a href="/rest/usage#client-id"><code>clientId</code></a></span><span lang="ruby,python"><a href="/rest/usage#client-id"><code>client_id</code></a></span> for members on a channel, it is also possible to include data when entering a channel. Clients can <a href="#update">update</a> their data at any point which will be broadcasted to all presence subscribers as a <span lang="ruby"><code>:update</code></span><span lang="java"><code>PresenceAction.UPDATE</code></span><span lang="java"><code>Action.UPDATE</code></span><span lang="default"><code>update</code></span> event.</p>
+<p>In addition to the <span lang="default"><a href="/rest/usage#client-id"><code>clientId</code></a></span><span lang="ruby,python"><a href="/rest/usage#client-id"><code>client_id</code></a></span><span lang="csharp"><a href="/rest/usage#client-id"><code>ClientId</code></a></span> for members on a channel, it is also possible to include data when entering a channel. Clients can <a href="/realtime/presence#update">update</a> their data at any point which will be broadcasted to all presence subscribers as a <span lang="ruby"><code>:update</code></span><span lang="java"><code>PresenceAction.UPDATE</code></span><span lang="csharp"><code>PresenceAction.Update</code></span><span lang="java"><code>Action.UPDATE</code></span><span lang="default"><code>update</code></span> event.</p>
 <p>See the <a href="/realtime/presence#member-data">Realtime Presence Member data documentation</a> for more info.</p>
 <h3 id="member-list">Presence member list</h3>
-<p>The <code>Presence</code> object exposes a <a href="#get"><code>get</code></a> method allowing a client to retrieve an array of all members currently present on the channel. In the REST client library this method directly queries <a href="/rest-api#presence">Ably&#8217;s REST presence API</a>. No presence state is cached in the library itself, unlike in the <a href="/realtime">Realtime client library</a>.</p>
+<p>The <code>Presence</code> object exposes a <a href="#get"><span lang="default"><code>get</code></span><span lang="csharp"><code>Get</code></span></a> method allowing a client to retrieve an array of all members currently present on the channel. In the REST client library this method directly queries <a href="/rest-api#presence">Ably&#8217;s REST presence API</a>. No presence state is cached in the library itself, unlike in the <a href="/realtime">Realtime client library</a>.</p>
 <pre lang="javascript"><code lang="javascript">channel.presence.get(function(err, membersPage) {
   console.log(membersPage.items.length + ' presence members in first page');
   if(membersPage.hasNext()) {
@@ -129,25 +129,32 @@ if(membersPage.hasNext()) {
   PaginatedResult&lt;PresenceMessage&gt; nextPage = membersPage.next();
   System.out.println(nextPage.items().length + " members on 2nd page");
 }</code></pre>
+<pre lang="csharp"><code lang="csharp">PaginatedResult&lt;PresenceMessage&gt; membersPage = await channel.Presence.GetAsync();
+Console.WriteLine(membersPage.Items.Count + " members in first page");
+if(membersPage.HasNext)
+{
+  PaginatedResult&lt;PresenceMessage&gt; nextPage = await membersPage.NextAsync();
+  Console.WriteLine(nextPage.Items.Count + " members on 2nd page");
+}</code></pre>
 <pre lang="objc"><code lang="objc">[channel.presence get:^(ARTPaginatedResult&lt;ARTPresenceMessage *&gt; *membersPage, ARTErrorInfo *error) {
-    NSLog(@"%lu members in first page", [membersPage.items count]);
-    if (membersPage.hasNext) {
-        [membersPage next:^(ARTPaginatedResult&lt;ARTPresenceMessage *&gt; *nextPage, ARTErrorInfo *error) {
-            NSLog(@"%lu members on 2nd page", [nextPage.items count]);
-        }];
-    }
+  NSLog(@"%lu members in first page", [membersPage.items count]);
+  if (membersPage.hasNext) {
+    [membersPage next:^(ARTPaginatedResult&lt;ARTPresenceMessage *&gt; *nextPage, ARTErrorInfo *error) {
+      NSLog(@"%lu members on 2nd page", [nextPage.items count]);
+    }];
+  }
 }];</code></pre>
 <pre lang="swift"><code lang="swift">channel.presence.get { membersPage, error in
-    let membersPage = membersPage!
-    print("\(membersPage.items.count) in first page")
-    if membersPage.hasNext {
-        membersPage.next { nextPage, error in
-            print("\(nextPage!.items.count) members on 2nd page")
-        }
+  let membersPage = membersPage!
+  print("\(membersPage.items.count) in first page")
+  if membersPage.hasNext {
+    membersPage.next { nextPage, error in
+      print("\(nextPage!.items.count) members on 2nd page")
     }
+  }
 }</code></pre>
 <h3 id="presence-history">Presence History</h3>
-<p>The <code>Presence</code> object exposes a <a href="#history"><code>history</code></a> method allowing a client to retrieve historical presence events on the channel.</p>
+<p>The <code>Presence</code> object exposes a <a href="#history"><span lang="default"><code>history</code></span><span lang="csharp"><code>History</code></span></a> method allowing a client to retrieve historical presence events on the channel.</p>
 <p>History provides access to instantaneous &#8220;live&#8221; history as well as the longer term persisted history for presence channels. If <a href="/realtime/history#persisted-history">persisted history</a> is enabled for the channel, then presence events will <a href="https://support.ably.io/solution/articles/3000030059-how-long-are-messages-stored-for">typically be stored for 24 &#8211; 72 hours</a>. If persisted history is not enabled, Ably retains the last two minutes of presence event history in memory.</p>
 <p>The following example retrieves the first two pages of historical presence events published.</p>
 <pre lang="javascript"><code lang="javascript">var presence = channel.presence;
@@ -192,22 +199,29 @@ if(eventsPage.hasNext()) {
   PaginatedResult&lt;PresenceMessage&gt; nextPage = eventsPage.next();
   System.out.println(nextPage.items().length + " presence events received in 2nd page");
 }</code></pre>
+<pre lang="csharp"><code lang="csharp">PaginatedResult&lt;PresenceMessage&gt; eventsPage = await channel.Presence.HistoryAsync();
+Console.WriteLine(eventsPage.Items.Count + " presence events received in first page");
+if (eventsPage.HasNext)
+{
+  PaginatedResult&lt;PresenceMessage&gt; nextPage = await eventsPage.NextAsync();
+  Console.WriteLine(nextPage.Items.Count + " presence events received in 2nd page");
+}</code></pre>
 <pre lang="objc"><code lang="objc">[channel.presence history:^(ARTPaginatedResult&lt;ARTPresenceMessage *&gt; *eventsPage, ARTErrorInfo *error) {
-    NSLog(@"%lu presence events received in first page", [eventsPage.items count]);
-    if (eventsPage.hasNext) {
-        [eventsPage next:^(ARTPaginatedResult&lt;ARTPresenceMessage *&gt; *nextPage, ARTErrorInfo *error) {
-            NSLog(@"%lu presence events received in 2nd page", [nextPage.items count]);
-        }];
-    }
+  NSLog(@"%lu presence events received in first page", [eventsPage.items count]);
+  if (eventsPage.hasNext) {
+    [eventsPage next:^(ARTPaginatedResult&lt;ARTPresenceMessage *&gt; *nextPage, ARTErrorInfo *error) {
+      NSLog(@"%lu presence events received in 2nd page", [nextPage.items count]);
+    }];
+  }
 }];</code></pre>
 <pre lang="swift"><code lang="swift">channel.presence.history { eventsPage, error in
-    let eventsPage = eventsPage!
-    print("\(eventsPage.items.count) presence events received in first page")
-    if eventsPage.hasNext {
-        eventsPage.next { nextPage, error in
-            print("\(nextPage!.items.count) presence events received in 2nd page")
-        }
+  let eventsPage = eventsPage!
+  print("\(eventsPage.items.count) presence events received in first page")
+  if eventsPage.hasNext {
+    eventsPage.next { nextPage, error in
+      print("\(nextPage!.items.count) presence events received in 2nd page")
     }
+  }
 }</code></pre>
 <p>See the <a href="/rest/history#presence-history">presence history documentation</a> for further details of the supported query parameters.</p>
 <h1>API Reference</h1>
@@ -233,15 +247,18 @@ Related types
 </ul>
 </li></ul>
 </div><h2>Methods</h2>
-<h6 id="get">get</h6>
+<h6 id="get"><span lang='default'>get</span><span lang='csharp'>Get</span></h6>
 <p>Get the current presence member set for this channel.  In the REST client library this method directly queries <a href="/rest-api#presence">Ably&#8217;s REST presence API</a></p>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>get(Object options, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; resultPage))</span><span lang='ruby'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; get(Hash options)</span><span lang='python'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; get(kwargs_options)</span><span lang='php'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; get(Array options)</span><span lang='java'>public <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; get(<a href="#param">Param</a>[] options)</span><span lang='swift,objc'>get(query: ARTPresenceQuery, callback: (<a href="#presence-message">ARTPresenceMessage</a>, ARTErrorInfo?) &#8594; Void)</span></p>
+<p class="definition"><span lang='default'>get(Object options, callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; resultPage))</span><span lang='ruby'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; get(Hash options)</span><span lang='python'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; get(kwargs_options)</span><span lang='php'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; get(Array options)</span><span lang='java'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; get(<a href="#param">Param</a>[] options)</span><span lang='csharp'>Task&lt;<a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt;&gt; GetAsync(int? limit = null, string clientId = null, string connectionId = null);</span><span lang='swift,objc'>get(query: ARTPresenceQuery, callback: (<a href="#presence-message">ARTPresenceMessage</a>, ARTErrorInfo?) &#8594; Void)</span></p>
 </blockquote>
 <p>Gets an array of members present on the channel as <a href="#presence-message">PresenceMessage</a> objects.</p>
+
+
+<div lang="javascript,nodejs,,ruby,python,php,java,swift,objc"> <!-- start javascript,nodejs,,ruby,python,php,java,swift,objc language block -->
 <h4>Parameters</h4>
 <dl>
-	<dt><span lang="default">options</span><span lang="objc,swift">query</span><span lang="java"><a href="#param">Param</a>[] options</span></dt>
+	<dt><span lang="default">options</span><span lang="objc,swift,csharp">query</span><span lang="java"><a href="#param">Param</a>[] options</span></dt>
 	<dd><span lang="default">an optional object containing query parameters</span><span lang="python">optional keyword arguments containing the query parameters</span><span lang="ruby">an optional set of symbol key and value pairs containing the query parameters</span><span lang="php">an optional Associate Array containing the query parameters</span> as specified below.</dd>
 </dl>
 <dl>
@@ -250,12 +267,15 @@ Related types
 	<dt><div lang="objc,swift">callback</div></dt>
 	<dd>called with a <a href="#paginated-result"><code>PaginatedResult</code></a><code>&lt;</code><a href="#presence-message"><code>PresenceMessage</code></a><code>&gt;</code>, or with an error</dd>
 </dl>
-<h4><span lang="default"><code>options</code> parameters</span><span lang="objc,swift"><code>ARTPresenceQuery</code> properties</span></h4>
+
+</div> <!-- /end javascript,nodejs,,ruby,python,php,java,swift,objc language block -->
+
+<h4><span lang="default"><code>options</code> parameters</span><span lang="objc,swift"><code>ARTPresenceQuery</code> properties</span><span lang="csharp">Arguments</span></h4>
 <dl>
 	<dt><span lang="default">clientId</span><span lang="python">client_id</span><span lang="ruby">:client_id</span></dt>
-	<dd>when provided, will filter array of members returned that match the provided <span lang="default"><a href="/rest/usage#client-id"><code>clientId</code></a></span><span lang="ruby,python"><a href="/rest/usage#client-id"><code>client_id</code></a></span> string</dd>
+	<dd>when provided, will filter array of members returned that match the provided <span lang="default"><a href="/rest/usage#client-id"><code>clientId</code></a></span><span lang="ruby,python"><a href="/rest/usage#client-id"><code>client_id</code></a></span><span lang="csharp"><a href="/rest/usage#client-id"><code>ClientId</code></a></span> string</dd>
 	<dt><span lang="default">connectionId</span><span lang="python">connection_id</span><span lang="ruby">:connection_id</span></dt>
-	<dd>when provided, will filter array of members returned that match the provided <span lang="default"><a href="/realtime/connection#id"><code>connectionId</code></a></span><span lang="ruby,python"><a href="/realtime/connection/#id"><code>connection_id</code></a></span> string</dd>
+	<dd>when provided, will filter array of members returned that match the provided <span lang="default"><code>connectionId</code></span><span lang="csharp"><code>ConnectionId</code></span><span lang="ruby"><code>connection_id</code></span>&quot;:/realtime/connection/#id string</dd>
 </dl>
 
 
@@ -268,21 +288,22 @@ Related types
 
 
 
-<div lang="java,ruby,php,python"> <!-- start java,ruby,php,python language block -->
+<div lang="java,ruby,php,python,csharp"> <!-- start java,ruby,php,python,csharp language block -->
 <h4>Returns</h4>
-<p>On success, the returned <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulates an array of <a href="#presence-message"><code>PresenceMessage</code></a> objects corresponding to the current page of members currently present on the channel. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>next</code></a> and <a href="#paginated-result"><code>first</code></a> methods.</p>
+<p><span lang="csharp">This method is asyncronous and needs to be awaited.</span></p>
+<p>On success, the returned <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulates an array of <a href="#presence-message"><code>PresenceMessage</code></a> objects corresponding to the current page of members currently present on the channel. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><span lang="default"><code>next</code></span><span lang="csharp"><code>NextAsync</code></span></a> and <a href="#paginated-result"><span lang="default"><code>first</code></span><span lang="csharp"><code>FirstAsync</code></span></a> methods.</p>
 <p>Failure to retrieve the current presence member set will raise an <a href="/realtime/types/#ably-exception"><code>AblyException</code></a></p>
 
-</div> <!-- /end java,ruby,php,python language block -->
+</div> <!-- /end java,ruby,php,python,csharp language block -->
 
-<h6 id="history">history</h6>
+<h6 id="history">History</h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>history(Object options, callback(<a href="/rest/types#error-info">ErrorInfo</a> err, <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; resultPage))</span><span lang='ruby'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; history(Hash options)</span><span lang='python'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; history(kwargs_options)</span><span lang='php'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; history(Array options)</span><span lang='java'>public <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; history(<a href="#param">Param</a>[] options)</span><span lang='objc,swift'>history(query: ARTDataQuery?, callback: (<a href="#paginated-result">ARTPaginatedResult</a>&lt;<a href="#presence-message">ARTPresenceMessage</a>&gt;?, ARTErrorInfo?) &#8594; Void) throws</span></p>
+<p class="definition"><span lang='default'>history(Object options, callback(<a href="/rest/types#error-info">ErrorInfo</a> err, <a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; resultPage))</span><span lang='ruby'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; history(Hash options)</span><span lang='python'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; history(kwargs_options)</span><span lang='php'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; history(Array options)</span><span lang='java'><a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt; history(<a href="#param">Param</a>[] options)</span><span lang='csharp'>Task&lt;<a href="#paginated-result">PaginatedResult</a>&lt;<a href="#presence-message">PresenceMessage</a>&gt;&gt; HistoryAsync(<a href="#data-request-query">DataRequestQuery</a> query);</span><span lang='objc,swift'>history(query: ARTDataQuery?, callback: (<a href="#paginated-result">ARTPaginatedResult</a>&lt;<a href="#presence-message">ARTPresenceMessage</a>&gt;?, ARTErrorInfo?) &#8594; Void) throws</span></p>
 </blockquote>
 <p>Gets a <a href="#paginated-result">paginated</a> set of historical presence message events for this channel. If the <a href="https://support.ably.io/support/solutions/articles/3000030059-how-long-are-messages-stored-for">channel is configured to persist messages to disk</a>, then the presence message event history will <a href="https://support.ably.io/solution/articles/3000030059-how-long-are-messages-stored-for">typically be available for 24 &#8211; 72 hours</a>. If not, presence message events are only retained in memory by the Ably service for two minutes.</p>
 <h4>Parameters</h4>
 <dl>
-	<dt><span lang="default">options</span><span lang="java"><a href="#param">Param</a>[] options</span></dt>
+	<dt><span lang="default">options</span><span lang="java"><a href="#param">Param</a>[] options</span><span lang="objc,swift">query</span><span lang="csharp"><a href="#data-request-query">DataRequestQuery</a> query</span></dt>
 	<dd><span lang="default">an optional object containing query parameters</span><span lang="python">optional keyword arguments containing the query parameters</span><span lang="ruby">an optional set of key value pairs containing query parameters</span><span lang="php">an optional Associate Array containing the query parameters</span>, as specified in the <a href="/rest/history#presence-history">presence history API documentation</a>.</dd>
 </dl>
 <dl>
@@ -302,20 +323,23 @@ Related types
 
 
 
-<div lang="java,ruby,php,python"> <!-- start java,ruby,php,python language block -->
+<div lang="java,ruby,php,python,csharp"> <!-- start java,ruby,php,python,csharp language block -->
 <h4>Returns</h4>
-<p>On success, the returned <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulates an array of <a href="#presence-message"><code>PresenceMessage</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>next</code></a> and <a href="#paginated-result"><code>first</code></a> methods.</p>
+<p><span lang="csharp">This method is asyncronous and needs to be awaited.</span></p>
+<p>On success, the returned <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulates an array of <a href="#presence-message"><code>PresenceMessage</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><span lang="default"><code>next</code></span><span lang="csharp"><code>NextAsync</code></span></a> and <a href="#paginated-result"><span lang="default"><code>first</code></span><span lang="csharp"><code>FirstAsync</code></span></a> methods.</p>
 <p>Failure to retrieve the message history will raise an <a href="/realtime/types/#ably-exception"><code>AblyException</code></a></p>
 
-</div> <!-- /end java,ruby,php,python language block -->
+</div> <!-- /end java,ruby,php,python,csharp language block -->
 
 <h2 id="related-types">Related types</h2>
-<h3 id="presence-message"><span lang='default'>PresenceMessage</span><span lang='swift,objc'>ARTPresenceMessage</span><span lang='ruby'>Ably::Models::PresenceMessage</span><span lang='java'>io.ably.lib.types.PresenceMessage</span></h3>
+<h3 id="presence-message"><span lang='default'>PresenceMessage</span><span lang='swift,objc'>ARTPresenceMessage</span><span lang='ruby'>Ably::Models::PresenceMessage</span><span lang='java'>io.ably.lib.types.PresenceMessage</span><span lang='csharp'>IO.Ably.PresenceMessage</span></h3>
 <p>A <code>PresenceMessage</code> represents an individual presence update that is sent to or received from Ably.</p>
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span></h4>
 <dl>
 	<dt><div lang="java">action</div></dt>
 	<dd>the event signified by a PresenceMessage. See <a href="/realtime/types#presence-action"><code>PresenceMessage.action</code></a><br><i>Type: <code>enum { ABSENT, PRESENT, ENTER, LEAVE, UPDATE }</code></i></dd>
+	<dt><div lang="java">action</div></dt>
+	<dd>the event signified by a PresenceMessage. See <a href="/realtime/types#presence-action"><code>PresenceMessage.action</code></a><br><i>Type: <code>enum { Absent, Present, Enter, Leave, Update }</code></i></dd>
 	<dt><div lang="javascript,nodejs">action</div></dt>
 	<dd>the event signified by a PresenceMessage. See <a href="/realtime/types#presence-action"><code>Presence action</code></a><br><i>Type: <code>int enum { ABSENT, PRESENT, ENTER, LEAVE, UPDATE }</code></i></dd>
 	<dt><div lang="python">action</div></dt>
@@ -330,6 +354,8 @@ Related types
 <dl>
 	<dt><div lang="java">data</div></dt>
 	<dd>The presence update payload, if provided<br><i>Type: <code>String</code>, <code>ByteArray</code>, <code>JSONObject</code>, <code>JSONArray</code></i></dd>
+	<dt><div lang="csharp">data</div></dt>
+	<dd>The presence update payload, if provided<br><i>Type: <code>String</code>, <code>byte[]</code>, plain C# object that can be converted to Json</i></dd>
 	<dt><div lang="javascript,nodejs">data</div></dt>
 	<dd>The presence update payload, if provided<br><i>Type: <code>String</code>, <code>StringBuffer</code>, <code>JSON Object</code></i></dd>
 	<dt><div lang="ruby">data</div></dt>
@@ -357,13 +383,13 @@ Related types
 </dl>
 <dl>
 	<dt>timestamp</dt>
-	<dd>Timestamp when the presence update was received by the Ably the realtime service<span lang="default">, as milliseconds since the epoch</span><span lang="ruby,objc,swift"></span>.<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
+	<dd>Timestamp when the presence update was received by the Ably the realtime service<span lang="default">, as milliseconds since the epoch</span><span lang="ruby,objc,swift"></span>.<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="csharp"><code>DateTimeOffset</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
 </dl>
 <dl>
 	<dt>encoding</dt>
 	<dd>This will typically be empty as all presence updates received from Ably are automatically decoded client-side using this value. However, if the message encoding cannot be processed, this attribute will contain the remaining transformations not applied to the <code>data</code> payload<br><i>Type: <code>String</code></i></dd>
 </dl>
-<h3 id="presence-action"><span lang='default'>Presence action</span><span lang='python'>PresenceAction</span><span lang='swift,objc'>ARTPresenceAction</span><span lang='java'>io.ably.lib.types.PresenceMessage.Action</span><span lang='ruby'>Ably::Models::PresenceMessage::ACTION</span></h3>
+<h3 id="presence-action"><span lang='default'>Presence action</span><span lang='python'>PresenceAction</span><span lang='swift,objc'>ARTPresenceAction</span><span lang='java'>io.ably.lib.types.PresenceMessage.Action</span><span lang='ruby'>Ably::Models::PresenceMessage::ACTION</span><span lang='csharp'>IO.Ably.PresenceAction</span></h3>
 
 
 <div lang="javascript,nodejs"> <!-- start javascript,nodejs language block -->
@@ -391,6 +417,20 @@ Related types
 }</code></pre>
 
 </div> <!-- /end java language block -->
+
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>IO.Ably.PresenceAction</code> is an enum representing all the <a href="/realtime/presence#presence-states"><code>Realtime Presence</code> states &amp; events</a>.</p>
+<pre lang="csharp"><code lang="csharp">public enum Action {
+  Absent,  // 0 (reserved for internal use)
+  Present, // 1
+  Enter,   // 2
+  Leave,   // 3
+  Update   // 4
+}</code></pre>
+
+</div> <!-- /end csharp language block -->
 
 
 
@@ -475,15 +515,36 @@ Ably::Models::PresenceMessage::ACTION.Enter == :enter # =&gt; true</code></pre>
 
 </div> <!-- /end objc,swift language block -->
 
-<h3 id="paginated-result"><span lang='default'>PaginatedResult</span><span lang='swift,objc'>ARTPaginatedResult</span><span lang='ruby'>Ably::Models::PaginatedResult</span><span lang='java'>io.ably.lib.types.PaginatedResult</span></h3>
+<h3 id="data-request-query"><span lang='csharp'>DataRequestQuery</span></h3>
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>DataRequestQuery</code> is a type that encapsulates the parameters for a history queries. For example usage see <a href="/realtime/history#channel-history"><span lang="default"><code>Channel#history</code></span><span lang="csharp"><code>Channel#History</code></span></a>.</p>
+<h4>Members</h4>
+<dl>
+	<dt>Start</dt>
+	<dd><em>null</em> The start of the queried interval<br><i>Type: <code>DateTimeOffset</code></i></dd>
+	<dt>End</dt>
+	<dd><em>null</em> The end of the queried interval<br><i>Type: <code>DateTimeOffset</code></i></dd>
+	<dt>Limit</dt>
+	<dd><em>null</em> By default it is null. Limits the number of items returned by history or stats<br><i>Type: <code>Integer</code></i></dd>
+	<dt>Direction</dt>
+	<dd><em>Backwards</em> Enum which is either <code>Forwards</code> or <code>Backwards</code><br><i>Type: <code>Direction</code> enum</i></dd>
+	<dt>ExtraParameters</dt>
+	<dd>Optionally any extra query parameters that may be passed to the query. This is mainly used internally by the library to manage paging.<br><i>Type: <code>Dictionary&lt;string, string&gt;</code></i></dd>
+</dl>
+
+</div> <!-- /end csharp language block -->
+
+<h3 id="paginated-result"><span lang='default'>PaginatedResult</span><span lang='swift,objc'>ARTPaginatedResult</span><span lang='ruby'>Ably::Models::PaginatedResult</span><span lang='java'>io.ably.lib.types.PaginatedResult</span><span lang='csharp'>IO.Ably.PaginatedResult</span></h3>
 <p>A <code>PaginatedResult</code> is a type that represents a page of results for all message and presence history, stats and REST presence requests. The response from a <a href="/rest-api/#pagination">Ably REST API paginated query</a> is accompanied by metadata that indicates the relative queries available to the <code>PaginatedResult</code> object.</p>
 <h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span><span lang='python'>Attributes</span></h4>
 <dl>
-	<dt>items</dt>
+	<dt><span lang="default">items</span><span lang="csharp">Items</span></dt>
 	<dd>contains a page of results (for example an Array of <a href="#message"><code>Message</code></a> or <a href="#presence-message"><code>PresenceMessage</code></a> objects for a channel history request)<br><span lang="default"><i>Type: <code>Array &lt;Message, Presence, Stats&gt;</code></i></span><span lang="python"><i>Type: <code>List &lt;Message, Presence, Stats&gt;</code></i></span></dd>
 </dl>
 <dl>
-	<dt><div lang="default">isLast</div></dt>
+	<dt><div lang="javascript,nodejs,java,swift,objc">isLast</div></dt>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="ruby">last?</div></dt>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
@@ -491,9 +552,9 @@ Ably::Models::PresenceMessage::ACTION.Enter == :enter # =&gt; true</code></pre>
 	<dd><code>true</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="python">is_last()</div></dt>
 	<dd><code>True</code> if this page is the last page<br><i>Type: <code>Boolean</code></i></dd>
-</dl>
-<dl>
 	<dt><div lang="default">hasNext</div></dt>
+	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
+	<dt><div lang="csharp">HasNext</div></dt>
 	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
 	<dt><div lang="ruby">has_next?</div></dt>
 	<dd><code>true</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
@@ -503,21 +564,21 @@ Ably::Models::PresenceMessage::ACTION.Enter == :enter # =&gt; true</code></pre>
 	<dd><code>True</code> if there are further pages<br><i>Type: <code>Boolean</code></i></dd>
 </dl>
 <h4>Methods</h4>
-<h6>first</h6>
+<h6><span lang='default'>first</span><span lang='csharp'>First</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>first(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> first</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='java'>public <a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='swift,objc'>first(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
+<p class="definition"><span lang='default'>first(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> first</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='csharp'>Task&lt;PaginatedResult<T>&gt; FirstAsync()</span><span lang='java'><a href="/realtime/types#paginated-result">PaginatedResult</a> first()</span><span lang='swift,objc'>first(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
 </blockquote>
-<p>Returns a new <code>PaginatedResult</code> for the first page of results. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
-<h6>items</h6>
+<p>Returns a new <code>PaginatedResult</code> for the first page of results. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span><span lang="csharp">The method is asyncronous and returns a Task which needs to be awaited to get the <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
+<h6><span lang='default'>items</span><span lang='csharp'>Items</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>Object[] items()</span><span lang='python'>List items()</span><span lang='ruby'>Object[] items</span><span lang='java'>public Object[] items()</span><span lang='swift, objc'>items: [AnyObject]</span></p>
+<p class="definition"><span lang='default'>Object[] items()</span><span lang='python'>List items()</span><span lang='ruby'>Object[] items</span><span lang='java'>Object[] items()</span><span lang='csharp'>List<T> Items</span><span lang='swift, objc'>items: [AnyObject]</span></p>
 </blockquote>
-<p>Returns the current page of results as <span lang="default">an Array</span><span lang="python">a <code>List</code></span>. The type of the objects in the <span lang="default">array</span><span lang="python">list</span> is determined by the operation that provided the <code>PaginatedResult</code>. For example, a <a href="/realtime/channels-messages#history">Message#history</a> request will return <span lang="default">an array</span><span lang="python">a list</span> of <code>Message</code> objects.</p>
-<h6>next</h6>
+<p>Returns the current page of results as <span lang="default">an Array</span><span lang="csharp">a List</span><span lang="python">a <code>List</code></span>. The type of the objects in the <span lang="default">array</span><span lang="python,csharp">list</span> is determined by the operation that provided the <code>PaginatedResult</code>. For example, a <a href="/realtime/channels-messages#history"><span lang="default">Message.history()</span><span lang="csharp">Message.History()</span></a> request will return <span lang="default">an array</span><span lang="python,csharp">a list</span> of <code>Message</code> objects.</p>
+<h6><span lang='default'>next</span><span lang='csharp'>Next</span></h6>
 <blockquote class="definition">
-<p class="definition"><span lang='default'>next(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> next</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='java'>public <a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='swift,objc'>next(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
+<p class="definition"><span lang='default'>next(callback(<a href="/realtime/types#error-info">ErrorInfo</a> err, <a href="/realtime/types#paginated-result">PaginatedResult</a> resultPage))</span><span lang='ruby'><a href="/realtime/types#paginated-result">PaginatedResult</a> next</span><span lang='php'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='python'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='csharp'>Task&lt;<a href="/realtime/types#paginated-result">PaginatedResult</a><T>&gt; NextAsync()</span><span lang='java'><a href="/realtime/types#paginated-result">PaginatedResult</a> next()</span><span lang='swift,objc'>next(callback: (ARTPaginatedResult?, ARTErrorInfo?) &#8594; Void)</span></p>
 </blockquote>
-<p>Returns a new <code>PaginatedResult</code> loaded with the next page of results. If there are no further pages, then <span lang="default"><code>null</code></span><span lang="java"><code>Null</code></span><span lang="python"><code>None</code></span><span lang="ruby,objc,swift"><code>nil</code></span> is returned. <span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
+<p>Returns a new <code>PaginatedResult</code> loaded with the next page of results. If there are no further pages, then <span lang="default"><code>null</code></span><span lang="csharp">a blank PaginatedResult will be returned</span><span lang="java"><code>Null</code></span><span lang="python"><code>None</code></span><span lang="ruby,objc,swift"><code>nil</code></span> is returned. <span lang="csharp">The method is asyncronous and return a Task which needs to be awaited to get the <code>PaginatedResult</code></span><span lang="ruby">When using the Realtime library, the <code>first</code> method returns a <a href="/realtime/types#deferrable">Deferrable</a> and yields a <a href="/realtime/types#paginated-result">PaginatedResult</a>.</span></p>
 <h4>Example</h4>
 <pre lang="javascript"><code lang="javascript">channel.history(function(err, paginatedResult) {
   console.log('Page 0 item 0:' + paginatedResult.items[0].data);
@@ -538,8 +599,17 @@ System.out.println("Page 0 item 0:" + firstPage.items[0].data);
 if (firstPage.hasNext) {
   PaginatedResult nextPage = firstPage.next();
   System.out.println("Page 1 item 1:" + nextPage.items[1].data);
-  System.out.println("More pages?:" + Strong.valueOf(nextpage.hasNext()));
-});</code></pre>
+  System.out.println("More pages?:" + Strong.valueOf(nextPage.hasNext()));
+};</code></pre>
+<pre lang="csharp"><code lang="csharp">PaginatedResult&lt;Message&gt; firstPage = await channel.HistoryAsync(null);
+Message firstMessage = firstPage.Items[0];
+Console.WriteLine("Page 0 item 0: " + firstMessage.data);
+if (firstPage.HasNext)
+{
+    var nextPage = await firstPage.NextAsync();
+    Console.WriteLine("Page 1 item 1:" + nextPage.Items[1].data);
+    Console.WriteLine("More pages?: " + nextPage.HasNext);
+}</code></pre>
 <pre lang="ruby"><code lang="ruby"># When using the REST sync library
 first_page = channel.history
 puts "Page 0 item 0: #{first_page.items[0].data}"
@@ -646,6 +716,7 @@ if ($firstPage-&gt;hasNext()) {
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

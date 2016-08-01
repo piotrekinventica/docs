@@ -45,7 +45,7 @@
   <code>TokenParams</code> is a Dict and is used in the parameters of <a href="/realtime/authentication">token authentication</a> requests, corresponding to the desired attributes of the token. The following keys-value pairs can be added to the Dict:</p>
 <p>blang[php].<br />
   <code>TokenParams</code> is an Associative Array and is used in the parameters of <a href="/realtime/authentication">token authentication</a> requests, corresponding to the desired attributes of the token. The following named keys and values can be added to the Associative Array:</p>
-<p>blang[java].<br />
+<p>blang[java,csharp].<br />
   <code>TokenParams</code> is used in the parameters of <a href="/realtime/authentication">token authentication</a> requests, corresponding to the desired attributes of the token.</p>
 <p>blang[objc,swift].<br />
   <code>ARTTokenParams</code> is used in the parameters of <a href="/realtime/authentication">token authentication</a> requests, corresponding to the desired attributes of the token.</p>
@@ -55,24 +55,24 @@
   ruby:    Attributes<br />
   python:  Attributes</p>
 <dl>
-	<dt><span lang="default">capability</span><span lang="ruby">:capability</span></dt>
-	<dd>JSON stringified capability of the token. If the token request is successful, the capability of the returned token will be the intersection of this capability with the capability of the issuing key. <a href="#capabilities-explained">Find our more about how to use capabilities to manage access privileges for clients</a>. <i>Type: <span lang="default"><code>Function</code></span><span lang="java"><code>TokenCallback</code></span><span lang="ruby"><code>Proc</code></span></i></dd>
+	<dt><span lang="default">capability</span><span lang="csharp">Capability</span><span lang="ruby">:capability</span></dt>
+	<dd>JSON stringified capability of the token. If the token request is successful, the capability of the returned token will be the intersection of this capability with the capability of the issuing key. <a href="#capabilities-explained">Find our more about how to use capabilities to manage access privileges for clients</a>. <i>Type: <span lang="default"><code>String</code></span><span lang="csharp"><code>Capability</code></span></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">clientId</span><span lang="python">client_id</span><span lang="ruby">:client_id</span></dt>
-	<dd>A client ID, used for identifying this client when publishing messages or for presence purposes. The <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span> can be any non-empty string. This option is primarily intended to be used in situations where the library is instanced with a key; note that a <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span> may also be implicit in a token used to instance the library; an error will be raised if a <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span> specified here conflicts with the <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span> implicit in the token. <a href="/how-ably-works#client-identity">Find out more about client identities</a><br><i>Type: <code>String</code></i></dd>
+	<dt><span lang="default">clientId</span><span lang="csharp">ClientId</span><span lang="python">client_id</span><span lang="ruby">:client_id</span></dt>
+	<dd>A client ID, used for identifying this client when publishing messages or for presence purposes. The <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span><span lang="csharp"><code>ClientId</code></span> can be any non-empty string. This option is primarily intended to be used in situations where the library is instanced with a key; note that a <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span><span lang="csharp"><code>ClientId</code></span> may also be implicit in a token used to instance the library; an error will be raised if a <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span><span lang="csharp"><code>ClientId</code></span> specified here conflicts with the <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span><span lang="csharp"><code>ClientId</code></span> implicit in the token. <a href="/how-ably-works#client-identity">Find out more about client identities</a><br><i>Type: <code>String</code></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">nonce</span><span lang="ruby">:nonce</span></dt>
-	<dd>An optional opaque nonce string of at least 16 characters to ensure uniqueness of this request. Any subsequent request using the same nonce will be rejected.<br><i>Type: String</i></dd>
+	<dt><span lang="default">nonce</span><span lang="csharp">Nonce</span><span lang="ruby">:nonce</span></dt>
+	<dd>An optional opaque nonce string of at least 16 characters to ensure uniqueness of this request. Any subsequent request using the same nonce will be rejected.<br><i>Type: <code>String</code></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">timestamp</span><span lang="ruby">:timestamp</span></dt>
-	<dd><span lang="default">The timestamp (in milliseconds since the epoch)</span><span lang="ruby,objc,swift">The timestamp</span> of this request. <code>timestamp</code>, in conjunction with the <code>nonce</code>, is used to prevent token requests from being replayed.<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span></i></dd>
+	<dt><span lang="default">timestamp</span><span lang="csharp">timestamp</span><span lang="ruby">:timestamp</span></dt>
+	<dd><span lang="default">The timestamp (in milliseconds since the epoch)</span><span lang="ruby,objc,swift,csharp">The timestamp</span> of this request. <code>timestamp</code>, in conjunction with the <code>nonce</code>, is used to prevent token requests from being replayed.<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="java"><code>Long Integer</code></span><span lang="ruby"><code>Time</code></span><span lang="objc,swift"><code>NSDate</code></span><span lang="csharp"><code>DateTimeOffset</code></span></i></dd>
 </dl>
 <dl>
-	<dt><span lang="default">ttl</span><span lang="ruby">:ttl</span></dt>
-	<dd><em>1 hour</em> Requested time to live for the token being created <span lang="default">in milliseconds</span><span lang="ruby">in seconds</span><span lang="objc,swift">as a <code>NSTimeInterval</code></span>. When omitted, the Ably REST API default of 60 minutes is applied by Ably<br><i>Type: <span lang="default"><code>Integer</code> (milliseconds)</span><span lang="ruby"><code>Integer</code> (seconds)</span><span lang="objc,swift"><code>NSTimeInterval</code></span><span lang="java"><code>Long Integer</code></span></i></dd>
+	<dt><span lang="default">ttl</span><span lang="csharp">Ttl</span><span lang="ruby">:ttl</span></dt>
+	<dd><em>1 hour</em> Requested time to live for the token being created <span lang="default">in milliseconds</span><span lang="ruby">in seconds</span><span lang="objc,swift">as a <code>NSTimeInterval</code></span><span lang="csharp">as a <code>TimeSpan</code>. When omitted, the Ably REST API default of 60 minutes is applied by Ably<br><i>Type: <span lang="default"><code>Integer</code> (milliseconds)</span><span lang="ruby"><code>Integer</code> (seconds)</span><span lang="objc,swift"><code>NSTimeInterval</code></span><span lang="java"><code>Long Integer</code></span><span lang="csharp"><code>TimeSpan</code></span></i></dd>
 </dl>
   </div>
   <div id="sidebar">
@@ -112,6 +112,7 @@
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>

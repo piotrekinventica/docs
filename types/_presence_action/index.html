@@ -59,6 +59,17 @@ LEAVE,   // 3
 UPDATE   // 4
 }
 ```
+<p>blang[csharp].<br />
+  <code>IO.Ably.PresenceAction</code> is an enum representing all the <a href="/realtime/presence#presence-states"><code>Realtime Presence</code> states &amp; events</a>.</p>
+```[csharp]
+public enum Action {
+Absent,  // 0 (reserved for internal use)
+Present, // 1
+Enter,   // 2
+Leave,   // 3
+Update   // 4
+}
+```
 <p>blang[python].<br />
   <code>PresenceAction</code> is an enum-like class representing all the <a href="/realtime/presence#presence-states"><code>Realtime Presence</code> states &amp; events</a>.</p>
 ```[python]
@@ -180,6 +191,7 @@ case Last
 <li class=''><a href='/general/authentication/'>Authentication</a></li>
 <li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
 <li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
 <li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
 <li class=''><a href='/general/statistics/'>Application Statistics</a></li>
 </ul>
