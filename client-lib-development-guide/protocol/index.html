@@ -152,52 +152,76 @@ The serial number of the message must be included in the <code>msgSerial</code> 
 	<dt>SYNC (16)</dt>
 	<dd>Currently reserved for us with presence member synchronisation following a channel <code>ATTACHED</code> Protocol Message being received by the client. Once a channel becomes attached, the server will automatically send a list of all members present on the channel to the client. Every <code>SYNC</code> Protocol Message received will contain a channelSerial value and one or more PresenceMessages for each member currently present on the channel i.e. they are in the <code>PRESENT</code> state.  The channelSerial serves two purposes, it provides a way for the client library to resume a <code>SYNC</code> should the transport be disconnected, and it also provides a means for the client library to know when the sync is complete.  A channelSerial that is being synced will contian an ID with followed by a cursor after a colon such as &#8220;cf30e75054887:psl_7g:client:189&#8221;, however the final page of <code>SYNC</code> messages will have a serial with an empty cursor such as &#8220;cf30e75054887:&#8221;.  A client can explicitly request a SYNC with an optional channelSerial; if no channelSerial is provided the server will send a complete set of members on the channel; if a channelSerial is provided, the server will resume the <code>SYNC</code> operation.</dd>
 </dl>
+<dl>
+	<dt>AUTH (17)</dt>
+	<dd>Sent by the client with a new token to reauthenticate the connection, with the connection either being closed due to incompatible token details being provided, or a <code>CONNECTED</code> message being sent back to the client confirming the authentication succeeded. The server can request that the client authenticates by sending an <code>AUTH</code> protocol message to the client, and the client must respond with a new token in an <code>AUTH</code> protocol message.</dd>
+</dl>
 <h2 id="protocol-message-fields">Protocol Message fields</h2>
 <p>ProtocolMessages are populated with one or more of the following fields.</p>
 <dl>
-	<dt>i32 action</dt>
+	<dt>i32 <code>action</code></dt>
 	<dd>Indicates the purpose of the message. See <a href="#actions">Actions</a> above.</dd>
 </dl>
 <dl>
-	<dt>i32 count</dt>
+	<dt>string <code>id</code></dt>
+	<dd>Unique identifier for each protocol message</dd>
+</dl>
+<dl>
+	<dt>AuthDetails <code>auth</code></dt>
+	<dd>Object used for providing authentication details</dd>
+</dl>
+<dl>
+	<dt>string <code>channel</code></dt>
+	<dd>Present when protocol message applies to a single channel</dd>
+</dl>
+<dl>
+	<dt>string <code>channelSerial</code></dt>
+	<dd>Contains a serial number for a message on the channel</dd>
+</dl>
+<dl>
+	<dt>i32 <code>count</code></dt>
 	<dd>The count field is used for <code>ACK</code> and <code>NACK</code> actions. See <a href="#message-acknowledgement">message acknowledgement protocol</a>.</dd>
 </dl>
 <dl>
-	<dt>Error</dt>
-	<dd>Contains error information. See <code>Error</code> type description for details of the contained information. The error field is populated in an <code>ERROR</code> message and may also be populated to provide supplementary information (eg for non-fatal errors) in various other message types (<code>CONNECTED</code>, <code>ATTACHED</code>, <code>DETACHED</code>, <code>ACK</code>, <code>NACK</code>).</dd>
-</dl>
-<dl>
-	<dt>string connectionId</dt>
+	<dt>string <code>connectionId</code></dt>
 	<dd>Contains a public string connection ID. This field is populated in the first <code>CONNECTED</code> Protocol Messages from the service to the client.  The connection ID is a public identifier used to uniquely identify each connected client.</dd>
 </dl>
 <dl>
-	<dt>string connectionKey</dt>
-	<dd>Contains a private string connection Key. This field is populated in the first <code>CONNECTED</code> Protocol Messages from the service to the client.  The connection key is a private identifier used to recover and resume connections and their connection state.</dd>
+	<dt>string <code>connectionKey</code></dt>
+	<dd>Contains a private string connection Key. Note that this field is soon to be deprecated; when <code>ConnectionDetails#connectionKey</code> is present, it should be considered the definitive <code>connectionKey</code> for the current connection</dd>
 </dl>
 <dl>
-	<dt>i64 connectionSerial</dt>
+	<dt>ConnectionDetails <code>connectionDetails</code></dt>
+	<dd>provides details on the constraints or defaults for the connection such as max message size, client ID or connection state TTL</dd>
+</dl>
+<dl>
+	<dt>i64 <code>connectionSerial</code></dt>
 	<dd>Contains a serial number for a message on the current connection, in <code>MESSAGE</code> and <code>PRESENCE</code> protocol messages sent from the service to the client. The <code>connectionSerial</code> is a zero-based, serially increasing number which, in combination with the <code>connectionId</code>, uniquely identifies an attempted delivery of a Protocol Message to the client. The client uses the connection serial to track the receipt of messages, and may specify the <code>connectionSerial</code> when performing connection state recovery.</dd>
 </dl>
 <dl>
-	<dt>i64 msgSerial</dt>
+	<dt>Error <code>error</code></dt>
+	<dd>Contains error information. See <code>Error</code> type description for details of the contained information. The error field is populated in an <code>ERROR</code> message and may also be populated to provide supplementary information (eg for non-fatal errors) in various other message types (<code>CONNECTED</code>, <code>ATTACHED</code>, <code>DETACHED</code>, <code>ACK</code>, <code>NACK</code>).</dd>
+</dl>
+<dl>
+	<dt>i32 <code>flags</code></dt>
+	<dd>Currently used to flag properties in messages such as the presence sync state of an <code>ATTACHED</code> ProtocolMessage.  See <a href="/client-lib-development-guide/features#TR4i">client library spec TR4i</a></dd>
+</dl>
+<dl>
+	<dt>i64 <code>msgSerial</code></dt>
 	<dd>Contains a serial number for a message sent from the client to the service. The <code>msgSerial</code> is a zero-based, serially increasing number which, in combination with the <code>connectionId</code>, uniquely identifies the message across the system. The <code>msgSerial</code> is also used in the message acknowledgement protocol.</dd>
 </dl>
 <dl>
-	<dt>i64 timestamp</dt>
-	<dd>An optional timestamp, applied by the service in messages sent to the client, to indicate the system time at which the message was sent. Note that this differs from the timestamp field of a <code>Message</code> or <code>PresenceMessage</code> which is an indication of the timestamp of receipt of that message by the system.<br><br>
-Currently there are no requirements for the client library to process or populate the timestamp.</dd>
-</dl>
-<dl>
-	<dt>i32 flags</dt>
-	<dd>Currently used to flag properties in messages such as the presence sync state of an <code>ATTACHED</code> ProtocolMessage.  See the list of <a href="https://github.com/ably/ably-java/blob/master/src/io/ably/types/ProtocolMessage.java">currently implemented bit flags</a>.</dd>
-</dl>
-<dl>
-	<dt>list<Message> messages</dt>
+	<dt>list<Message> <code>messages</code></dt>
 	<dd>A ProtocolMessage with a <code>MESSAGE</code> action contains one or more messages belonging to a channel. The messages field of the ProtocolMessage contains a collection of messages.</dd>
 </dl>
 <dl>
-	<dt>list<Presence> presence</dt>
+	<dt>list<Presence> <code>presence</code></dt>
 	<dd>A ProtocolMessage with a <code>PRESENCE</code> action contains one or more presence updates belonging to a channel. The presence field of the ProtocolMessage contains a collection of presence messages.</dd>
+</dl>
+<dl>
+	<dt>i64 <code>timestamp</code></dt>
+	<dd>An optional timestamp, applied by the service in messages sent to the client, to indicate the system time at which the message was sent. Note that this differs from the timestamp field of a <code>Message</code> or <code>PresenceMessage</code> which is an indication of the timestamp of receipt of that message by the system.<br><br>
+Currently there are no requirements for the client library to process or populate the timestamp.</dd>
 </dl>
 <h2 id="other-message-structs">Other message object</h2>
 <p>The protocol relies on a number of structs embedded in Protocol Messages.</p>

@@ -1,0 +1,119 @@
+<h1 id="ably-pusher-protocol-adaptor">Ably Pusher protocol adaptor</h1>
+
+<p style="margin-bottom: 0.5em"><strong>Our protocol adaptors are in public beta. If you wish to use our adaptors, please <a href="https://www.ably.io/contact">contact us first</a> using our live chat or email support@ably.io</strong></p>
+
+<p style="margin-bottom: 0.5em">To use the Ably Pusher protocol adaptor, you must initialize your Pusher client library as follows, assuming an <a href="https://support.ably.io/solution/articles/3000030054-what-is-an-app-api-key">Ably API key</a> of <code>'appid.keyid:keysecret'</code>:</p>
+
+<pre code-brush="js" rel="highlighter" contenteditable="false" style="margin-bottom: 1em;">var pusher = new Pusher(&#x27;appid.keyid&#x27;, {
+  wsHost       : &#x27;realtime-pusher.ably.io&#x27;,
+  httpHost     : &#x27;realtime-pusher.ably.io&#x27;,
+  disableStats : true,
+  encrypted    : true
+});
+</pre>
+
+<p style="margin-bottom: 0.5em">And your Pusher REST libraries as (using ruby as an example):</p>
+
+<pre code-brush="ruby" rel="highlighter" contenteditable="false" style="margin-bottom: 1em;">Pusher::Client.new(
+  app_id:    &#x27;appid&#x27;,
+  key:       &#x27;appid.keyid&#x27;,
+  secret:    &#x27;keysecret&#x27;,
+  host:      &#x27;rest-pusher.ably.io&#x27;,
+  encrypted: true
+)
+</pre>
+
+<p style="margin-bottom: 0.5em"><a href="https://jsbin.ably.io:443/omeped/1/edit?javascript,live">View a Pusher adaptor example that receives messages in your browser</a></p>
+
+<p style="margin-bottom: 0.5em">Please note:</p>
+
+<ul>
+  <li style="margin-bottom: 0.5em">For simplicity, the above example uses the Pusher Javascript and Ruby libraries. All other Pusher client libraries can be instanced in a similar fashion. See the <a href="https://pusher.com/docs/libraries">complete list of Pusher client libraries and their documentation</a>.</li>
+  <li style="margin-bottom: 0.5em">For the Pusher key, use the part of the <a href="https://support.ably.io/solution/articles/3000030054-what-is-an-app-api-key">Ably API key</a> before the colon; for the secret, use the part after the colon.</li>
+  <li style="margin-bottom: 0.5em">You can add any other Pusher options you would normally use in the initializer.</li>
+  <li style="margin-bottom: 0.5em">Note that in the Pusher client library terminology, the ‘encrypted’ option controls whether the the lib uses TLS, not end-to-end encryption. Setting the <code>encrypted</code> option to true is not mandatory, but strongly recommended to avoid sending private keys over plain text connections.</li>
+</ul>
+
+<h2 id="supported-features" style="margin-top: 1em">Supported features</h2>
+
+<ul>
+  <li style="margin-bottom: 0.5em">REST publish</li>
+  <li style="margin-bottom: 0.5em">REST get occupied channels</li>
+  <li style="margin-bottom: 0.5em">REST get presence set</li>
+  <li style="margin-bottom: 0.5em">REST get user count</li>
+  <li style="margin-bottom: 0.5em">Realtime subscribe</li>
+  <li style="margin-bottom: 0.5em">Realtime publish (ie client events)</li>
+  <li style="margin-bottom: 0.5em">Realtime presence</li>
+</ul>
+
+<h2 id="unsupported-features" style="margin-top: 1em">Unsupported features</h2>
+
+<ul>
+  <li style="margin-bottom: 0.5em">REST subscriber count (partially supported; see below)</li>
+</ul>
+
+<h2 id="usage-notes" style="margin-top: 1em">Usage notes</h2>
+
+<h3 id="general">General</h3>
+
+<ul>
+  <li style="margin-bottom: 0.5em">While the Pusher adaptor is quite a light translation layer (certainly a good deal lighter than the Pubnub adaptor), a protocol adaptor inevitably adds some latency. Using the adaptor will be a little slower than using Ably native client libraries. Typically the impact is in the low milliseconds. By the same token, it will likely also be marginally slower than using Pusher natively – but only if you are close to whichever Pusher datacenter you are using. If not, the extra milliseconds of latency from the adaptor should be more than compensated for by being able to use a datacenter closer to you (unlike Pusher, Ably has datacenters in <a href="https://support.ably.io/solution/articles/3000029525-where-are-ably-s-servers-located-around-the-world">9+ regions worldwide</a> and federates messages between them - you automatically connect to the closest one to you, using latency-based routing).</li>
+  <li style="margin-bottom: 0.5em">Behind the scenes, the adaptor just uses the normal Ably service, so there is no problem with using Pusher and Ably client libraries side by side (though bear in mind channel name translation, see below). You can mix and match as you like; for example, using Pusher client libraries normally, but using the Ably REST api to get channel history, which is not available through the Pusher clients.</li>
+  <li style="margin-bottom: 0.5em">While using the adaptor gives you some of the advantages of Ably over Pusher (eg inter-region message federation), many others (e.g. <a href="https://support.ably.io/solution/articles/3000044639-connection-state-recovery">continuity guarantees</a>, <a href="https://support.ably.io/solution/articles/3000044636-routing-around-network-and-dns-issues">fallback host support</a>, <a href="https://www.ably.io/documentation/realtime/history">history</a>, <a href="https://support.ably.io/solution/articles/3000030058-what-is-a-channel-namespace-and-how-can-i-use-them-">flexible channel namespaces</a>, <a href="https://www.ably.io/documentation/general/authentication">powerful token authentication</a>) require the use of the Ably client libraries. As a result, if a native Ably library is available for your platform, we recommend you consider using the Ably client libraries instead or at least make a plan to eventually transition over to Ably native client libraries.</li>
+</ul>
+
+<h3 id="security">Security</h3>
+
+<p style="margin-bottom: 0.5em">When using Ably normally, you cannot connect to the Ably service at all without a complete API key, or a token derived from one. When using the Pusher adaptor, you can connect to public channels (see ‘Channels’ below) with only the Ably key name (the app id together with the key id). Since the Pusher adaptor lets you do something that would not normally be possible with Ably, it needs to be explicitly enabled for each api key you want to use it with. If you would like it enabled, please <a href="https://www.ably.io/contact">contact us through live chat</a> or by emailing support@ably.io.</p>
+
+<h3 id="channels">Channels</h3>
+
+<ul>
+  <li style="margin-bottom: 0.5em">Ably and Pusher both have various (incompatible) restrictions on channel names, and use namespaces very differently. So when using the adaptor, channel names are mapped. That is, if you connect to the channel “foo” using the Pusher adaptor, it will actually use the Ably channel “public:foo”. The channel name translation rules are as follows:</li>
+  <li style="margin-bottom: 0.5em">Pusher public channels (no prefix) are mapped to the the Ably ‘public:’ namespace.</li>
+  <li style="margin-bottom: 0.5em">Pusher private channels (‘private-‘ prefix) are mapped to the the Ably ‘private:’ namespace.</li>
+  <li style="margin-bottom: 0.5em">Pusher presence channels (‘presence-‘ prefix) are mapped to the the Ably ‘presence:’ namespace.</li>
+  <li style="margin-bottom: 0.5em">Conversely, Ably channels not in any of the ‘public:’, ‘private:’, or ‘presence:’ namespaces get a ‘private-ablyroot-‘ prefix.</li>
+  <li style="margin-bottom: 0.5em">Semicolons are banned in Ably channel names; colons are banned in Pusher channel names. So the adaptor maps one to the other: semicolons in Pusher channel names become colons in Ably channel names.</li>
+</ul>
+
+<p style="margin-bottom: 0.5em">A few examples:</p>
+
+<table style="margin-bottom: 1em; border-collapse: collapse;" border="1">
+  <thead>
+    <tr>
+      <th>Pusher adaptor channel</th>
+      <th>Actual Ably channel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>presence-foo</td>
+      <td>presence:foo</td>
+    </tr>
+    <tr>
+      <td>private-foo</td>
+      <td>private:foo</td>
+    </tr>
+    <tr>
+      <td>foo</td>
+      <td>public:foo</td>
+    </tr>
+    <tr>
+      <td>foo;bar</td>
+      <td>public:foo:bar</td>
+    </tr>
+    <tr>
+      <td>private-ablyroot-foo</td>
+      <td>foo</td>
+    </tr>
+    <tr>
+      <td>private-ablyroot-foo;bar</td>
+      <td>foo:bar</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="user-and-subscriber-count">User and subscriber count</h3>
+
+<p style="margin-bottom: 0.5em">Getting total subscriber count for a channel is a planned feature in Ably. For now, ‘subscriber count’, like ‘user count’, will only work with presence channels. ‘User count’ gives the size of the presence set once uniqified by <a href="https://www.ably.io/documentation/realtime/authentication#identified-clients"><code>clientId</code></a>, and ‘subscriber count’ gives the raw size of the presence set.</p>

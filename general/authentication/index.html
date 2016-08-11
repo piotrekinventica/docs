@@ -131,7 +131,7 @@ ably.createTokenRequest({ clientId: 'client@example.com' }, null, function(err, 
      } */
 });</code></pre>
 <h4>Token is issued by your servers and passed to clients</h4>
-<p>Using our client libraries, a <a href="/realtime/authentication#request-token">token is requested</a> from Ably on your servers and then handed to client libraries. Our client libraries then use that <a href="#tokens">token</a> to authenticationenticate with Ably. This is an alternative approach for authentication that allows you to issue <a href="#tokens">tokens</a> directly as opposed to providing <a href="/realtime/types#token-request">signed token requests</a> from your servers. The advantage for clients is it saves one round trip request as they do not need to request a <a href="#tokens">token</a> themselves. The disadvantage is that your servers must communicate with Ably each time a <a href="#tokens">token</a> is required. This process is depicted in the following diagram:</p>
+<p>Using our client libraries, a <a href="/realtime/authentication#request-token">token is requested</a> from Ably on your servers and then handed to client libraries. Our client libraries then use that <a href="#tokens">token</a> to authenticate with Ably. This is an alternative approach for authentication that allows you to issue <a href="#tokens">tokens</a> directly as opposed to providing <a href="/realtime/types#token-request">signed token requests</a> from your servers. The advantage for clients is it saves one round trip request as they do not need to request a <a href="#tokens">token</a> themselves. The disadvantage is that your servers must communicate with Ably each time a <a href="#tokens">token</a> is required. This process is depicted in the following diagram:</p>
 <p><a href="/images/diagrams/token-auth-process.png" target="_blank"><br />
   <img src="/images/diagrams/token-auth-process.png" style="width: 100%" alt="Token auth process diagram"><br />
 </a></p>
@@ -159,7 +159,7 @@ ably.requestToken({ clientId: 'client@example.com' }, function(err, token) {
 </ul>
 <p>See <a href="#capability-operations">capability operations</a> below for the complete set of supported operations on a channel.</p>
 <h4 id="capabilities-example">Capabilities example in code</h4>
-<p>If you just want to see how capabilities work with some code, take a look at our <a href="https://jsbin.ably.io:443/ivomas/1/edit?javascript,live">capabilities example</a>.</p>
+<p>If you just want to see how capabilities work with some code, take a look at our <a href="https://jsbin.ably.io:443/imiyeg/1/edit?javascript,live">capabilities example</a>.</p>
 <h4 id="capabilities-explained-all">Token request without capabilities example</h4>
 <p>Given an API key exists with the following capabilities:</p>
 <pre lang="json"><code lang="json">{
@@ -201,7 +201,7 @@ ably.requestToken({ clientId: 'client@example.com' }, function(err, token) {
   "status": ["*"]
 }}, tokenCallback)</code></pre>
 <p>Then Ably will be unable to issue a token because the requested capabilities do not intersect with the API key&#8217;s capabilities i.e. they are entirely incompatible. In the example above, <code>requestToken</code> will call the callback with an error.</p>
-<p>See a working <a href="https://jsbin.ably.io:443/ivomas/1/edit?javascript,live">capabilities example</a>.</p>
+<p>See a working <a href="https://jsbin.ably.io:443/imiyeg/1/edit?javascript,live">capabilities example</a>.</p>
 <h3 id="tokens">Tokens</h3>
 <p>In the documentation, references to tokens typically refer to both <code>TokenDetails</code> object that contain the token string or the token string itself. <code>TokenDetails</code> objects are obtained when <a href="/realtime/authentication#request-token">requesting tokens</a> from the Ably service and contain not only the token string in the <code>token</code> attribute, but also contain attributes describing the properties of the token.</p>
 <h4>TokenDetails type</h4>
@@ -329,7 +329,7 @@ with the following constraints:<br />
 	<dt>stats</dt>
 	<dd>can retrieve current and historical usage statistics for an app</dd>
 </dl>
-<p>See a working <a href="https://jsbin.ably.io:443/ivomas/1/edit?javascript,live">capabilities example</a>, read <a href="#capabilities-explained">understanding capabilities and token security</a> above to get a more thorough overview of how capabilities can be used to secure your application along with working examples.</p>
+<p>See a working <a href="https://jsbin.ably.io:443/imiyeg/1/edit?javascript,live">capabilities example</a>, read <a href="#capabilities-explained">understanding capabilities and token security</a> above to get a more thorough overview of how capabilities can be used to secure your application along with working examples.</p>
 <h3>HMAC calculation</h3>
 <p>First the canonicalised request text, constructed as follows:</p>
 <ul>

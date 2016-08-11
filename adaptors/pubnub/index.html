@@ -1,0 +1,88 @@
+<h1 id="ably-pubnub-protocol-adaptor">Ably Pubnub protocol adaptor</h1>
+
+<p style="margin-bottom: 0.5em"><strong>Our protocol adaptors are in public beta. If you wish to use our adaptors, please <a href="https://www.ably.io/contact">contact us first</a> using our live chat or email support@ably.io</strong></p>
+
+<h2 id="example" style="margin-top: 1em">Example</h2>
+
+<p style="margin-bottom: 0.5em">To use the Ably Pubnub protocol adaptor, you must initialize your Pubnub client library as follows:</p>
+
+<pre code-brush="js" rel="highlighter" contenteditable="false" style="margin-bottom: 1em;">var apiKey = &quot;&lt;your Ably api key&gt;&quot;;
+var pubnub = PUBNUB({
+  publish_key        : apiKey,
+  subscribe_key      : apiKey,
+  origin             : &#x27;pubnub.ably.io&#x27;,
+  ssl                : true,
+  no_wait_for_pending: true
+});
+</pre>
+
+<p style="margin-bottom: 0.5em"><a href="https://jsbin.ably.io:443/upoqev/1/edit?javascript,live">View a Pubnub adaptor example that publishes &amp; receives messages in your browser</a></p>
+
+<p style="margin-bottom: 0.5em">Please note:</p>
+
+<ul>
+  <li style="margin-bottom: 0.5em">For simplicity, the above example uses the Pubnub Javascript library. All other Pubnub client libraries can be instanced in a similar fashion. See the <a href="https://www.pubnub.com/docs">complete list of Pubnub SDKs and their documentation</a>.</li>
+  <li style="margin-bottom: 0.5em">You can add any other Pubnub options you would normally use in the initializer.</li>
+  <li style="margin-bottom: 0.5em">Note that the <code>ssl</code> option is not mandatory, but strongly recommended. The Pubnub client includes the raw api key in the path that it connects to, so we strongly advise you to use this option to prevent it being sent in plain text.</li>
+</ul>
+
+<h2 id="supported-features" style="margin-top: 1em">Supported features</h2>
+
+<ul>
+  <li style="margin-bottom: 0.5em">publish</li>
+  <li style="margin-bottom: 0.5em">subscribe</li>
+  <li style="margin-bottom: 0.5em">presence</li>
+  <li style="margin-bottom: 0.5em">history</li>
+  <li style="margin-bottom: 0.5em">getstate</li>
+  <li style="margin-bottom: 0.5em">setstate</li>
+  <li style="margin-bottom: 0.5em">herenow</li>
+  <li style="margin-bottom: 0.5em">global herenow</li>
+</ul>
+
+<h2 id="unsupported-features" style="margin-top: 1em">Unsupported features</h2>
+
+<ul>
+  <li style="margin-bottom: 0.5em">PAM</li>
+  <li style="margin-bottom: 0.5em">wherenow</li>
+  <li style="margin-bottom: 0.5em">channel groups</li>
+  <li style="margin-bottom: 0.5em">backfill subscribes</li>
+  <li style="margin-bottom: 0.5em">stream filters</li>
+</ul>
+
+<h2 id="usage-notes" style="margin-top: 1em">Usage notes</h2>
+
+<h3 id="general">General</h3>
+
+<ul>
+  <li style="margin-bottom: 0.5em">Using the Pubnub adaptor will likely be slightly slower than using a native Ably library due to the overhead of protocol translation. Typically the impact is in the low milliseconds</li>
+  <li style="margin-bottom: 0.5em">Some things which are quick with Pubnub are slow or impossible with Ably, and vice versa. Some things which in Pubnub are single operations (e.g. global herenow) are translated to many different operations, and will be correspondingly slower. Some operations (e.g. wherenow) are unlikely to ever be supported in the adaptor, as they have no Ably equivalent.</li>
+  <li style="margin-bottom: 0.5em">Behind the scenes, the adaptor just uses the normal Ably service, so there is no problem with using Pubnub and Ably client libraries side by side: they are completely interoperable, subject to a few caveats below.</li>
+  <li style="margin-bottom: 0.5em">Finally, many of the advantages of Ably over Pubnub (using <a href="https://support.ably.io/solution/articles/3000044831-which-transports-are-supported-">websockets rather than long polling</a>, <a href="https://support.ably.io/solution/articles/3000044639-connection-state-recovery">continuity guarantees</a>, <a href="https://support.ably.io/solution/articles/3000044636-routing-around-network-and-dns-issues">fallback host support</a> etc.) are unavailable when using Pubnub client libraries. If a native Ably library is available for your platform, we recommend you consider using the Ably client libraries instead or at least make a plan to eventually transition over to Ably native client libraries.</li>
+</ul>
+
+<h3 id="publishing-and-subscribing">Publishing and subscribing</h3>
+
+<ul>
+  <li style="margin-bottom: 0.5em">Pubnub message content is mapped to Ably message data (the payload). A publish using the Pubnub adaptor will leave the Ably message name blank, and message name is not visible to Pubnub adaptor subscribers.</li>
+  <li style="margin-bottom: 0.5em">Each separate UUID (for a given api key, in a given region) is treated as a separate subscriber (for presence purposes), and so will count as a separate connection to Ably.</li>
+  <li style="margin-bottom: 0.5em">In Pubnub’s model, message continuity is available for ‘5-20 minutes’ and up to 100 messages. To provide compatibility with this, the Pubnub adaptor will stay connected and attached to your channels for 5 minutes after the last subscribe long poll it receives. If the client doesn’t connect to the adaptor for 5 minutes, the adaptor will disconnect from Ably, and any subsequent subscribe poll will be treated as a new connection (and will get messages from the time of that poll onwards).</li>
+  <li style="margin-bottom: 0.5em">As such, during development, beware that using a lot of different uuids (eg using the <code>unique_uuid</code> option of the js lib to generate a new uuid on each page refresh) may result in connections racking up quickly, as each will stay alive a minimum of 5 minutes.</li>
+  <li style="margin-bottom: 0.5em">In Pubnub itself, the catchup mechanism will only give you the last ~100 messages total, across all channels you’re subscribed to. When using the Ably Pubnub adaptor, things are not quite this bad: you will receive the last 100 messages for <em>each</em> channel you’re subscribed to. But as with Pubnub, you will have no idea whether or not this represents all the messages you missed, and so you will not know whether you’ve lost connection continuity. This is a problem inherent to the Pubnub protocol, so if it is an issue for you, we recommend switching to the Ably client libraries, which will tell you whether or not you have lost continuity (and so e.g. you can do a history request if so, to get any messages you’ve missed).</li>
+  <li style="margin-bottom: 0.5em">Commas are valid in Ably channel names, but not Pubnub, since with Pubnub they are used as delimiters. So Ably channels with commas in them will not be accessible to Pubnub clients.</li>
+</ul>
+
+<h3 id="presence-and-state">Presence and state</h3>
+
+<ul>
+  <li style="margin-bottom: 0.5em">Pubnub’s <code>UUID</code> is mapped to Ably’s <a href="https://www.ably.io/documentation/realtime/authentication#identified-clients"><code>clientId</code></a>.</li>
+  <li style="margin-bottom: 0.5em">Pubnub considers the same <code>UUID</code> to be the same member; Ably considers the same <code>clientid</code> on different connections to be different members of the presence set. As such, if you have multiple connections with the same <code>clientId</code>, the presence set will contain that <code>clientId</code> multiple times. Ably does this so that if you have multiple devices connected with the same <code>clientId</code> you can check which devices are present. If getting the state for a <code>clientId</code>, if there are multiple members in the set with the same <code>clientId</code>, the adaptor will just pick one and return its state.</li>
+  <li style="margin-bottom: 0.5em">Pubnub’s member state is mapped to Ably’s presence data. With presence data, member aren’t permitted to change other members’ presence data. So each client can only set its own state, not other people’s.</li>
+</ul>
+
+<h3 id="rest-requests">REST requests</h3>
+
+<ul>
+  <li style="margin-bottom: 0.5em">Note that some Pubnub api requests are mapped to multiple Ably requests, and will count as such for rate limiting and package quota purposes. For example:</li>
+  <li style="margin-bottom: 0.5em">A global herenow request is mapped to a request for a list of active channels, followed by a presence request for each channel, for a total of n+1 requests for n channels.</li>
+  <li style="margin-bottom: 0.5em">Due to the mismatch between how Ably and how Pubnub paginate history requests, any Pubnub history request which in Ably would give a paginated result (that is, for which the result set is limited by the <code>limit</code>/<code>count</code> param) will involve two Ably API requests.</li>
+</ul>
