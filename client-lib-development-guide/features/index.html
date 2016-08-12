@@ -698,7 +698,7 @@ with an evented async callback interface</li>
 	<li><a id='RTP2' name='RTP2' href='#RTP2'><code>(RTP2)</code></a> A <code>PresenceMap</code> should be used to maintain a list of members present on a channel. Broadly, this is is a map of <a href="#TP3h">memberKeys</a> to presence messages, all with <code>PRESENT</code> actions (during a sync there may also be ones with an <code>ABSENT</code> action, see <a href="#RTP2f">RTP2f</a> ). Consult the <a href="https://github.com/ably/ably-java/blob/master/lib/src/main/java/io/ably/lib/realtime/Presence.java#L578-L723">the Java implementation</a> for details.
 	<ul>
 		<li><a id='RTP2a' name='RTP2a' href='#RTP2a'><code>(RTP2a)</code></a> All incoming presence messages must be compared for newness with the matching member already in the <code>PresenceMap</code>, if one exists, where &#8220;matching&#8221; means they share the same <code>memberKey</code> (or equivalently, they share both <code>connectionId</code> and <code>clientId</code>)</li>
-		<li><a id='RTP2b' name='RTP2b' href='#RTP2b'><code>(RTP2b)</code></a> To comparing for newness:</li>
+		<li><a id='RTP2b' name='RTP2b' href='#RTP2b'><code>(RTP2b)</code></a> To compare for newness:</li>
 		<li><a id='RTP2b1' name='RTP2b1' href='#RTP2b1'><code>(RTP2b1)</code></a> If either presence message has a <code>connectionId</code> which is not an initial substring of its <code>id</code>, compare them by <code>timestamp</code> numerically. (This will be the case when one of them is a &#8216;synthesized leave&#8217; event sent by realtime to indicate a connection disconnected unexpectedly 15s ago. Such messages will have an <code>id</code> that does not correspond to its <code>connectionId</code>, as it wasn&#8217;t actually published by that connection)</li>
 		<li><a id='RTP2b2' name='RTP2b2' href='#RTP2b2'><code>(RTP2b2)</code></a> Else split the <code>id</code> of both presence messages (which will be of the form <code>connid:msgSerial:index</code>, e.g. <code>aaaaaa:0:0</code>) on the separator <code>:</code>, and parse the latter two as integers. Compare them first by <code>msgSerial</code> numerically, then (if @msgSerial@s are equal) by <code>index</code> numerically, larger being newer in both cases</li>
 		<li><a id='RTP2c' name='RTP2c' href='#RTP2c'><code>(RTP2c)</code></a> As there are no guarantees that during a <code>SYNC</code> operation presence events will arrive in order, all presence messages from a <code>SYNC</code> must also be compared for newness in the same way as they would from a <code>PRESENCE</code></li>
@@ -1621,7 +1621,7 @@ class HttpPaginatedResponse // RSC19b
   headers: Hash // HP8</code></pre>
 <h2 id="old-specs">Old specs</h2>
 <ul>
-	<li><a href="/client-lib-development-guide/versions/features-0-8">v0.8</a> (deprecated in June 2016)</li>
+	<li><a href="/client-lib-development-guide/versions/features-0-8">v0.8</a> (deprecated in July 2016)<br>&#8220;View 0.8 &#8594; 0.9 changes&#8221;:https://github.com/ably/docs/blob/source/content/client-lib-development-guide/versions/features-0-8__0-9.textile.diff</li>
 </ul>
     </article>
     <hr class="back">
