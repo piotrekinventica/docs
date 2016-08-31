@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ably API Documentation - </title>
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/vendor/prettify/prettify.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheet.css" media="screen">
+
+    
+
+    <script src="/vendor/javascripts/jquery-1-8-3-min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/jquery-cookie-1-3-1.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/base64.js" type="text/javascript"></script>
+
+    <script src="/vendor/prettify/prettify-lib.js" type="text/javascript"></script>
+
+    <script src="//cdn.ably.io/lib/ably.min.js" type="text/javascript"></script>
+
+    <script src="/javascripts/application.js" type="text/javascript"></script>
+    <script src="/javascripts/lang-manager.js" type="text/javascript"></script>
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.7.5">
+  </head>
+  <body>
+    <div class="canonical-notice">
+      <img src="/images/icon-alert.png">
+      <span class="canonical-notice-text">
+        You are viewing our bleeding edge unstable documentation. We recommend you use our <a href="https://www.ably.io/documentation">stable documentation »</a>
+      </span>
+      <img src="/images/icon-alert.png">
+    </div>
+    <div class="fork-banner"><a href="https://github.com/ably/docs"><img src="/images/forkme.png" alt="Fork me on GitHub"></a></div>
+
+  <div id="documentation">
+    
+    <header>
+      
+
+      <div id="version-not-latest-warning"></div>
+
+      
+        <div id="version-container">
+          <div class="dropdown">
+            <input id="toggle2" type="checkbox">
+            <label for="toggle2" class="animate">Version 0.9<i class="fa fa-list float-right"></i></label>
+            <ul class="animate">
+              
+                  <li class="animate" data-version="0.8"><a href="/realtime/versions/v0.8/_reattach_strategy/">Version 0.8</a></li>
+              
+            </ul>
+           </div>
+        </div>
+        <script type="text/javascript">window.AblyVersionInfo={'langVersions':{"javascript":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"java":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"python":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"php":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"ruby":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"nodejs":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"objc":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"swift":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"go":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"csharp":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"cplusplus":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"c":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"appcelerator":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"},"phonegap":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/_reattach_strategy/"}},'latestForPage':{'version': '0.9', 'path': '/realtime/_reattach_strategy/'},'page':'0.9'}</script>
+      
+
+      
+      
+        <h1 id="title">Untitled</h1>
+      
+    </header>
+    <article>
+      <p>Once a channel becomes attached, it will remain attached until any of the following occurs:</p>
+<ul>
+	<li>An explicit request to detach the channel is made;</li>
+	<li>The channel moves into the <code>failed</code> state following an unrecoverable error sent from Ably. If for example permissions were revoked for that client on that channel, the channel would move to the <code>failed</code> state;</li>
+	<li>The connection enters the <code>suspended</code>, <code>failed</code> or <code>closed</code> state;</li>
+	<li>The connection is not resumed fully as part of the <a href="#connection-state-recovery">connection state recovery process</a></li>
+</ul>
+<p>Ably provides automatic message continuity for channels, even when connections are disconnected and later resumed. See <a href="/realtime/connection#connection-state-recovery">connection state recovery</a> for more details on how connections and channel state recovery allows you, as a developer, to publish and receive messages without having to worry about changing network conditions. However, there are times when connection recovery is not possible such as being disconnected from Ably for more than two minutes.  When this occurs, the channels that are attached can no longer provide guaranteed message continuity. We wanted developers to be aware of this discontinuity, and as such, our client libraries will automatically detach all attached channels that have lost continuity. It is then up to the developer to decide what action to take such as using the <a href="/realtime/history">history API</a> to retrieve old messages, or simply to reattach the channel and continue if messsage loss is not important.</p>
+<p>For customers who want to ensure that all channels are attached when a connection is available, regardless of whether messages may have been missed, we recommend the following approach:</p>
+<ul>
+	<li>Add a listener on the connection object for all <code>connected</code> events</li>
+	<li>Reattach all channels you have created. If a channel is already attached, and you call the <a href="/realtime/channels-messages/#attach"><span lang="default"><code>channel#attach</code></span><span lang="csharp"><code>channel#Attach</code></span></a> method, the channel will simply remain attached. It is therefore safe to simply attach all channels every time the connection becomes <code>connected</code></li>
+</ul>
+<p>The following Javascript example demonstrates a trivial way to ensure all channels are attached when the client becomes connected or the channel becomes detached:</p>
+<pre lang="javascript"><code lang="javascript">function reattach(channel) {
+  channel.attach();
+  /* Example when using presence on the channel */
+  channel.presence.enter();
+}
+
+/* Connection state changes can trigger channels to become detached
+   Automatically re-attach channels, nothing will happen if alreay attached */
+client.connection.on('connected', function() {
+  for (let channelName in client.channels.all) {
+    let channel = client.channels.get(channelName);
+    reattach(channel);
+  }
+});
+
+/* If a channel becomes detached due to channel failure (some edge cases exist)
+   You should explicitly re-attach the channel if you are connected */
+channel.on('detached', function() {
+  if (client.connection.state === 'connected') {
+    reattach(channel);
+  }
+});</code></pre>
+    </article>
+    <hr class="back">
+    <a href="#documentation">Back to top</a>
+  </div>
+  <div id="sidebar">
+  <a href="/" title="API Documentation Home"><img src="/images/ably-logo.png" class="ably-logo" title="API Documentation Home"></a>
+  <ul>
+<li class=''><a href='/quick-start-guide/'>Quickstart Guide</a></li>
+<li class=''><a href='/how-ably-works/'>How Ably works</a></li>
+</ul>
+  <h2><a href="/realtime/">Realtime client lib</a></h2>
+<ul>
+<li class=''><a href='/realtime/usage/'>Using the Realtime library</a></li>
+<li class=''><a href='/realtime/connection/'>Connection</a></li>
+<li class=''><a href='/realtime/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/realtime/presence/'>Presence</a></li>
+<li class=''><a href='/realtime/authentication/'>Authentication</a></li>
+<li class=''><a href='/realtime/history/'>History</a></li>
+<li class=''><a href='/realtime/encryption/'>Encryption</a></li>
+<li class=''><a href='/realtime/statistics/'>Statistics</a></li>
+<li class=''><a href='/realtime/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest/">REST client lib</a></h2>
+<ul>
+<li class=''><a href='/rest/usage/'>Using the REST library</a></li>
+<li class=''><a href='/rest/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/rest/presence/'>Presence</a></li>
+<li class=''><a href='/rest/authentication/'>Authentication</a></li>
+<li class=''><a href='/rest/history/'>History</a></li>
+<li class=''><a href='/rest/encryption/'>Encryption</a></li>
+<li class=''><a href='/rest/statistics/'>Statistics</a></li>
+<li class=''><a href='/rest/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest-api/">REST API</a></h2>
+<ul>
+</ul>
+  <h2>General</h2>
+<ul>
+<li class=''><a href='/general/authentication/'>Authentication</a></li>
+<li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
+<li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
+<li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
+<li class=''><a href='/general/statistics/'>Application Statistics</a></li>
+</ul>
+  <h2><a href="/client-lib-development-guide/">Library Development</a></h2>
+<ul>
+<li class=''><a href='/client-lib-development-guide/features/'>Features spec</a></li>
+<li class=''><a href='/client-lib-development-guide/feature-prioritisation/'>Feature prioritisation</a></li>
+<li class=''><a href='/client-lib-development-guide/protocol/'>Realtime Protocol Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/test-api/'>Sandbox Test API</a></li>
+<li class=''><a href='/client-lib-development-guide/encryption/'>Encryption</a></li>
+<li class=''><a href='/client-lib-development-guide/websocket/'>WebSocket Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/comet/'>Comet Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/documentation-formatting-guide/'>Documentation Formatting Guide</a></li>
+<li class=''><a href='/code-index/'>Code Examples List</a></li>
+</ul>
+  <ul>
+<li><a href="https://www.ably.io">Visit Ably.io</a></li>
+</ul>
+</div>
+
+</body>
+</html>

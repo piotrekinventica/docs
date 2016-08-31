@@ -1,0 +1,366 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ably API Documentation - Statistics</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/vendor/prettify/prettify.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheet.css" media="screen">
+
+    
+      <link rel="canonical" href="https://www.ably.io/documentation/realtime/versions/v0.8/statistics" />
+    
+
+    <script src="/vendor/javascripts/jquery-1-8-3-min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/jquery-cookie-1-3-1.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/base64.js" type="text/javascript"></script>
+
+    <script src="/vendor/prettify/prettify-lib.js" type="text/javascript"></script>
+
+    <script src="//cdn.ably.io/lib/ably.min.js" type="text/javascript"></script>
+
+    <script src="/javascripts/application.js" type="text/javascript"></script>
+    <script src="/javascripts/lang-manager.js" type="text/javascript"></script>
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.7.5">
+  </head>
+  <body>
+    <div class="canonical-notice">
+      <img src="/images/icon-alert.png">
+      <span class="canonical-notice-text">
+        You are viewing our bleeding edge unstable documentation. We recommend you use our <a href="https://www.ably.io/documentation">stable documentation »</a>
+      </span>
+      <img src="/images/icon-alert.png">
+    </div>
+    <div class="fork-banner"><a href="https://github.com/ably/docs"><img src="/images/forkme.png" alt="Fork me on GitHub"></a></div>
+
+  <div id="documentation">
+    
+      <nav class="jump-to-nav">
+        <div class="form">
+          <select id="jump-to-nav">
+            <option>Jump to ...</option>
+            <optgroup label='Help with'>
+<option id="anchor-title">Statistics</option>
+<option id="anchor-getting-started">Getting started</option>
+</optgroup>
+<optgroup label='API reference'>
+<option id="anchor-stats">stats</option>
+</optgroup>
+          </select>
+        </div>
+      </nav>
+    
+    <header>
+      <script type="text/javascript">window.NavLangs=["javascript","nodejs","ruby","java","swift","objc","csharp"];</script>
+
+      <div id="version-not-latest-warning"></div>
+
+      
+        <div id="version-container">
+          <div class="dropdown">
+            <input id="toggle2" type="checkbox">
+            <label for="toggle2" class="animate">Version 0.8<i class="fa fa-list float-right"></i></label>
+            <ul class="animate">
+              
+                  <li class="animate" data-version="0.9"><a href="/realtime/statistics/">Version 0.9</a></li>
+              
+            </ul>
+           </div>
+        </div>
+        <script type="text/javascript">window.AblyVersionInfo={'langVersions':{"javascript":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/statistics/"},"java":{"versions":["0.8"],"most_recent_path":"/realtime/versions/v0.8/statistics/"},"python":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/statistics/"},"php":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/statistics/"},"ruby":{"versions":["0.8"],"most_recent_path":"/realtime/versions/v0.8/statistics/"},"nodejs":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/statistics/"},"objc":{"versions":["0.8"],"most_recent_path":"/realtime/versions/v0.8/statistics/"},"swift":{"versions":["0.8"],"most_recent_path":"/realtime/versions/v0.8/statistics/"},"go":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/statistics/"},"csharp":{"versions":["0.8"],"most_recent_path":"/realtime/versions/v0.8/statistics/"},"cplusplus":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/statistics/"},"c":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/statistics/"},"appcelerator":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/statistics/"},"phonegap":{"versions":["0.9","0.8"],"most_recent_path":"/realtime/statistics/"}},'latestForPage':{'version': '0.9', 'path': '/realtime/statistics/'},'page':'0.8'}</script>
+      
+
+      
+        <div class="breadcrumb"><a href="/realtime/">Realtime Client Library API</a><span class="separator">/</span></div>
+      
+      
+        <h1 id="title">Statistics</h1>
+      
+    </header>
+    <article>
+      <p>The Ably service retains usage statistics per application and per account at 1 minute intervals. Your application statistics are available programatically through our client libraries at 1 minute intervals, or aggregated up to the hour, day, or month.</p>
+<p class="tip">Your most recent statistics are delayed by up to 6 seconds.</p>
+<p>Your application and account statistics are also available as graphs, tabular data or downlaods in your <a href="https://support.ably.io/solution/articles/3000030053-how-do-i-access-my-app-dashboard">application dashboard</a>.</p>
+<p>The Ably service aggregates your application statistics by minute, hour, day and month, both at an application level and at an account level. Account level statistics are not available via the client library APIs and must be viewed using your <a href="https://support.ably.io/solution/articles/3000048664-how-do-i-access-my-account-dashboard">account dashboard</a>. Your monthly quota and any potential overages are calculated using the account level statistics. <a href="https://support.ably.io/solution/articles/3000044717-what-happens-if-i-exceed-my-package-limits">Find out what happens if you exceed your package limits</a>.</p>
+<h2 id="getting-started">Getting started</h2>
+<p>The Ably Realtime client library provides a straightforward API for retrieving application statistics:</p>
+<pre class="code-editor open-jsbin open-jsbin-ixowal" lang="javascript"><code class="code-editor open-jsbin open-jsbin-ixowal" lang="javascript">var realtime = new Ably.Realtime('{{API_KEY}}');
+realtime.stats({ unit: 'hour' }, function(err, resultPage) {
+  var thisHour = resultPage.items[0];
+  console.log(this.hour) // =&gt; {all: a, inbound: f, outbound: f, …}
+);</code></pre>
+<pre class="code-editor open-jsbin open-jsbin-ixowal" lang="nodejs"><code class="code-editor open-jsbin open-jsbin-ixowal" lang="nodejs">var realtime = new Ably.Realtime('{{API_KEY}}');
+realtime.stats({ unit: 'hour' }, function(err, resultPage) {
+  var thisHour = resultPage.items[0];
+  console.log(this.hour) // =&gt; {all: a, inbound: f, outbound: f, …}
+);</code></pre>
+<pre lang="ruby"><code lang="ruby">realtime = Ably::Realtime.new('{{API_KEY}}')
+realtime.stats(unit: 'hour') do |result_page|
+  this_hour = result_page.items.first
+  puts this_hour # =&gt; #&lt;Ably::Models::Stat:…
+end</code></pre>
+<pre lang="java"><code lang="java">AblyRealtime realtime = new AblyRealtime("{{API_KEY}}");
+Params options = new Param[]{ new Param("unit", "hour") }
+PaginatedResult&lt;Stats&gt; results = realtime.stats(options);
+Stats thisHour = results.items[0];
+System.out.println("Published this hour " + thisHour.inbound.all.all.count);</code></pre>
+<pre lang="csharp"><code lang="csharp">var realtime = new AblyRealtime("{{API_KEY}}");
+var query = new StatsDataRequestQuery() { By = StatsBy.Hour };
+var results = await realtime.StatsAsync(query);
+Stats thisHour = results.Items[0];
+Console.WriteLine("Published this hour " + thisHour.Inbound.All.All);</code></pre>
+<pre lang="objc"><code lang="objc">ARTRealtime *realtime = [[ARTRealtime alloc] initWithKey:@"{{API_KEY}}"];
+ARTStatsQuery *query = [[ARTStatsQuery alloc] init];
+query.unit = ARTStatsGranularityHour;
+[realtime stats:query callback:^(ARTPaginatedResult&lt;ARTStats *&gt; *result, ARTErrorInfo *error) {
+    ARTStats *thisHour = result.items[0];
+    NSLog(@"Published this hour %lu", thisHour.inbound.all.all.count);
+} error:nil];</code></pre>
+<pre lang="swift"><code lang="swift">let realtime = ARTRealtime(key: "{{API_KEY}}")
+let query = ARTStatsQuery()
+query.unit = .Hour
+try! realtime.stats(query) { results, error in
+    let thisHour = results!.items[0]
+    print("Published this hour \(thisHour.inbound.all.all.count)")
+}</code></pre>
+<h1>Realtime API Reference</h1>
+<h6 id="stats">stats</h6>
+<blockquote class="definition">
+<p class="definition"><span lang='javascript,nodejs'>stats(Object options, callback(<a href="/realtime/versions/v0.8/types#error-info">ErrorInfo</a> err, <a href="/realtime/versions/v0.8/types#paginated-result">PaginatedResult</a>&lt;<a href="/realtime/versions/v0.8/types#stats">Stats</a>&gt; results))</span><span lang='ruby'><a href="/realtime/versions/v0.8/types#deferrable">Deferrable</a> stats(Hash options) &#8594; yields <a href="/realtime/versions/v0.8/types#paginated-result">PaginatedResult</a>&lt;<a href="/realtime/versions/v0.8/types#stats">Stats</a>&gt;</span><span lang='java'><a href="/realtime/versions/v0.8/types#paginated-result">PaginatedResult</a>&lt;<a href="/realtime/versions/v0.8/types#stats-type">Stats</a>&gt; stats(<a href="#param">Param</a>[] options)</span><span lang='swift,objc'>stats(query: ARTStatsQuery?, callback: (<a href="/realtime/versions/v0.8/types#paginated-result">ARTPaginatedResult</a>&lt;<a href="/realtime/versions/v0.8/types#stats">ARTStats</a>&gt;?, ARTErrorInfo?) &#8594; Void) throws</span><span lang='csharp'>Task&lt;<a href="/realtime/versions/v0.8/types#paginated-result">PaginatedResult</a>&lt;<a href="/realtime/versions/v0.8/types#status">Stats</a>&gt;&gt; StatsAsync(<a href="#statsdatarequest">StatsDataRequestQuery</a> query)</span></p>
+</blockquote>
+<p>This call queries the <a href="/rest-api#stats-type">REST <code>/stats</code> API</a> and retrieves your application&#8217;s usage statistics. A <a href="/realtime/versions/v0.8/types#paginated-result">PaginatedResult</a> is returned, containing an array of <a href="/realtime/versions/v0.8/types#stats-type">Stats</a> for the first page of results. <a href="/realtime/versions/v0.8/types#paginated-result">PaginatedResult</a> objects are iterable providing a means to page through historical statistics. <a href="/general/versions/v0.8/statistics">See an example set of raw stats returned via the REST API</a>.</p>
+<h4>Parameters</h4>
+<dl>
+	<dt><span lang="default">options</span><span lang="objc,swift,csharp">query</span></dt>
+	<dd>an optional <span lang="default">object</span><span lang="ruby">Hash</span><span lang="objc,swift"><code>ARTStatsQuery</code></span><span lang="csharp"><code>StatsDataRequestQuery</code></span><span lang="java"><a href="#param"><code>Param</code></a>[] array</span> containing the query parameters</dd>
+</dl>
+<dl>
+	<dt><div lang="javascript,nodejs">callback</div></dt>
+	<dd>is a function of the form: <code>function(err, result)</code></dd>
+	<dt><div lang="ruby">&amp;block</div></dt>
+	<dd>yields a <code>PaginatedResult&lt;Stats&gt;</code> array</dd>
+	<dt><div lang="swift,objc">callback</div></dt>
+	<dd>called with a <a href="#paginated-result">ARTPaginatedResult</a>&lt;<a href="/rest/versions/v0.8/types#stats">ARTStats</a>&gt; object or an error</dd>
+</dl>
+<h4><span lang="default"><code>options</code> parameters</span><span lang="objc,swift"><code>ARTStatsQuery</code> properties</span><span lang="csharp"><code>StatsDataRequestQuery</code> properties</span></h4>
+<p>The following options, as defined in the <a href="/rest-api#stats">REST <code>/stats</code> API</a> endpoint, are permitted:</p>
+<dl>
+	<dt><span lang="default">start</span><span lang="ruby">:start</span><span lang="csharp">Start</span></dt>
+	<dd><em>beginning of time</em> earliest <span lang="csharp"><code>DateTimeOffset</code> or </span><span lang="ruby"><code>Time</code> or </span>time in milliseconds since the epoch for any stats retrieved<br><i>Type: <span lang="default"><code>Long</code></span><span lang="ruby"><code>Int or @Time</code></span><span lang="csharp"><code>DateTimeOffset</code></span></i></dd>
+	<dt><span lang="default">end</span><span lang="ruby">:end</span><span lang="csharp">End</span></dt>
+	<dd><em>current time</em> latest <span lang="csharp"><code>DateTimeOffset</code> or </span><span lang="ruby"><code>Time</code> or </span>time in milliseconds since the epoch for any stats retrieved<br><i>Type: <span lang="default"><code>Long</code></span><span lang="ruby"><code>Int or @Time</code></span><span lang="csharp"><code>DateTimeOffset</code></span></i></dd>
+	<dt><span lang="default">direction</span><span lang="ruby">:direction</span><span lang="csharp">Direction</span></dt>
+	<dd><em>backwards</em> <span lang="ruby"><code>:</code></span><code>forwards</code> or <span lang="ruby"><code>:</code></span><code>backwards</code><br><i>Type: <span lang="default"><code>String</code></span><span lang="ruby"><code>Symbol</code></span><span lang="csharp"><code>Direction</code> enum</span></i></dd>
+	<dt><span lang="default">limit</span><span lang="ruby">:limit</span><span lang="csharp">Limit</span></dt>
+	<dd><em>100</em> maximum number of stats to retrieve up to 1,000<br><i>Type: <code>Integer</code></i></dd>
+	<dt><span lang="default">unit</span><span lang="ruby">:unit</span><span lang="csharp">Unit</span></dt>
+	<dd><em>minute</em> <span lang="ruby"><code>:</code></span><code>minute</code>, <span lang="ruby"><code>:</code></span><code>hour</code>, <span lang="ruby"><code>:</code></span><code>day</code> or <span lang="ruby"><code>:</code></span><code>month</code>. Based on the unit selected, the given start or end times are rounded down to the start of the relevant interval depending on the unit granularity of the query<br><i>Type: <span lang="default"><code>String</code></span><span lang="objc,swift"><a href="#stats-granularity"><code>ARTStatsGranularity</code></a></span><span lang="ruby"><code>Symbol</code></span><span lang="csharp"><code>StatsBy</code> enum</span></i></dd>
+</dl>
+
+
+<div lang="javascript,nodejs,,objc,swift"> <!-- start javascript,nodejs,,objc,swift language block -->
+<h4>Callback result</h4>
+<p>On success, <code>result</code> contains a <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulating an array of <a href="/realtime/versions/v0.8/types#stats"><code>Stats</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>next</code></a> and <a href="#paginated-result"><code>first</code></a> methods.</p>
+<p>On failure to retrieve stats, <code>err</code> contains an <a href="#error-info"><code>ErrorInfo</code></a> object with an error response as defined in the <a href="/rest-api#common">Ably REST API</a> documentation.</p>
+
+</div> <!-- /end javascript,nodejs,,objc,swift language block -->
+
+
+
+<div lang="java"> <!-- start java language block -->
+<h4>Returns</h4>
+<p>On success, the returned <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulates an array of <a href="/realtime/versions/v0.8/types#stats"><code>Stats</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>next</code></a> and <a href="#paginated-result"><code>first</code></a> methods.</p>
+<p>Failure to retrieve the stats will raise an <a href="/realtime/versions/v0.8/types/#ably-exception"><code>AblyException</code></a></p>
+
+</div> <!-- /end java language block -->
+
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<h4>Returns</h4>
+<p>Returns a <code>Task&lt;PaginatedResult&gt;</code> which needs to be awaited.</p>
+<p>On success, the returned <a href="#paginated-result"><code>PaginatedResult</code></a> encapsulates an array of <a href="/realtime/versions/v0.8/types#stats"><code>Stats</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>NextAsync</code></a> and <a href="#paginated-result"><code>FirstAsync</code></a> methods.</p>
+<p>Failure to retrieve the stats will raise an <a href="/realtime/versions/v0.8/types/#ably-exception"><code>AblyException</code></a></p>
+
+</div> <!-- /end csharp language block -->
+
+
+
+<div lang="ruby"> <!-- start ruby language block -->
+<h4>Returns</h4>
+<p>A <a href="/realtime/versions/v0.8/types#deferrable"><code>Deferrable</code></a> object is returned from the stats method.</p>
+<p>On success, the registered success callbacks for the <a href="/realtime/versions/v0.8/types#deferrable"><code>Deferrable</code></a> and any block provided to the method yields a <a href="#paginated-result">PaginatedResult</a> that encapsulates an array of <a href="/realtime/versions/v0.8/types#stats"><code>Stats</code></a> objects corresponding to the current page of results. <a href="#paginated-result"><code>PaginatedResult</code></a> supports pagination using <a href="#paginated-result"><code>next</code></a> and <a href="#paginated-result"><code>first</code></a> methods.</p>
+<p>Failure to retrieve the stats will trigger the errback callbacks of the <a href="/realtime/versions/v0.8/types#deferrable"><code>Deferrable</code></a> with an <a href="#error-info"><code>ErrorInfo</code></a> object containing an error response as defined in the <a href="/rest-api#common">Ably REST API</a> documentation.</p>
+
+</div> <!-- /end ruby language block -->
+
+<h2 id="related-types">Related types</h2>
+<h3 id="stats-type"><span lang='default'>Stats object</span><span lang='objc,swift'>ARTStats</span><span lang='java'>io.ably.lib.types.Stats</span><span lang='ruby'>Ably::Models::Stats</span><span lang='csharp'>IO.Ably.Stats</span></h3>
+<p>A <code>Stats</code> object represents a application statistic for the specified interval and time period. Ably aggregates statistics globally for all accounts and applications, and makes these available both through our <a href="/realtime/versions/v0.8/statistics">statistics API</a> as well as your <a href="https://support.ably.io/solution/articles/3000030053-how-do-i-access-my-app-dashboard">application dashboard</a>.</p>
+<p>Please note that most attributes of the <code>Stats</code> type below contain references to further stats types. This documentation is not exhaustive for all stats stypes, and as such, links to the stats types below will take you to the <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats">Ruby library stats documentation</a> which contains exhaustive stats documentation. Ruby and Python however uses <code>under_score</code> case instead of the default <code>camelCase</code> in most languages, so please bear that in mind.</p>
+<h4><span lang='default'>Properties</span><span lang='java'>Members</span><span lang='ruby'>Attributes</span><span lang='python'>Keyword arguments</span></h4>
+<dl>
+	<dt><span lang="default">all</span><span lang="csharp">All</span></dt>
+	<dd>aggregate count of both <code>inbound</code> and <code>outbound</code> message stats<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/MessageTypes"><code>MessageTypes</code></a></i></dd>
+	<dt><span lang="default">apiRequests</span><span lang="ruby,python">api_requests</span><span lang="csharp">ApiRequests</span></dt>
+	<dd>breakdown of API requests received via the Ably REST API<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/RequestCount">RequestCount</a></i></dd>
+	<dt><span lang="default">channels</span><span lang="csharp">Channels</span></dt>
+	<dd>breakdown of channel related stats such as min, mean and peak channels<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/ResourceCount"><code>ResourceCount</code></a></i></dd>
+	<dt><span lang="default">connections</span><span lang="csharp">Connections</span></dt>
+	<dd>breakdown of connection related stats such as min, mean and peak channels for TLS and non-TLS connections<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/ConnectionTypes"><code>ConnectionTypes</code></a></i></dd>
+	<dt><span lang="default">inbound</span><span lang="csharp">Inbound</span></dt>
+	<dd>statistics such as count and data for all inbound messages received over REST and Realtime connection, broken down by normal channel messages or presence messages<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/MessageTraffic"><code>MessageTraffic</code></a></i></dd>
+	<dt><div lang="ruby,python,csharp"><span lang="default">interval_granularity</span><span lang="csharp">IntervalGranularity</span></div></dt>
+	<dd>A <span lang="ruby"><a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats#GRANULARITY-constant"><code>GRANULARITY</code></a> constant</span><span lang="python">value</span><span lang="csharp"><code>Enum</code></span> representing the granularity (interval) of this statistic such as <span lang="ruby"><code>:minute</code>, <code>:hour</code>, <code>:day</code>, <code>:month</code></span><span lang="python"><code>'minute'</code>, <code>'hour'</code>, <code>'day'</code>, <code>'month'</code></span><span lang="csharp"><code>Minute</code>, <code>Hour</code>, <code>Day</code>, <code>Month</code></span>.<br><i>Type: <span lang="ruby"><a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats#GRANULARITY-constant"><code>Stats::GRANULARITY</code></a></span><span lang="python"><code>String</code></span><span lang="csharp"><code>StatsIntervalGranularity enum</code></span></i></dd>
+	<dt><span lang="default">intervalId</span><span lang="ruby,python">interval_id</span><span lang="csharp">IntervalId</span></dt>
+	<dd>the interval ID provides both the time from which the interval starts as well as the length of time that this statistic covers i.e. the period of time which the stats are aggregated for. For example, an interval ID value of &#8220;2016-03-01:10:02&#8221; represents a single minute interval for the UTC time presented in the string. However, an interval ID of &#8220;2016-03&#8221; represents a month interval for the entire month of March 2016 based on UTC time.<br><i>Type: <code>String</code></i></dd>
+	<dt><div lang="ruby,python,csharp"><span lang="default">interval_time</span><span lang="csharp">IntervalTime</span></div></dt>
+	<dd>A <span lang="ruby"><code>Time</code></span><span lang="python"><code>DateTime</code></span><span lang="csharp"><code>DateTimeOffset</code></span> object representing the start of the interval<br><i>Type: <span lang="ruby"><code>Time</code></span><span lang="python"><code>DateTime</code></span><span lang="csharp"><code>DateTimeOffset</code></span></i></dd>
+	<dt><span lang="default">outbound</span><span lang="csharp">Outbound</span></dt>
+	<dd>statistics such as count and data for all oubound messages retrieved via REST history requests, received over Realtime connections, or pushed with WebHooks, broken down by normal channel messages or presence messages<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/MessageTraffic"><code>MessageTraffic</code></a></i></dd>
+	<dt><span lang="default">persisted</span><span lang="csharp">Persisted</span></dt>
+	<dd>messages persisted and later retrieved via the <a href="/realtime/versions/v0.8/history">history API</a><br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/MessageTypes"><code>MessageTypes</code></a></i></dd>
+	<dt><span lang="default">tokenRequests</span><span lang="ruby,python">token_requests</span><span lang="csharp">TokenRequests</span></dt>
+	<dd>breakdown of Token requests received via the Ably REST API.<br><i>Type: <a href="http://www.rubydoc.info/gems/ably/Ably/Models/Stats/RequestCount"><code>RequestCount</code></a></i></dd>
+</dl>
+<h3 id="stats-data-request-query"><span lang='csharp'>IO.Ably.StatsDataRequestQuery</span></h3>
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>StatsDataRequestQuery</code> is a type that encapsulates the parameters for a stats query. For example usage see <a href="/realtime/versions/v0.8/statistics"><span lang="default"><code>Realtime#stats</code></span><span lang="csharp"><code>Realtime#Stats</code></span></a>.</p>
+<h4>Members</h4>
+<dl>
+	<dt>Start</dt>
+	<dd><em>null</em> The start of the queried interval<br><i>Type: <code>DateTimeOffset</code></i></dd>
+	<dt>End</dt>
+	<dd><em>null</em> The end of the queried interval<br><i>Type: <code>DateTimeOffset</code></i></dd>
+	<dt>Limit</dt>
+	<dd><em>null</em> By default it is null. Limits the number of items returned by history or stats<br><i>Type: <code>Integer</code></i></dd>
+	<dt>Direction</dt>
+	<dd><em>Backwards</em> Enum which is either <code>Forwards</code> or <code>Backwards</code><br><i>Type: <code>Direction</code> enum</i></dd>
+	<dt>Unit</dt>
+	<dd><em>Minute</em> <code>Minute</code>, <code>Hour</code>, <code>Day</code> <code>Month</code>. Based on the unit selected, the given start or end times are rounded down to the start of the relevant interval depending on the unit granularity of the query<br><i>Type: <code>StatsBy</code> enum</i></dd>
+	<dt>ExtraParameters</dt>
+	<dd>Optionally any extra query parameters that may be passed to the query. This is mainly used internally by the library to manage paging.<br><i>Type: <code>Dictionary&lt;string, string&gt;</code></i></dd>
+</dl>
+
+</div> <!-- /end csharp language block -->
+
+<h3 id="stats-granularity"><span lang='objc,swift'>ARTStatsGranularity</span><span lang='csharp'>StatsIntervalGranularity</span></h3>
+
+
+<div lang="swift,objc"> <!-- start swift,objc language block -->
+<p><code>ARTStatsGranularity</code> is an enum specifying the granularity of a <a href="/rest/versions/v0.8/statistics#stats-type"><code>ARTStats interval</code></a>.</p>
+<pre lang="objc"><code lang="objc">typedef NS_ENUM(NSUInteger, ARTStatsGranularity) {
+    ARTStatsGranularityMinute,
+    ARTStatsGranularityHour,
+    ARTStatsGranularityDay,
+    ARTStatsGranularityMonth
+};</code></pre>
+<pre lang="swift"><code lang="swift">enum ARTStatsGranularity : UInt {
+    case Minute
+    case Hour
+    case Day
+    case Month
+}</code></pre>
+
+</div> <!-- /end swift,objc language block -->
+
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p><code>StatsIntervalGranularity</code> is an enum specifying the granularity of a <a href="/rest/versions/v0.8/statistics#stats-type"><code>Stats interval</code></a>.</p>
+<pre lang="csharp"><code lang="csharp">public enum StatsGranularity
+{
+    Minute,
+    Hour,
+    Day,
+    Month
+}</code></pre>
+
+</div> <!-- /end csharp language block -->
+
+<h3 id="param"><span lang='java'>io.ably.lib.types.Param</span></h3>
+
+
+<div lang="java"> <!-- start java language block -->
+<p><code>Param</code> is a type encapsulating a key/value pair. This type is used frequently in method parameters allowing key/value pairs to be used more flexible, see <a href="/realtime/versions/v0.8/history#channel-history"><code>Channel#history</code></a> for an example.</p>
+<p>Please note that <code>key</code> and <code>value</code> attributes are always strings. If an <code>Integer</code> or other value type is expected, then you must coerce that type into a <code>String</code>.</p>
+<h4><span lang='java'>Members</span></h4>
+<dl>
+	<dt>key</dt>
+	<dd>The key value<br><i>Type: <code>String</code></i></dd>
+	<dt>value</dt>
+	<dd>The value associated with the <code>key</code><br><i>Type: <code>String</code></i></dd>
+</dl>
+
+</div> <!-- /end java language block -->
+
+
+    </article>
+    <hr class="back">
+    <a href="#documentation">Back to top</a>
+  </div>
+  <div id="sidebar">
+  <a href="/" title="API Documentation Home"><img src="/images/ably-logo.png" class="ably-logo" title="API Documentation Home"></a>
+  <ul>
+<li class=''><a href='/quick-start-guide/'>Quickstart Guide</a></li>
+<li class=''><a href='/how-ably-works/'>How Ably works</a></li>
+</ul>
+  <h2><a href="/realtime/">Realtime client lib</a></h2>
+<ul>
+<li class=''><a href='/realtime/versions/v0.8/usage/'>Using the Realtime library</a></li>
+<li class=''><a href='/realtime/versions/v0.8/connection/'>Connection</a></li>
+<li class=''><a href='/realtime/versions/v0.8/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/realtime/versions/v0.8/presence/'>Presence</a></li>
+<li class=''><a href='/realtime/versions/v0.8/authentication/'>Authentication</a></li>
+<li class=''><a href='/realtime/versions/v0.8/history/'>History</a></li>
+<li class=''><a href='/realtime/versions/v0.8/encryption/'>Encryption</a></li>
+<li class='selected'><a href='/realtime/versions/v0.8/statistics/'>Statistics</a></li>
+<li class=''><a href='/realtime/versions/v0.8/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest/">REST client lib</a></h2>
+<ul>
+<li class=''><a href='/rest/versions/v0.8/usage/'>Using the REST library</a></li>
+<li class=''><a href='/rest/versions/v0.8/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/rest/versions/v0.8/presence/'>Presence</a></li>
+<li class=''><a href='/rest/versions/v0.8/authentication/'>Authentication</a></li>
+<li class=''><a href='/rest/versions/v0.8/history/'>History</a></li>
+<li class=''><a href='/rest/versions/v0.8/encryption/'>Encryption</a></li>
+<li class=''><a href='/rest/versions/v0.8/statistics/'>Statistics</a></li>
+<li class=''><a href='/rest/versions/v0.8/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest-api/">REST API</a></h2>
+<ul>
+</ul>
+  <h2>General</h2>
+<ul>
+<li class=''><a href='/general/versions/v0.8/authentication/'>Authentication</a></li>
+<li class=''><a href='/general/versions/v0.8/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
+<li class=''><a href='/general/versions/v0.8/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/versions/v0.8/queues/'>Message Queues</a></li>
+<li class=''><a href='/general/versions/v0.8/webhooks/'>Receiving WebHooks</a></li>
+<li class=''><a href='/general/versions/v0.8/statistics/'>Application Statistics</a></li>
+</ul>
+  <h2><a href="/client-lib-development-guide/">Library Development</a></h2>
+<ul>
+<li class=''><a href='/client-lib-development-guide/versions/v0.8/features/'>Features spec</a></li>
+<li class=''><a href='/client-lib-development-guide/feature-prioritisation/'>Feature prioritisation</a></li>
+<li class=''><a href='/client-lib-development-guide/versions/v0.8/protocol/'>Realtime Protocol Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/test-api/'>Sandbox Test API</a></li>
+<li class=''><a href='/client-lib-development-guide/encryption/'>Encryption</a></li>
+<li class=''><a href='/client-lib-development-guide/websocket/'>WebSocket Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/comet/'>Comet Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/documentation-formatting-guide/'>Documentation Formatting Guide</a></li>
+<li class=''><a href='/code-index/'>Code Examples List</a></li>
+</ul>
+  <ul>
+<li><a href="https://www.ably.io">Visit Ably.io</a></li>
+</ul>
+</div>
+
+</body>
+</html>

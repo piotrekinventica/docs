@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ably API Documentation - How Ably works</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/vendor/prettify/prettify.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheet.css" media="screen">
+
+    
+      <link rel="canonical" href="https://www.ably.io/documentation/how-ably-works" />
+    
+
+    <script src="/vendor/javascripts/jquery-1-8-3-min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/jquery-cookie-1-3-1.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/base64.js" type="text/javascript"></script>
+
+    <script src="/vendor/prettify/prettify-lib.js" type="text/javascript"></script>
+
+    <script src="//cdn.ably.io/lib/ably.min.js" type="text/javascript"></script>
+
+    <script src="/javascripts/application.js" type="text/javascript"></script>
+    <script src="/javascripts/lang-manager.js" type="text/javascript"></script>
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.7.5">
+  </head>
+  <body>
+    <div class="canonical-notice">
+      <img src="/images/icon-alert.png">
+      <span class="canonical-notice-text">
+        You are viewing our bleeding edge unstable documentation. We recommend you use our <a href="https://www.ably.io/documentation">stable documentation »</a>
+      </span>
+      <img src="/images/icon-alert.png">
+    </div>
+    <div class="fork-banner"><a href="https://github.com/ably/docs"><img src="/images/forkme.png" alt="Fork me on GitHub"></a></div>
+
+  <div id="documentation">
+    
+      <nav class="jump-to-nav">
+        <div class="form">
+          <select id="jump-to-nav">
+            <option>Jump to ...</option>
+            <optgroup label='Concepts'>
+<option id="anchor-channels">Channels</option>
+<option id="anchor-presence">Presence</option>
+<option id="anchor-authentication">Authentication</option>
+<option id="anchor-global-message-routing">Global message routing</option>
+<option id="anchor-connection-state-recovery">Connection state recovery</option>
+<option id="anchor-redundancy">Redundancy</option>
+<option id="anchor-security-and-encryption">Security and Encryption</option>
+<option id="anchor-any-internet-device">Any internet device</option>
+</optgroup>
+          </select>
+        </div>
+      </nav>
+    
+    <header>
+      
+
+      <div id="version-not-latest-warning"></div>
+
+      
+
+      
+      
+        <h1 id="title">How Ably works</h1>
+      
+    </header>
+    <article>
+      <p>Ably&#8217;s global realtime service enables Internet enabled devices, such as a browser, phone, server or IoT sensor, to stream data in realtime between to any other Internet connected device in milliseconds. The Ably platform brings enterprise scale messaging to developers by delivering <a href="http://support.ably.io/solution/articles/3000029531-100-uptime-guarantee">100% service availability</a>, <a href="http://support.ably.io/solution/articles/3000044640-message-durability-and-qos-quality-of-service">message delivery guarantees</a>- and <a href="http://support.ably.io/solution/articles/3000044625-round-trip-latency-and-performance">low-latencies globally</a> (typically less than 60ms).</p>
+<h2>Key concepts</h2>
+<p>At its simplest, Ably is a cloud-based <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> Platform-as-a-Service ensuring any device publishing messages to Ably will be received in real time by any number of subscribing devices. But it is more than that. Ably makes it possible for developers to build apps and infrastructure that can communicate in realtime without the worries of managing scale, latency, data durability, integrity and storage, seamless connection recovery, device interopability, network outages, encryption, security and authentication, throttling, and denial of service attacks, to name a few.</p>
+<p>In order to understand how Ably works, and why <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> is only one part of the problem we solve for developers, we have have broken down the key concepts below.</p>
+<h3 id="channels">Channels</h3>
+<p>The Ably service organises the traffic within any application into named channels. Clients connected to Ably can either be publishers (they push messages with data to Ably), subscribers (they wait for messages to be pushed from Ably to them), or both. Messages are always published over a named channel. Channels are used to filter messages, so whilst billions of messages may be delivered by Ably, subscribers will only receive the messages on the channels they subscribe to.</p>
+<p>Channels are uniquely identified by a string specified when publishing to or attaching to a channel. Publishers and subscribers are completely decoupled: a publisher can publish a message without any subscribers on the channel; subscribers can listen on channels that don&#8217;t yet have publishers; arbitrarily many subscribers can receive a single message published on a channel. In other words, Ably channels support one-to-many (fan-out), many-to-one (fan-in), and many-to-many.</p>
+<p>The following diagram illustrates a very simple use case for channels. The server and vehicle are publishing messages on channels without any knowledge of subscribers. One mobile device is both a subscriber and publisher and is publishing its location, but also subscribing for alerts. All other devices are subscribed to just one channel.</p>
+<p><a href="/images/diagrams/channels.png" target="_blank"><br />
+  <img src="/images/diagrams/channels.png" style="width: 100%" alt="Channel concept diagram"><br />
+</a></p>
+<h4>Message persistence</h4>
+<p>All messages received by Ably are immediately stored in RAM in three separate physical locations for redudancy. They are then persisted as follows:</p>
+<ul>
+	<li>In server RAM for 2 minutes in every location that the channel is active</li>
+	<li>On disk in three locations for 24 &#8211; 72 hours if the <a href="https://support.ably.io/support/solutions/articles/3000030057-what-are-channel-rules-and-how-can-i-use-them-in-my-app">channel is configured to persist messages</a></li>
+</ul>
+<p>Whilst Ably is used primarily by clients to receive messages in real time, Ably provides a <a href="/rest/history">history API</a> that allows clients to retrieve older messages from memory and/or disk.</p>
+<h3 id="presence">Presence</h3>
+<p>Presence provides awareness of other clients that are connected to Ably and present on a channel. Each member present on a channel has a unique client identifier and an optional payload that can be used to describe the member’s status or attributes. Presence allows you to quickly build apps such as chat rooms or multiplayer games as Ably will automatically keep track of who is present in real time across any device. Clients can also subscribe to the presence events and members on a channel without being present themselves.</p>
+<p>There are three presence operations, <code>enter</code> for new members, <code>update</code> allowing the payload data associated with a member to be updated and announced to everyone, and <code>leave</code> for members that have requested to leave or who have left implicitly as a result of their connection being disconnected.</p>
+<p>The complete set of members present and their optional payload is stored by Ably in server RAM in at least three locations. Like messages, presence events such as <code>enter</code> and <code>leave</code> are persisted in RAM for 2 minutes, and optionally to disk in three locations for 24 &#8211; 72 if the <a href="https://support.ably.io/support/solutions/articles/3000030057-what-are-channel-rules-and-how-can-i-use-them-in-my-app">channel is configured to persist messages</a></p>
+<h3 id="authentication">Authentication</h3>
+<p>Ably supports two forms of authentication described below. For an in-depth explanation, view the <a href="/general/authentication">authentication documentation</a>.</p>
+<h4>Basic Authentication</h4>
+<p>Basic authentication is the simplest form of authentication, allowing clients to communicate with Ably by including the complete private API key within the URL or request headers. To mitigate the risks of sending a private key over the Internet, basic authentication is only permitted over an encrypted <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security">TLS</a> connection. Private API keys and their capabilities (permissions) are managed within an <a href="http://support.ably.io/support/solutions/articles/3000030053-how-do-i-access-my-app-dashboard">app&#8217;s dashboard</a>. In most cases, we do not recommend that basic authentication is used as it requires that you share your private API key with the client that is connecting to Ably. Our recommendation is to only use basic authentication on your trusted servers.</p>
+<h4>Token Authentication</h4>
+<p>Token authentication provides a means for clients to connect to Ably without a private API key. Tokens have a time-to-live (they expire) ensuring that any compromise of a token will have a limited impact. Token authentication is also used to identify clients and provide fine-grained access control on a per-client basis.</p>
+<p>Most often, token authentication is implemented as follows: a token request is generated by your server; it is signed using your private API key and then passed to the client; the realtime client uses this signed token request to request a token from Ably directly with the trusted token request. This approach is recommended as at no point does your server need to communicate directly with Ably and ever communicate the secret API key.</p>
+<p><a href="/images/diagrams/signed-token-request-auth-process.png" target="_blank"><br />
+  <img src="/images/diagrams/signed-token-request-auth-process.png" style="width: 100%" alt="Signed token request from your server concept diagram"><br />
+</a></p>
+<h5 id="client-identity">Client identity and access control</h5>
+<p>A client using token authentication is considered to either anonymous, or identified if a client ID exists in the token. All messages, presence state and connection state for <a href="/realtime/authentication#identified-clients">identified clients</a> contain the trusted client ID and are accessible by other clients. As a private key is needed to generate a token for a client with a client ID, the client ID can be trusted by other clients. Find out <a href="/realtime/authentication#identified-clients">more on identified clients</a>.</p>
+<p>Tokens are limited to the capabilities of the API key used to create the token. When requesting a token, the capabilities may be limited further using fine-grained permissions using a combination of the operation (such as publish, subscribe, presence) and the channel(s). Find out <a href="/general/authentication#capabilities-explained">more on token capabilities</a>.</p>
+<h3 id="global-message-routing">Global message routing</h3>
+<p>The Ably service, running in <a href="https://support.ably.io/solution/articles/3000029525-where-are-ably-s-servers-located-around-the-world">over 20 data centres globally</a>, provides a true mesh distributed system ensuring that there is both no single point of congestion and no single point of failure. Ably is designed to always route messages using the least number of network hops minimising latency and ensuring maximum performance for clients no matter their location.</p>
+<p>The diagram below explains how Ably solves the challenge of efficient global routing at all times:</p>
+<ul>
+	<li>The publish only server located in New York is routed to the nearest data centre (US East) using our latency based routing; <code>Msg A</code> published to US East is routed directly to clients in US East, and once to every other data centre with clients subscribed for messages; Clients in all other regions subscribed for messages receive <code>Msg A</code> directly from the data centre they are connected to</li>
+	<li>Publish &amp; subscribe client in London is routed to the nearest data (EU West) using our lateny based routing; <code>Msg B</code> published to EU West is routed directly to clients in EU West, and once to every other data centre with clients subscribed for messages; Clients in all other regions subscribed for messages receive <code>Msg B</code> directly from the data centre they are connected to</li>
+</ul>
+<p><a href="/images/diagrams/global-routing.png" target="_blank"><br />
+  <img src="/images/diagrams/global-routing.png" style="width: 100%" alt="Global routing diagram"><br />
+</a></p>
+<h3 id="connection-state-recovery">Connection state recovery</h3>
+<p>It is common for devices to have constantly changing network conditions as a result of moving from a mobile data network to a wifi network, being in a tunnel for a short period, or perhaps due to intermittent network issues. We believe that developers shouldn&#8217;t have to worry about service continuity between brief connection loss. As such, Ably ensures that the connection state for a client is retained on our servers whenever a client is disconnected abruptly. By retaining a client&#8217;s connection state on our servers, this allows us to replay all channel activity back to a client as soon as it reconnects.</p>
+<p>Ably provides the following assurances in regards to connection state recovery:</p>
+<ul>
+	<li>Any client that is able to reestablish a connection within 2 minutes will remain attached on all channels and will not lose any messages published by other clients whilst disconnected;</li>
+	<li>All messages published on channels whilst the client was disconnected will be replayed to the recovered client in the order they were published;</li>
+	<li>There is no upper limit in regards to the number of messages that are queued for disconnected clients, however if a threshold to ensure system stability is exceeded then an error is emitted;</li>
+	<li>Connection state recovery provides certainty and is thus binary in its behaviour &#8211; it either succeeds and all operations continue as if the connection was never disconnected, or it fails by detaching the channel or emitting an error on the channel so that the developer is made aware of the state loss and is able to respond accordingly</li>
+</ul>
+<h3 id="redundancy">Redundancy</h3>
+<p>The Ably global platform is designed to provide an industry first <a href="https://support.ably.io/support/solutions/articles/3000029531-100-uptime-guarantee">100% uptime guarantee</a>. This is possible because redundancy has been addressed in not just every area of our systems, but also within the client libraries used by our customers. Our redundancy is best depicted in the following diagram:</p>
+<p><a href="/images/diagrams/redundancy.png" target="_blank"><br />
+  <img src="/images/diagrams/redundancy.png" style="width: 100%" alt="Ably redundancy diagram"><br />
+</a></p>
+<h4>Jargon buster:</h4>
+<dl>
+	<dt><a href="https://support.ably.io/support/solutions/articles/3000044639-connection-state-recovery">Connection state recovery</a></dt>
+	<dd>ensures that clients disconnected abruptly from Ably can resume their connection</dd>
+	<dt><a href="https://support.ably.io/support/solutions/articles/3000044636-routing-around-network-and-dns-issues">Proactive health checked DNS</a></dt>
+	<dd>our DNS TTL is kept very low allowing us to route traffic away from unhealthy data centres in 60s once our monitoring systems detect an issue</dd>
+	<dt><a href="https://support.ably.io/solution/articles/3000044636-routing-around-network-and-dns-issues#fallback">Secondary domain endpoints</a></dt>
+	<dd>we operate a completely isolated backup domain that is used by our client libraries if the primary <code>ably.io</code> endpoint is failing</dd>
+	<dt><a href="https://support.ably.io/solution/articles/3000044636-routing-around-network-and-dns-issues#fallback">Host fallback</a></dt>
+	<dd>clients that are unable to connect to their closest data centre using the primary <code>ably.io</code> domain will automatically fallback to an alternative data centre using the secondary domain</dd>
+	<dt><a href="https://support.ably.io/solution/articles/3000045691-are-you-able-to-scale-indefinitely-to-meet-demand">Auto scaling</a></dt>
+	<dd>as load on the system increases, more servers are automatically provisioned in every part of the system that requires additional capacity</dd>
+	<dt><a href="https://support.ably.io/solution/articles/3000045691-are-you-able-to-scale-indefinitely-to-meet-demand">Load balancers</a></dt>
+	<dd>our load balancers are elastic and scale to meet demand, but are also responsible for intelligently routing traffic to existing and new frontends that are coming online</dd>
+	<dt><a href="https://en.wikipedia.org/wiki/Stateless_protocol">Stateless</a></dt>
+	<dd>our frontends do not store any state thus ensuring that frontends can come online quickly and service new requests, but also go offline easily without data loss</dd>
+	<dt><a href="https://support.ably.io/solution/articles/3000045692-self-healing-cluster">Self-healing cluster</a></dt>
+	<dd>as problems are detected in the system, they are isolated or remedied by our automated health servers</dd>
+	<dt><a href="https://support.ably.io/support/solutions/articles/3000029531-100-uptime-guarantee">Data replicas</a></dt>
+	<dd>all data is stored in at least three data centres across at least two regions ensuring data availability through any imaginable failure</dd>
+	<dt><a href="https://support.ably.io/solution/articles/3000029525-where-are-ably-s-servers-located-around-the-world">Multiple availability zones</a></dt>
+	<dd>in every region our our data is replicated between servers in at least two independent data centres ensuring outages in one data centre cannot cause data loss</dd>
+	<dt><a href="https://support.ably.io/solution/articles/3000029525-where-are-ably-s-servers-located-around-the-world">Multiple regions</a></dt>
+	<dd>ensuring that data is always stored in at least two regions protects against complete region outage or network partioning</dd>
+</dl>
+<h3 id="security-and-encryption">Security and Encryption</h3>
+<p>By default all of our client libraries use TLS when communicating with Ably over REST or via our Realtime transports such as Websockets. We do not charge customers for using TLS and actively encourage everyone to always use TLS as it provides a secure transport for communication with Ably with very little practical overhead.</p>
+<p>Whilst TLS encryption ensures that messages in transit to and from Ably cannot be intercepted, inspected, or tampered with, it does not ensure that the Ably service itself is unable to (in theory) inspect your messages and their content. If you want to ensure that all messages are encrypted and complete opaque and inaccessible to the Ably service, we provide built-in <a href="https://support.ably.io/solution/articles/3000029535-cross-platform-symmetrical-encryption-offered-by-the-libraries">private key symmetric encryption within our client libraries</a>.</p>
+<h3 id="any-internet-device">Any internet enabled device support</h3>
+<p>Most of our client libraries use a WebSocket to establish a realtime connection to Ably, and use a simple HTTP request for all other REST operations including authentication.</p>
+<p>However, client libraries such as our <a href="https://github.com/ably/ably-js">Javascript browser library</a> are designed to choose the best transport available based on the browser and connection available. By supporting additional transports with the ability to fallback to the lowest common denominator, Ably ensures that practically every browser in use today is able to establish a realtime connection to Ably. The following transports are currently supported by our <a href="https://github.com/ably/ably-js">Javascript browser library</a> in order of best to worst performing:</p>
+<ul>
+	<li><a href="https://en.wikipedia.org/wiki/WebSocket">WebSockets</a> (<a href="http://caniuse.com/#feat=websockets">supported by 88% of browsers globally as of Nov 2015</a>)</li>
+	<li>XHR streaming</li>
+	<li>XDR streaming</li>
+	<li>XHR polling</li>
+	<li>XDR polling</li>
+	<li>iFrame XHR polling</li>
+	<li>JSONP polling</li>
+</ul>
+    </article>
+    <hr class="back">
+    <a href="#documentation">Back to top</a>
+  </div>
+  <div id="sidebar">
+  <a href="/" title="API Documentation Home"><img src="/images/ably-logo.png" class="ably-logo" title="API Documentation Home"></a>
+  <ul>
+<li class=''><a href='/quick-start-guide/'>Quickstart Guide</a></li>
+<li class='selected'><a href='/how-ably-works/'>How Ably works</a></li>
+</ul>
+  <h2><a href="/realtime/">Realtime client lib</a></h2>
+<ul>
+<li class=''><a href='/realtime/usage/'>Using the Realtime library</a></li>
+<li class=''><a href='/realtime/connection/'>Connection</a></li>
+<li class=''><a href='/realtime/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/realtime/presence/'>Presence</a></li>
+<li class=''><a href='/realtime/authentication/'>Authentication</a></li>
+<li class=''><a href='/realtime/history/'>History</a></li>
+<li class=''><a href='/realtime/encryption/'>Encryption</a></li>
+<li class=''><a href='/realtime/statistics/'>Statistics</a></li>
+<li class=''><a href='/realtime/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest/">REST client lib</a></h2>
+<ul>
+<li class=''><a href='/rest/usage/'>Using the REST library</a></li>
+<li class=''><a href='/rest/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/rest/presence/'>Presence</a></li>
+<li class=''><a href='/rest/authentication/'>Authentication</a></li>
+<li class=''><a href='/rest/history/'>History</a></li>
+<li class=''><a href='/rest/encryption/'>Encryption</a></li>
+<li class=''><a href='/rest/statistics/'>Statistics</a></li>
+<li class=''><a href='/rest/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest-api/">REST API</a></h2>
+<ul>
+</ul>
+  <h2>General</h2>
+<ul>
+<li class=''><a href='/general/authentication/'>Authentication</a></li>
+<li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
+<li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
+<li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
+<li class=''><a href='/general/statistics/'>Application Statistics</a></li>
+</ul>
+  <h2><a href="/client-lib-development-guide/">Library Development</a></h2>
+<ul>
+<li class=''><a href='/client-lib-development-guide/features/'>Features spec</a></li>
+<li class=''><a href='/client-lib-development-guide/feature-prioritisation/'>Feature prioritisation</a></li>
+<li class=''><a href='/client-lib-development-guide/protocol/'>Realtime Protocol Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/test-api/'>Sandbox Test API</a></li>
+<li class=''><a href='/client-lib-development-guide/encryption/'>Encryption</a></li>
+<li class=''><a href='/client-lib-development-guide/websocket/'>WebSocket Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/comet/'>Comet Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/documentation-formatting-guide/'>Documentation Formatting Guide</a></li>
+<li class=''><a href='/code-index/'>Code Examples List</a></li>
+</ul>
+  <ul>
+<li><a href="https://www.ably.io">Visit Ably.io</a></li>
+</ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ably API Documentation - </title>
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/vendor/prettify/prettify.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheet.css" media="screen">
+
+    
+
+    <script src="/vendor/javascripts/jquery-1-8-3-min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/jquery-cookie-1-3-1.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/base64.js" type="text/javascript"></script>
+
+    <script src="/vendor/prettify/prettify-lib.js" type="text/javascript"></script>
+
+    <script src="//cdn.ably.io/lib/ably.min.js" type="text/javascript"></script>
+
+    <script src="/javascripts/application.js" type="text/javascript"></script>
+    <script src="/javascripts/lang-manager.js" type="text/javascript"></script>
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.7.5">
+  </head>
+  <body>
+    <div class="canonical-notice">
+      <img src="/images/icon-alert.png">
+      <span class="canonical-notice-text">
+        You are viewing our bleeding edge unstable documentation. We recommend you use our <a href="https://www.ably.io/documentation">stable documentation »</a>
+      </span>
+      <img src="/images/icon-alert.png">
+    </div>
+    <div class="fork-banner"><a href="https://github.com/ably/docs"><img src="/images/forkme.png" alt="Fork me on GitHub"></a></div>
+
+  <div id="documentation">
+    <p>blang[jsall].<br />
+  <code>ClientOptions</code> is a plain Javascript object and is used in the <code>Ably.Realtime</code> constructor&#8217;s <code>options</code> argument.  The following attributes can be defined on the object:</p>
+<p>blang[ruby].<br />
+  <code>ClientOptions</code> is a Hash object and is used in the <code>Ably::Realtime</code> constructor&#8217;s <code>options</code> argument.  The following key symbol values can be added to the Hash:</p>
+<p>blang[php].<br />
+  <code>ClientOptions</code> is a associative array and is used in the <code>Ably\AblyRest</code> constructor&#8217;s <code>options</code> argument.  The following named keys and values can be added to the associative array:</p>
+<p>blang[java,objc,swift,csharp].<br />
+  <span lang="objc,swift"><code>ART</code></span><code>ClientOptions</code> is used in the <code>AblyRealtime</code> constructor&#8217;s <code>options</code> argument.</p>
+<p>h4.<br />
+  default: Properties<br />
+  java:    Members<br />
+  ruby:    Attributes<br />
+  python:  Keyword arguments</p>
+<dl>
+	<dt><span lang="default">key</span><span lang="csharp">Key</span><span lang="ruby">:key</span></dt>
+	<dd>The full key string, as obtained from the <a href="http://support.ably.io/solution/articles/3000030053-how-do-i-access-my-app-dashboard">application dashboard</a>. Use this option if you wish to use Basic authentication, or wish to be able to issue tokens without needing to defer to a separate entity to sign token requests. Read more about <a href="/general/authentication#basic-authentication">Basic authentication</a><br><i>Type: <code>String</code></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">token</span><span lang="csharp">Token</span><span lang="ruby">:token</span></dt>
+	<dd>An authenticated token string that is most commonly obtained from the <span lang="default">@token@&gt;</span><span lang="csharp"><code>Token</code></span> property of a <a href="/realtime/types#token-details"><code>TokenDetails</code></a> component of a token request response. Use this option if you wish to use Token authentication. Read more about <a href="/general/authentication#token-authentication">Token authentication</a><br><i>Type: <code>String</code></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">tokenDetails</span><span lang="csharp">TokenDetails</span><span lang="python">token_details</span><span lang="ruby">:token_details</span></dt>
+	<dd>An authenticated <a href="/realtime/types/#token-details"><code>TokenDetails</code></a> object that is most commonly obtained from of a token request response. Use this option if you wish to use Token authentication. Read more about <a href="/general/authentication#token-authentication">Token authentication</a><br><i>Type: <code>TokenDetails</code></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">tls</span><span lang="csharp">Tls</span><span lang="ruby">:tls</span></dt>
+	<dd><em>true</em> A boolean value, indicating whether or not a TLS (&#8220;SSL&#8221;) secure connection should be used. An insecure connection cannot be used with Basic authentication ensuring private keys are compromised in transit. <a href="https://support.ably.io/solution/articles/3000045208-are-messages-sent-to-and-received-from-ably-sent-security-using-tls">Find out more about TLS</a><br><i>Type: <code>Boolean</code></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">clientId</span><span lang="csharp">ClientId</span><span lang="python">client_id</span><span lang="ruby">:client_id</span></dt>
+	<dd>A client ID, used for identifying this client when publishing messages or for presence purposes. The <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span><span lang="csharp"><code>ClientId</code></span> can be any non-empty string. This option is primarily intended to be used in situations where the library is instanced with a key; note that a <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span><span lang="csharp"><code>ClientId</code></span> may also be implicit in a token used to instance the library; an error will be raised if a <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span> specified here conflicts with the <span lang="default"><code>clientId</code></span><span lang="ruby,python"><code>client_id</code></span><span lang="csharp"><code>ClientId</code></span> implicit in the token. <a href="/how-ably-works#client-identity">Find out more about client identities</a><br><i>Type: <code>String</code></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">authCallback</span><span lang="csharp">AuthCallback</span><span lang="python">auth_callback</span><span lang="ruby">:auth_callback</span></dt>
+	<dd>A <span lang="default">function</span><span lang="javascript,nodejs">function with the form <code>function(tokenParams, callback(err, tokenOrTokenRequest))</code></span><span lang="java"><code>TokenCallback</code> instance</span><span lang="python">callable (eg a lambda)</span><span lang="ruby">proc / lambda</span> which is called when a new token is required. The role of the callback is to either generate a signed <a href="/realtime/types#token-request"><code>TokenRequest</code></a> which may then be submitted automatically by the library to the <a href="/rest-api#request-token">Ably REST API <code>requestToken</code></a>; or to provide a valid token in as a <a href="/realtime/types#token-details"><code>TokenDetails</code></a> object. See <a href="https://jsbin.ably.io:443/ocodaf/1/edit?javascript,live">an authentication callback example</a> or <a href="/rest/authentication">our authentication documentation</a> for details of the token request format and associated API calls.<br><i>Type: <span lang="default"><code>Callable</code></span><span lang="java"><code>TokenCallback</code></span><span lang="ruby"><code>Proc</code></span><span lang="csharp"><code>Func&lt;TokenParams, Task&lt;TokenDetails&gt;&gt;</code></span></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">authUrl</span><span lang="csharp">AuthUrl</span><span lang="python">auth_url</span><span lang="ruby">:auth_url</span></dt>
+	<dd>A URL that the library may use to obtain a token string (in plain text format), or a signed <a href="/realtime/types#token-request"><code>TokenRequest</code></a> or <a href="/realtime/types#token-details"><code>TokenDetails</code></a> (in JSON format). For example, this can be used by a client to obtain signed token requests from an application server.<br><i>Type: <span lang="default"><code>String</code></span><span lang="csharp"><code>Uri</code></span></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">authMethod</span><span lang="csharp">AuthMethod</span><span lang="python">auth_method</span><span lang="ruby">:auth_method</span></dt>
+	<dd><em><span lang="default"><code>GET</code></span><span lang="ruby"><code>:get</code></span></em> The HTTP verb to use for the request, either <span lang="default"><code>GET</code></span><span lang="ruby"><code>:get</code></span> or <span lang="default"><code>POST</code></span><span lang="ruby"><code>:post</code></span><br><i>Type: <span lang="default"><code>String</code></span><span lang="ruby"><code>Symbol</code></span><span lang="csharp"><code>HttpMethod</code></span></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">authHeaders</span><span lang="csharp">AuthHeaders</span><span lang="python">auth_headers</span><span lang="ruby">:auth_headers</span></dt>
+	<dd>A set of key value pair headers to be added to any request made to the <span lang="default"><code>authUrl</code></span><span lang="csharp"><code>AuthUrl</code></span>. Useful when an application requires these to be added to validate the request or implement the response.<br><i>Type: <span lang="default"><code>Object</code></span><span lang="python"><code>Dict</code></span><span lang="ruby"><code>Hash</code></span><span lang="php"><code>Associative Array</code></span><span lang="java"><code>Param []</code></span><span lang="csharp"><code>Dictionary&lt;string, string&gt;</code></span></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">authParams</span><span lang="csharp">AuthParams</span><span lang="python">auth_params</span><span lang="ruby">:auth_params</span></dt>
+	<dd>A set of key value pair params to be added to any request made to the <span lang="default"><code>authUrl</code></span><span lang="csharp"><code>AuthUrl</code></span>. When the <span lang="default"><code>authMethod</code></span><span lang="csharp"><code>AuthMethod</code></span> is <code>GET</code>, query params are added to the URL, whereas when <span lang="default"><code>authMethod</code></span><span lang="csharp"><code>AuthMethod</code></span> is <code>POST</code>, the params are sent as URL encoded form data. Useful when an application require these to be added to validate the request or implement the response.<br><i>Type: <span lang="default"><code>Object</code></span><span lang="python"><code>Dict</code></span><span lang="ruby"><code>Hash</code></span><span lang="php"><code>Associative Array</code></span><span lang="java"><code>Param []</code></span><span lang="csharp"><code>Dictionary&lt;string, string&gt;</code></span></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">useTokenAuth</span><span lang="csharp">UseTokenAuth</span><span lang="python">use_token_auth</span><span lang="ruby">:use_token_auth</span></dt>
+	<dd><em>false</em> When true, forces <a href="/general/authentication#token-authentication">Token authentication</a> to be used by the libary. Please note that if a <span lang="ruby,python"><code>client_id</code></span><span lang="default"><code>clientId</code></span> is not specified in the <a href="/realtime/types#client-options"><code>ClientOptions</code></a> or <a href="/realtime/types#token-params"><code>TokenParams</code></a>, then the token issued will be <a href="https://support.ably.io/solution/articles/3000038608-authenticated-and-identified-clients">anonymous</a>.<br><i>Type: <code>Boolean</code></i></dd>
+</dl>
+<p>blang[jsall].<br />
+  &#8211; log := Parameters to control the log output of the library. The supplied value must be an object that may contain one or both of the following entries:<br />
+  <ul><br />
+    <li><code>level</code>: a number controlling the verbosity of the output. Valid values are: 0 (no logs), 1 (errors only), 2 (errors plus connection and channel state changes), 3 (high-level debug output), and 4 (full debug output). </li><br />
+    <li><code>handler</code>: a function to handle each line of log output. If <code>handler</code> is not specified, <code>console.log</code> is used.</li></p>
+</ul>
+Note that the log level and log handler have global scope in the library and will thus not act independently between library instances when multiple library instances exist concurrently.<br><i>Type: <code>Object</code></i>
+- transports := An optional array of transports to use, in descending order of preference. <span lang="javascript">In the browser environment the available transports are: <code>web_socket</code>, <code>xhr</code>, <code>jsonp</code>.</span><span lang="nodejs">The transports available in the Node.js client library are: <code>web_socket</code>, <code>xhr</code>, <code>comet</code>.</span><br><i>Type: <code>String []</code></i>
+<p>blang[java].<br />
+  &#8211; logLevel := <em>5</em> A number controlling the verbosity of the output from 2 (maximum, verbose) to 6 (errors only). A special value of 99 will silence all logging. Note that the <code>logLevel</code> is a static variable in the library and will thus not act independently between library instances when multiple library instances exist concurrently.<br><i>Type: <code>Integer</code></i></p>
+- logHandler := <em><code>System.out PrintStream</code></em> A <code>LogHandler</code> interface can be specified to handle each line of log output. If <code>logHandler</code> is not specified, <code>System.out</code> is used. Note that the <code>logHandler</code> is a static variable in the library and will thus not act independently between library instances when multiple library instances exist concurrently.<br><i>Type: PrintStream</i>
+<p>blang[csharp].<br />
+  To set the log level and custom logger sink when using the .Net library, configure the static <code>IO.Ably.Logger</code> class.</p>
+- LogLevel := <em><code>Error</code></em> This is an enum controlling the verbosity of the output from Debug (maximum) to 2 (errors only). A special value of None will silence all logging. Note that the <code>LogLevel</code> is a static variable in the library and will thus not act independently between library instances. <br><i>Type: <code>Enum</code></i>
+- LoggerSink := <em><code>IO.Ably.DefaultLoggerSink</code></em> The default ILoggerSink outputs messages to the debug console. This property allows the user to pipe the log messages to their own logging infrastructure.
+<p>blang[objc,swift].<br />
+  &#8211; logLevel := <em>ARTLogLevelWarn</em> An enum controlling the verbosity of the output from <code>ARTLogLevelVerbose</code> to <code>ARTLogLevelNone</code>. A special value of 99 will silence all logging.<br><i>Type: <code>ARTLogLevel</code></i></p>
+- logHandler := A <code>ARTLog</code> object can be specified to handle each line of log output. If <code>logHandler</code> is not specified, a default <code>ARTLog</code> instance is used.<br><i>Type: <code>ARTLog *</code></i>
+<p>blang[ruby].<br />
+  &#8211; :log_level :=<em><code>:error</code></em> Log level for the standard Logger that outputs to <code>STDOUT</code>. Can be set to <code>:fatal</code>, <code>:error</code>, <code>:warn</code>, <code>:info</code>, <code>:debug</code> or <code>:none</code>. Alternatively a <a href="http://ruby-doc.org/stdlib-2.2.0/libdoc/logger/rdoc/Logger.html#class-Logger-label-Description"><code>Logger</code> severity constant</a> can be specified.<br><i>Type: <code>Symbol</code>, <a href="http://ruby-doc.org/stdlib-2.2.0/libdoc/logger/rdoc/Logger.html#class-Logger-label-Description"><code>Logger::SEVERITY</code></a></i></p>
+- :logger := <em><code>STDOUT Logger</code></em> A <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/logger/rdoc/Logger.html">Ruby <code>Logger</code></a> compatible object to handle each line of log output. If <code>loggger</code> is not specified, <code>STDOUT</code> is used.<br><i>Type: <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/logger/rdoc/Logger.html">Ruby @Logger</a></i>
+<p>blang[php].<br />
+  &#8211; logLevel :=<em><code>Log::WARNING</code></em> A number controlling the verbosity of the output from 1 (minimum, errors only) to 4 (most verbose);<br><i>Type: <code>Integer</code></i></p>
+- logHandler := <em><code>console.log</code></em> A function to handle each line of log output. If handler is not specified, <code>console.log</code> is used. Note that the log level and log handler have global scope in the library and will therefore not act independently between library instances when multiple library instances exist concurrently.<br><i>Type: <code>Function</code></i>
+<dl>
+	<dt><span lang="default">useBinaryProtocol</span><span lang="csharp">UseBinaryProtocol</span><span lang="python">use_binary_protocol</span><span lang="ruby">:use_binary_protocol</span></dt>
+	<dd><em>true</em> If set to false, will forcibly disable the binary protocol. <span lang="default">The binary protocol is used by default unless it is</span><span lang="swift,objc,php">Note: The binary protocol is currently</span> not supported <span lang="swift">in Swift</span><span lang="obj-c">in Objective-C</span><span lang="php">in PHP</span>. Find out more about the <a href="https://support.ably.io/solution/articles/3000047365-do-you-binary-encode-your-messages-for-greater-efficiency">benefits of binary encoding</a><br><i>Type: <code>Boolean</code></i></dd>
+</dl>
+  </div>
+  <div id="sidebar">
+  <a href="/" title="API Documentation Home"><img src="/images/ably-logo.png" class="ably-logo" title="API Documentation Home"></a>
+  <ul>
+<li class=''><a href='/quick-start-guide/'>Quickstart Guide</a></li>
+<li class=''><a href='/how-ably-works/'>How Ably works</a></li>
+</ul>
+  <h2><a href="/realtime/">Realtime client lib</a></h2>
+<ul>
+<li class=''><a href='/realtime/usage/'>Using the Realtime library</a></li>
+<li class=''><a href='/realtime/connection/'>Connection</a></li>
+<li class=''><a href='/realtime/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/realtime/presence/'>Presence</a></li>
+<li class=''><a href='/realtime/authentication/'>Authentication</a></li>
+<li class=''><a href='/realtime/history/'>History</a></li>
+<li class=''><a href='/realtime/encryption/'>Encryption</a></li>
+<li class=''><a href='/realtime/statistics/'>Statistics</a></li>
+<li class=''><a href='/realtime/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest/">REST client lib</a></h2>
+<ul>
+<li class=''><a href='/rest/usage/'>Using the REST library</a></li>
+<li class=''><a href='/rest/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/rest/presence/'>Presence</a></li>
+<li class=''><a href='/rest/authentication/'>Authentication</a></li>
+<li class=''><a href='/rest/history/'>History</a></li>
+<li class=''><a href='/rest/encryption/'>Encryption</a></li>
+<li class=''><a href='/rest/statistics/'>Statistics</a></li>
+<li class=''><a href='/rest/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest-api/">REST API</a></h2>
+<ul>
+</ul>
+  <h2>General</h2>
+<ul>
+<li class=''><a href='/general/authentication/'>Authentication</a></li>
+<li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
+<li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
+<li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
+<li class=''><a href='/general/statistics/'>Application Statistics</a></li>
+</ul>
+  <h2><a href="/client-lib-development-guide/">Library Development</a></h2>
+<ul>
+<li class=''><a href='/client-lib-development-guide/features/'>Features spec</a></li>
+<li class=''><a href='/client-lib-development-guide/feature-prioritisation/'>Feature prioritisation</a></li>
+<li class=''><a href='/client-lib-development-guide/protocol/'>Realtime Protocol Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/test-api/'>Sandbox Test API</a></li>
+<li class=''><a href='/client-lib-development-guide/encryption/'>Encryption</a></li>
+<li class=''><a href='/client-lib-development-guide/websocket/'>WebSocket Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/comet/'>Comet Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/documentation-formatting-guide/'>Documentation Formatting Guide</a></li>
+<li class=''><a href='/code-index/'>Code Examples List</a></li>
+</ul>
+  <ul>
+<li><a href="https://www.ably.io">Visit Ably.io</a></li>
+</ul>
+</div>
+
+</body>
+</html>

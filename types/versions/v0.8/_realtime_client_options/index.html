@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ably API Documentation - </title>
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/vendor/prettify/prettify.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheet.css" media="screen">
+
+    
+
+    <script src="/vendor/javascripts/jquery-1-8-3-min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/jquery-cookie-1-3-1.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/base64.js" type="text/javascript"></script>
+
+    <script src="/vendor/prettify/prettify-lib.js" type="text/javascript"></script>
+
+    <script src="//cdn.ably.io/lib/ably.min.js" type="text/javascript"></script>
+
+    <script src="/javascripts/application.js" type="text/javascript"></script>
+    <script src="/javascripts/lang-manager.js" type="text/javascript"></script>
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.7.5">
+  </head>
+  <body>
+    <div class="canonical-notice">
+      <img src="/images/icon-alert.png">
+      <span class="canonical-notice-text">
+        You are viewing our bleeding edge unstable documentation. We recommend you use our <a href="https://www.ably.io/documentation">stable documentation »</a>
+      </span>
+      <img src="/images/icon-alert.png">
+    </div>
+    <div class="fork-banner"><a href="https://github.com/ably/docs"><img src="/images/forkme.png" alt="Fork me on GitHub"></a></div>
+
+  <div id="documentation">
+    <dl>
+	<dt><span lang="default">queueMessages</span><span lang="csharp">QueueMessages</span><span lang="ruby">:queue_messages</span></dt>
+	<dd><em>true</em> If false, this disables the default behaviour whereby the library queues messages on a connection in the disconnected or connecting states. The default behaviour allows applications to submit messages immediately upon instancing the library without having to wait for the connection to be established. Applications may use this option to disable queuing if they wish to have application-level control over the queueing under those conditions<br><i>Type: <code>Boolean</code></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">echoMessages</span><span lang="csharp">EchoMessages</span><span lang="ruby">:echo_messages</span></dt>
+	<dd><em>true</em> If false, prevents messages originating from this connection being echoed back on the same connection<br><i>Type: <code>Boolean</code></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">autoConnect</span><span lang="csharp">AutoConnect</span><span lang="ruby">:auto_connect</span></dt>
+	<dd><em>true</em> By default as soon as the client library is instanced it will connect to Ably. You can optionally set this to false and explicitly connect to Ably when require using the <a href="/realtime/usage/#connect"><code>connect</code></a> method<br><i>Type: <code>Boolean</code></i></dd>
+</dl>
+<dl>
+	<dt><div lang="javascript">recover</div></dt>
+	<dd>This option allows a connection to inherit the state of a previous connection that may have existed under a different instance of the Realtime library. This might typically be used by clients of the browser library to ensure connection state can be preserved when the user refreshes the page. A recovery key string can be explicitly provided, or alternatively if a callback function is provided, the client library will automatically persist the recovery key between page reloads and call the callback when the connection is recoverable. The callback is then responsible for confirming whether the connection should be recovered or not. See <a href="/realtime/connection/#connection-state-recovery">connection state recovery</a> for further information<br><i>Type: <code>String</code>, <code>Callable</code></i></dd>
+</dl>
+<dl>
+	<dt><div lang="javascript">closeOnUnload</div></dt>
+	<dd><em>false</em> When true, the client library will automatically send a close request to Ably whenever the <code>window beforeunload</code> event fires. By enabling this option, the close request sent to Ably ensures the connection state will not be retained and all channels associated with the channel will be detached. This is commonly used by developers who want presence leave events to fire immediately i.e. if a user navigates to another page or closes their browser, then enabling this option will result in the presence member leaving immediately. Without this option or an explicit call to the <a href="/realtime/connection#close"><code>close</code></a> method of the <a href="/realtime/connection"><code>Connection object</code></a>, Ably expects that the abruptly disconnected connection could later be recovered and therefore does not immediately remove the user from presence. Instead, to avoid &#8220;twitchy&#8221; presence behaviour an abruptly disconnected client is removed from channels in which they are present after 15 seconds, and the connection state is retained for two minutes<br><i>Type: <code>Boolean</code></i></dd>
+</dl>
+<dl>
+	<dt><div lang="java,ruby,nodejs,objc,swift,csharp"><span lang="default">recover</span><span lang="csharp">Recover</span><span lang="ruby">:recover</span></div></dt>
+	<dd>This option allows a connection to inherit the state of a previous connection that may have existed under a different instance of the library by providing that connection&#8217;s <span lang="default"><a href="/realtime/connection#recovery-key"><code>recoveryKey</code></a></span><span lang="ruby"><a href="/realtime/connection#recovery-key"><code>recovery_key</code></a></span>. This might typically be used by clients of an app to ensure connection state can be preserved following a reload. See <a href="/realtime/connection/#connection-state-recovery">connection state recovery</a> for further information and example code<br><i>Type: <code>String</code></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">queryTime</span><span lang="csharp">QueryTime</span><span lang="ruby">:query_time</span></dt>
+	<dd><em>false</em> If true, the library will query the Ably servers for the current time instead of relying on a locally-available time of day<br><i>Type: <code>Boolean</code></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">defaultTokenParams</span><span lang="csharp">DefaultTokenParams</span><span lang="ruby">:default_token_params</span></dt>
+	<dd>When a <a href="/realtime/types#token-params">TokenParams</a> object is provided, it will override the client library defaults when issuing new tokens or token requests<br><i>Type: <a href="/realtime/types#token-params"><code>TokenParams</code></a></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">disconnectedRetryTimeout</span><span lang="csharp">DisconnectedRetryTimeout</span><span lang="ruby">:disconnected_retry_timeout</span></dt>
+	<dd><em><span lang="default">15,000ms</span><span lang="ruby">15s</span></em> When the connection enters the <code>DISCONNECTED</code> state, after this delay <span lang="default">in milliseconds</span><span lang="ruby">in seconds</span><span lang="objc,swift">as a <code>NSTimeInterval</code></span>, if the state is still <code>DISCONNECTED</code>, the client library will attempt to reconnect automatically<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="objc,swift"><code>NSTimeInterval</code></span></i></dd>
+</dl>
+<dl>
+	<dt><span lang="default">suspendedRetryTimeout</span><span lang="csharp">SuspendedRetryTimoeut</span><span lang="ruby">:suspended_retry_timeout</span></dt>
+	<dd><em><span lang="default">30,000ms</span><span lang="ruby">30s</span></em> When the connection enters the <code>SUSPENDED</code> state, after this delay <span lang="default">in milliseconds</span><span lang="ruby">in seconds</span><span lang="objc,swift">as a <code>NSTimeInterval</code></span>, if the state is still <code>SUSPENDED</code>, the client library will attempt to reconnect automatically<br><i>Type: <span lang="default"><code>Integer</code></span><span lang="objc,swift"><code>NSTimeInterval</code></span></i></dd>
+</dl>
+  </div>
+  <div id="sidebar">
+  <a href="/" title="API Documentation Home"><img src="/images/ably-logo.png" class="ably-logo" title="API Documentation Home"></a>
+  <ul>
+<li class=''><a href='/quick-start-guide/'>Quickstart Guide</a></li>
+<li class=''><a href='/how-ably-works/'>How Ably works</a></li>
+</ul>
+  <h2><a href="/realtime/">Realtime client lib</a></h2>
+<ul>
+<li class=''><a href='/realtime/versions/v0.8/usage/'>Using the Realtime library</a></li>
+<li class=''><a href='/realtime/versions/v0.8/connection/'>Connection</a></li>
+<li class=''><a href='/realtime/versions/v0.8/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/realtime/versions/v0.8/presence/'>Presence</a></li>
+<li class=''><a href='/realtime/versions/v0.8/authentication/'>Authentication</a></li>
+<li class=''><a href='/realtime/versions/v0.8/history/'>History</a></li>
+<li class=''><a href='/realtime/versions/v0.8/encryption/'>Encryption</a></li>
+<li class=''><a href='/realtime/versions/v0.8/statistics/'>Statistics</a></li>
+<li class=''><a href='/realtime/versions/v0.8/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest/">REST client lib</a></h2>
+<ul>
+<li class=''><a href='/rest/versions/v0.8/usage/'>Using the REST library</a></li>
+<li class=''><a href='/rest/versions/v0.8/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/rest/versions/v0.8/presence/'>Presence</a></li>
+<li class=''><a href='/rest/versions/v0.8/authentication/'>Authentication</a></li>
+<li class=''><a href='/rest/versions/v0.8/history/'>History</a></li>
+<li class=''><a href='/rest/versions/v0.8/encryption/'>Encryption</a></li>
+<li class=''><a href='/rest/versions/v0.8/statistics/'>Statistics</a></li>
+<li class=''><a href='/rest/versions/v0.8/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest-api/">REST API</a></h2>
+<ul>
+</ul>
+  <h2>General</h2>
+<ul>
+<li class=''><a href='/general/versions/v0.8/authentication/'>Authentication</a></li>
+<li class=''><a href='/general/versions/v0.8/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
+<li class=''><a href='/general/versions/v0.8/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/versions/v0.8/queues/'>Message Queues</a></li>
+<li class=''><a href='/general/versions/v0.8/webhooks/'>Receiving WebHooks</a></li>
+<li class=''><a href='/general/versions/v0.8/statistics/'>Application Statistics</a></li>
+</ul>
+  <h2><a href="/client-lib-development-guide/">Library Development</a></h2>
+<ul>
+<li class=''><a href='/client-lib-development-guide/versions/v0.8/features/'>Features spec</a></li>
+<li class=''><a href='/client-lib-development-guide/feature-prioritisation/'>Feature prioritisation</a></li>
+<li class=''><a href='/client-lib-development-guide/versions/v0.8/protocol/'>Realtime Protocol Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/test-api/'>Sandbox Test API</a></li>
+<li class=''><a href='/client-lib-development-guide/encryption/'>Encryption</a></li>
+<li class=''><a href='/client-lib-development-guide/websocket/'>WebSocket Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/comet/'>Comet Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/documentation-formatting-guide/'>Documentation Formatting Guide</a></li>
+<li class=''><a href='/code-index/'>Code Examples List</a></li>
+</ul>
+  <ul>
+<li><a href="https://www.ably.io">Visit Ably.io</a></li>
+</ul>
+</div>
+
+</body>
+</html>
