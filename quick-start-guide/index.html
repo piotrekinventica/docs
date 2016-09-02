@@ -1,0 +1,321 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ably API Documentation - Quickstart Guide</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/vendor/prettify/prettify.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheet.css" media="screen">
+
+    
+      <link rel="canonical" href="https://www.ably.io/documentation/quick-start-guide" />
+    
+
+    <script src="/vendor/javascripts/jquery-1-8-3-min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/jquery-cookie-1-3-1.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/kjua-0.1.1.min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/base64.js" type="text/javascript"></script>
+
+    <script src="/vendor/prettify/prettify-lib.js" type="text/javascript"></script>
+
+    <script src="//cdn.ably.io/lib/ably.min.js" type="text/javascript"></script>
+
+    <script src="/javascripts/application.js" type="text/javascript"></script>
+    <script src="/javascripts/lang-manager.js" type="text/javascript"></script>
+
+    
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.7.5">
+  </head>
+  <body>
+    <div class="canonical-notice">
+      <img src="/images/icon-alert.png">
+      <span class="canonical-notice-text">
+        You are viewing our bleeding edge unstable documentation. We recommend you use our <a href="https://www.ably.io/documentation">stable documentation »</a>
+      </span>
+      <img src="/images/icon-alert.png">
+    </div>
+    <div class="fork-banner"><a href="https://github.com/ably/docs"><img src="/images/forkme.png" alt="Fork me on GitHub"></a></div>
+
+  <div id="documentation">
+    
+    <header>
+      
+      
+        <h1 id="title">Quickstart Guide</h1>
+      
+    </header>
+    <article>
+      <p>Integrating Ably is simple.  In this guide we&#8217;ll run you through the basics.</p>
+<p>Whilst our client libraries do support <a href="https://www.ably.io/download">every popular language and platform</a>, for simplicity we have used Javascript as the primary language for this guide.</p>
+<h3>Adding the Ably realtime library</h3>
+
+
+<div lang="javascript"> <!-- start javascript language block -->
+<p>When using Ably in a browser, simply include the Ably Javascript library within the <code>&lt;head&gt;</code> of your HTML page as follows:</p>
+<pre lang="html"><code lang="html">&lt;script src="//cdn.ably.io/lib/ably.min.js"&gt;&lt;/script&gt;</code></pre>
+<p>You can also obtain the library as an <a href="https://www.npmjs.com/package/ably">NPM module</a>.</p>
+
+</div> <!-- /end javascript language block -->
+
+
+
+<div lang="nodejs"> <!-- start nodejs language block -->
+<p>The Ably library is obtainable as an <a href="https://www.npmjs.com/package/ably">NPM module</a>. Simply add to your <code>package.json</code> file or install manually:</p>
+<pre lang="sh"><code lang="sh">npm install ably</code></pre>
+
+</div> <!-- /end nodejs language block -->
+
+
+
+<div lang="ruby"> <!-- start ruby language block -->
+<p>The Ably library is obtainable as a <a href="https://rubygems.org/gems/ably">Ruby Gem</a>. Simply add to your <code>Gemfile</code> or install manually:</p>
+<pre lang="sh"><code lang="sh">gem install ably</code></pre>
+
+</div> <!-- /end ruby language block -->
+
+
+
+<div lang="python"> <!-- start python language block -->
+<p>The Ably library is installable from <a href="https://pypi.python.org/pypi/ably">PyPI</a> as follows:</p>
+<pre lang="sh"><code lang="sh">pip install ably</code></pre>
+<p>It can then be imported as:</p>
+<pre lang="python"><code lang="python">from ably import AblyRest</code></pre>
+
+</div> <!-- /end python language block -->
+
+
+
+<div lang="php"> <!-- start php language block -->
+<p>The Ably library is available as a <a href="https://packagist.org/packages/ably/ably-php">composer package on packagist</a> and can be installed as follows:</p>
+<pre lang="sh"><code lang="sh">composer require ably/ably-php --update-no-dev</code></pre>
+<p>Then simply require composer&#8217;s autoloader:</p>
+<pre lang="php"><code lang="php">require_once __DIR__ . '/../vendor/autoload.php';</code></pre>
+
+</div> <!-- /end php language block -->
+
+
+
+<div lang="java"> <!-- start java language block -->
+<p>The Ably library for Java and Android is downloadable as a JAR from <a href="https://github.com/ably/ably-java/releases">https://github.com/ably/ably-java/releases</a> or via <a href="https://bintray.com/ably-io/ably">JCentre</a>.</p>
+<p>Ensure the JAR is included in your classpath as follows:</p>
+<pre lang="java"><code lang="java">import io.ably.lib.types.*;
+import io.ably.lib.realtime.*;</code></pre>
+
+</div> <!-- /end java language block -->
+
+
+
+<div lang="objc"> <!-- start objc language block -->
+<p>The Ably library is available as a CocoaPod. Add this line to your application&#8217;s Podfile:</p>
+<pre lang="text"><code lang="text">pod 'AblyRealtime'</code></pre>
+<p>And install with <code>pod install</code>. Then in your files:</p>
+<pre lang="objc"><code lang="objc">#import "Ably.h"</code></pre>
+
+</div> <!-- /end objc language block -->
+
+
+
+<div lang="swift"> <!-- start swift language block -->
+<p>The Ably library is available as a CocoaPod. Add this line to your application&#8217;s Podfile:</p>
+<pre lang="text"><code lang="text">pod 'AblyRealtime'</code></pre>
+<p>And install with <code>pod install</code>. Then in your files:</p>
+<pre lang="swift"><code lang="swift">import Ably</code></pre>
+
+</div> <!-- /end swift language block -->
+
+
+
+<div lang="csharp"> <!-- start csharp language block -->
+<p>The client library is available as a <a href="https://www.nuget.org/packages/ably.io/">nuget package</a>. You can install it from the Package Manager Console using this command</p>
+<pre lang="text"><code lang="text">PM&gt; Install-Package ably.io</code></pre>
+
+</div> <!-- /end csharp language block -->
+
+<h3>The basics: Receiving a message</h3>
+
+
+<div lang="python"> <!-- start python language block -->
+<p>The python library is currently <strong>REST only</strong>. To receive messages, you need to use one of the other client libraries.</p>
+
+</div> <!-- /end python language block -->
+
+<p>To connect to Ably, you need an API key.  In this example we have provided a temporary API key, however if you registered and visit your <a href="https://www.ably.io/dashboard">application dashboard</a>, you will be able to use your own API key.  If you do not have an API key yet, you can <a href="https://www.ably.io/#signup">sign up now for a free account with Ably</a>.</p>
+<pre class="code-editor open-jsbin open-jsbin-ezuzot" lang="javascript"><code class="code-editor open-jsbin open-jsbin-ezuzot" lang="javascript">var ably = new Ably.Realtime('{{API_KEY}}');
+ably.connection.on('connected', function() {
+  alert("That was simple, you're now connected to Ably in realtime");
+});</code></pre>
+<pre class="code-editor open-jsbin open-jsbin-ezuzot" lang="nodejs"><code class="code-editor open-jsbin open-jsbin-ezuzot" lang="nodejs">var ably = new Ably.Realtime('{{API_KEY}}');
+ably.connection.on('connected', function() {
+  alert("That was simple, you're now connected to Ably in realtime");
+});</code></pre>
+<pre lang="java"><code lang="java">ClientOptions options = new ClientOptions("{{API_KEY}}");
+AblyRealtime ably = new AblyRealtime(options);
+ably.connection.on(ConnectionState.connected, new ConnectionStateListener() {
+  @Override
+  public void onConnectionStateChanged(ConnectionStateChange state) {
+    System.out.println("That was simple, you're now connected to Ably in realtime");
+  }
+});</code></pre>
+<pre lang="ruby"><code lang="ruby">ably = Ably::Realtime.new(api_key)
+ably.connection.on(:connected) do
+  puts "That was simple, you're now connected to Ably in realtime"
+end</code></pre>
+<pre lang="swift"><code lang="swift">let ably = ARTRealtime(key: "{{API_KEY}}")
+ably.connection.on(.Connected) {
+    print("That was simple, you're now connected to Ably in realtime")
+}</code></pre>
+<pre lang="objc"><code lang="objc">ARTRealtime *ably = [[ARTRealtime alloc] initWithKey:@"{{API_KEY}}"];
+[ably.connection on:ARTRealtimeConnected call:^(ARTConnectionStateChange *stateChange) {
+    NSLog(@"That was simple, you're now connected to Ably in realtime");
+}];</code></pre>
+<p>Messages are broadcasted on channels.  Next we will subscribe to a channel and listen for messages that are sent to us from other connected clients or servers.</p>
+<pre class="code-editor open-jsbin open-jsbin-onocan" lang="javascript"><code class="code-editor open-jsbin open-jsbin-onocan" lang="javascript">var channel = ably.channels.get('quickstart');
+channel.subscribe('greeting', function(message) {
+  alert("Received a greeting message in realtime: " + message.data);
+});</code></pre>
+<pre class="code-editor open-jsbin open-jsbin-onocan" lang="nodejs"><code class="code-editor open-jsbin open-jsbin-onocan" lang="nodejs">var channel = ably.channels.get('quickstart');
+channel.subscribe('greeting', function(message) {
+  alert("Received a greeting message in realtime: " + message.data);
+});</code></pre>
+<pre lang="ruby"><code lang="ruby">channel = ably.channels.get('quickstart')
+channel.subscribe('greeting') do |message|
+  puts "Received a greeting message in realtime: #{message.data}"
+end</code></pre>
+<pre lang="java"><code lang="java">Channel channel = ably.channels.get("quickstart");
+channel.subscribe(new MessageListener() {
+  @Override
+  public void onMessage(Message message) {
+    System.out.println("Received a greeting message in realtime: " + message.data);
+  }
+});
+channel.publish("example", "message data");</code></pre>
+<pre lang="swift"><code lang="swift">let channel = ably.channels.get("quickstart")
+channel.subscribe("greeting") { message in
+  print("Received a greeting message in realtime: #{message.data}")
+}</code></pre>
+<pre lang="swift"><code lang="swift">let channel = ably.channels.get("quickstart")
+channel.subscribe("greeting") { message in
+    print("Received a greeting message in realtime: \(message.data)")
+}</code></pre>
+<pre lang="objc"><code lang="objc">ARTRealtimeChannel *channel = [ably.channels get:@"quickstart"];
+[channel subscribe:@"greeting" callback:^(ARTMessage *message) {
+    NSLog(@"Received a greeting message in realtime: %@", message.data);
+}];</code></pre>
+<h3>The basics: Sending a message</h3>
+<p>Publishing a message to a channel is extremely straightforward.  As this is commonly performed by both connected devices and servers, here are examples in multiple languages</p>
+<pre class="code-editor open-jsbin open-jsbin-onocan" lang="javascript"><code class="code-editor open-jsbin open-jsbin-onocan" lang="javascript">var channel = ably.channels.get('quickstart');
+channel.publish('greeting', 'hello!');</code></pre>
+<pre class="code-editor open-jsbin open-jsbin-onocan" lang="nodejs"><code class="code-editor open-jsbin open-jsbin-onocan" lang="nodejs">var channel = ably.channels.get('quickstart');
+channel.publish('greeting', 'hello!');</code></pre>
+<pre lang="csharp"><code lang="csharp">Channel channel = ably.channels.get('quickstart');
+channel.publish('greeting', 'hello!');</code></pre>
+<pre lang="java"><code lang="java">Channel channel = ably.channels.get('quickstart');
+channel.publish('greeting', 'hello!');</code></pre>
+<pre lang="python"><code lang="python">client = AblyRest(api_key)
+channel = ably.channels.get('quickstart')
+channel.publish(u'greeting', u'hello!')</code></pre>
+<pre lang="ruby"><code lang="ruby">channel = ably.channels.get('quickstart')
+channel.publish 'greeting', 'hello!'</code></pre>
+<pre lang="php"><code lang="php">$channel = $ably-&gt;channels-&gt;get('quickstart');
+$channel-&gt;publish('greeting', 'hello!');</code></pre>
+<pre lang="swift"><code lang="swift">let channel = ably.channels.get("quickstart")
+channel.publish("greeting", data: "hello!")</code></pre>
+<pre lang="objc"><code lang="objc">ARTRealtimeChannel *channel = [ably.channels get:@"quickstart"];
+[channel publish:@"greeting" data:@"hello!"];</code></pre>
+<h3>Sending a message via the REST API</h3>
+<p>We recommend using our REST client libraries over direct REST API access.  However, if you want to comunnicate directly over HTTP with Ably it&#8217;s as simple as:</p>
+<pre lang="sh"><code lang="sh">curl https://rest.ably.io/channels/{{RANDOM_CHANNEL_NAME}}/publish \
+  --user "{{API_KEY}}" \
+  --data "name=greeting&amp;data=Hello"</code></pre>
+<p>Copy and paste the <code>curl</code> command above into your console and try it now.</p>
+<script src="//cdn.ably.io/lib/ably.min.js"></script><script type="text/javascript">
+function subscribeToCurlRequest(key) {
+  var ably = new Ably.Realtime(key),
+      channelName = '{{RANDOM_CHANNEL_NAME}}';
+  if (channelName === '{{RANDOM_CHANNEL' + '_NAME}}') { channelName = window.randomChannelName; }
+  ably.channels.get(channelName).subscribe('greeting', function(message) {
+    alert('That was easy, a message was just received from the REST API on channel "' + channelName + '".\n\nGreeting => ' + message.data);
+  });
+}
+
+/* API_KEY variable is replaced inline on https://www.ably.io so
+  {{API_KEY}} will not equal '{{API_' + 'KEY}}'
+  On docs.ably.io, we rely on application.js to call the onApiKeyRetrieved method */
+if ('{{API_KEY}}' !== '{{API_' + 'KEY}}') {
+  subscribeToCurlRequest('{{API_KEY}}');
+} else {
+  window.onApiKeyRetrieved = subscribeToCurlRequest;
+}
+</script>
+    </article>
+    <hr class="back">
+    <a href="#documentation">Back to top</a>
+  </div>
+  <div id="sidebar">
+  <a href="/" title="API Documentation Home"><img src="/images/ably-logo.png" class="ably-logo" title="API Documentation Home"></a>
+  <ul>
+<li class='selected'><a href='/quick-start-guide/'>Quickstart Guide</a></li>
+<li class=''><a href='/how-ably-works/'>How Ably works</a></li>
+<li class=''><a href='/tutorials/'>Tutorials</a></li>
+</ul>
+  <h2><a href="/realtime/">Realtime client lib</a></h2>
+<ul>
+<li class=''><a href='/realtime/usage/'>Using the Realtime library</a></li>
+<li class=''><a href='/realtime/connection/'>Connection</a></li>
+<li class=''><a href='/realtime/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/realtime/presence/'>Presence</a></li>
+<li class=''><a href='/realtime/authentication/'>Authentication</a></li>
+<li class=''><a href='/realtime/history/'>History</a></li>
+<li class=''><a href='/realtime/encryption/'>Encryption</a></li>
+<li class=''><a href='/realtime/statistics/'>Statistics</a></li>
+<li class=''><a href='/realtime/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest/">REST client lib</a></h2>
+<ul>
+<li class=''><a href='/rest/usage/'>Using the REST library</a></li>
+<li class=''><a href='/rest/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/rest/presence/'>Presence</a></li>
+<li class=''><a href='/rest/authentication/'>Authentication</a></li>
+<li class=''><a href='/rest/history/'>History</a></li>
+<li class=''><a href='/rest/encryption/'>Encryption</a></li>
+<li class=''><a href='/rest/statistics/'>Statistics</a></li>
+<li class=''><a href='/rest/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest-api/">REST API</a></h2>
+<ul>
+</ul>
+  <h2>General</h2>
+<ul>
+<li class=''><a href='/general/authentication/'>Authentication</a></li>
+<li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
+<li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
+<li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
+<li class=''><a href='/general/statistics/'>Application Statistics</a></li>
+</ul>
+  <h2><a href="/client-lib-development-guide/">Library Development</a></h2>
+<ul>
+<li class=''><a href='/client-lib-development-guide/features/'>Features spec v0.9</a></li>
+<li class=''><a href='/client-lib-development-guide/feature-prioritisation/'>Feature prioritisation</a></li>
+<li class=''><a href='/client-lib-development-guide/protocol/'>Realtime Protocol Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/rest-api/'>REST API Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/test-api/'>Sandbox Test API</a></li>
+<li class=''><a href='/client-lib-development-guide/encryption/'>Encryption</a></li>
+<li class=''><a href='/client-lib-development-guide/websocket/'>WebSocket Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/comet/'>Comet Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/connection-recovery/'>Connection Recovery</a></li>
+<li class=''><a href='/client-lib-development-guide/connection-manager/'>Connection Manager</a></li>
+<li class=''><a href='/client-lib-development-guide/connection-fallback/'>Connection host fallback</a></li>
+<li class=''><a href='/client-lib-development-guide/documentation-formatting-guide/'>Documentation Formatting Guide</a></li>
+<li class=''><a href='/code-index/'>Code Examples List</a></li>
+</ul>
+  <ul>
+<li><a href="https://www.ably.io">Visit Ably.io</a></li>
+</ul>
+</div>
+
+</body>
+</html>

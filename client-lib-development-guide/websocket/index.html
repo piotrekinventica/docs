@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ably API Documentation - WebSocket Transport</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/vendor/prettify/prettify.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheet.css" media="screen">
+
+    
+
+    <script src="/vendor/javascripts/jquery-1-8-3-min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/jquery-cookie-1-3-1.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/kjua-0.1.1.min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/base64.js" type="text/javascript"></script>
+
+    <script src="/vendor/prettify/prettify-lib.js" type="text/javascript"></script>
+
+    <script src="//cdn.ably.io/lib/ably.min.js" type="text/javascript"></script>
+
+    <script src="/javascripts/application.js" type="text/javascript"></script>
+    <script src="/javascripts/lang-manager.js" type="text/javascript"></script>
+
+    
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.7.5">
+  </head>
+  <body>
+    <div class="canonical-notice">
+      <img src="/images/icon-alert.png">
+      <span class="canonical-notice-text">
+        You are viewing our bleeding edge unstable documentation. We recommend you use our <a href="https://www.ably.io/documentation">stable documentation »</a>
+      </span>
+      <img src="/images/icon-alert.png">
+    </div>
+    <div class="fork-banner"><a href="https://github.com/ably/docs"><img src="/images/forkme.png" alt="Fork me on GitHub"></a></div>
+
+  <div id="documentation">
+    
+      <nav class="jump-to-nav">
+        <div class="form">
+          <select id="jump-to-nav">
+            <option>Jump to ...</option>
+            <optgroup label='Help with'>
+<option id="anchor-overview">Overview</option>
+<option id="anchor-connection">Connection</option>
+<option id="anchor-disconnection">Disconnection</option>
+<option id="anchor-websocket-protocol-draft-support">WebSocket protocol draft support</option>
+</optgroup>
+          </select>
+        </div>
+      </nav>
+    
+    <header>
+      
+        <div class="breadcrumb"><a href="/client-lib-development-guide/">Client Library Development Guide</a><span class="separator">/</span></div>
+      
+      
+        <h1 id="title">WebSocket Transport</h1>
+      
+    </header>
+    <article>
+      <h2 id="overview">Overview</h2>
+<p>The Ably Realtime service supports client connections over multiple transports. The WebSocket transport is the primary transport for efficient connection by browser clients that are websocket-capable, and any other client environment that offers direct TCP socket access.</p>
+<p>The WebSocket transport transmits <a href="/client-lib-development-guide/protocol">Protocol Messages</a> in a single WebSocket data frame. In the binary transport, these are sent as binary data frames, with the <a href="/client-lib-development-guide/protocol">Protocol Message</a> being encoded with <a href="http://msgpack.org/">MessagePack encoding</a>.  In the text transport these are sent as text data frames containing JSON-encoded ProtocolMessage objects. The <a href="/client-lib-development-guide/protocol">protocol definition</a> specifies the content and interpretation of the various protocol messages.</p>
+<p>This section defines details that are transport-specific, covering:</p>
+<ul>
+	<li>connection</li>
+	<li>disconnection</li>
+	<li>WebSocket protocol draft support</li>
+</ul>
+<h2 id="connection">Connection</h2>
+<p>Establishment of a WebSocket transport requires that the client makes a WebSocket or secure WebSocket connection to the Ably WebSocket host (realtime.ably.io or one of the <a href="/client-lib-development-guide/connection-fallback">WebSocket fallback hosts</a>). The client library must allow the client to specify a non-default host or environment, at least to be able to connect to the sandbox environment at sandbox-realtime.ably.io.</p>
+<p>Certain apps may be configured to require TLS connections and will reject non-TLS connections.</p>
+<p>The connection URI must be a valid WebSocket URI as specified in http://tools.ietf.org/html/rfc6455#section-3 with an empty path component. The URI must include a valid set of authorisation params and a valid set of connection params, each as specified below.</p>
+<h3>Authorisation params</h3>
+<p>Authorisation params must be either basic authorisation params or token authorisation params.</p>
+<p>Basic auth params:</p>
+<ul>
+	<li><code>key</code> (mandatory API key string with name and secret in format <code>NAME:SECRET</code>)</li>
+</ul>
+<p>Token auth params:</p>
+<ul>
+	<li><code>access_token</code> (mandatory token ID)</li>
+</ul>
+<p>If the library has been initialized with a clientId then the authorisation params must include a &#8220;client_id&#8221; param with the clientId value. In the case of token auth, the token must either have been issued against that clientId or against the wildcard clientId.</p>
+<h3>Connection params</h3>
+<p>Connection params cover protocol mode and recovery mode.</p>
+<p>Protocol mode is specified with the protocol param:</p>
+<ul>
+	<li><code>protocol</code>; possible values &#8220;msgpack&#8221; for the binary MessagePack encoding, &#8220;json&#8221; for the text based JSON encoding</li>
+</ul>
+<p>The connection recovery mode is one of &#8220;clean&#8221;, &#8220;resume&#8221; or &#8220;recover&#8221;. Clean mode is the default, and is assumed if no connection params are specified.</p>
+<p>Resume or recover mode are specified by including a <code>resume</code> or <code>recover</code> param respectively. In each case the value of that param is the private connectionKey string of the connection that is being recovered.</p>
+<p>Resume and recover mode also require a <code>connection_serial</code> param to be specified whose value is the (decimal representation of the) serial number of the last message received.</p>
+<h3>Failed connections</h3>
+<p>In the event of a connection failure, the service may respond in two ways.</p>
+<p>First, the service may simply refuse the connection and there will be no handshake. The library must report this to the client as a 401 Unauthorized error with no further error information.</p>
+<p>Alternatively, the service may accept the WebSocket connection and complete the handshake, and then send an <code>ERROR</code> <a href="/client-lib-development-guide/protocol">Protocol Message</a> with further error information, followed by a normal close of the WebSocket connection. In this case the library must report that error information as the reason for connection failure to the client.</p>
+<p>At any time after a successful connection, the service may initiate termination of the connection by sending an <code>ERROR</code> message; this might occur for example if the credentials have been revoked, or the account has breached a hard connection limit. If a connection <code>ERROR</code> message is received, the error information must be passed to the client as the failure reason.</p>
+<h2 id="disconnection">Disconnection</h2>
+<p>Disconnection of the transport, in the case that the client wishes to be able to recover connection state, simply requires the client to perform a normal close on the WebSocket.</p>
+<p>Closing the connection, resulting in disposal of connection state, is achieved by sending a <code>CLOSE</code> message. The client should then wait a short period for a <code>CLOSED</code> message, however the client can also simply perform a normal close on the WebSocket.</p>
+<p>Abnormal termination for whatever reason (a transition to the failed connection state) again just requires a normal close of the WebSocket.</p>
+<p>WebSocket close events that are initiated by the remote end are handled as follows.</p>
+<p>A normal close, if the client end had already initiated an explicit <code>CLOSE</code>, are reported to the client as a transition to the closed state once a <code>CLOSED</code> message is received or the connection is closed.</p>
+<p>Any other normal close, or a close with one of the following codes:</p>
+<ul>
+	<li><code>GOING_AWAY</code> (1001)</li>
+	<li><code>ABNORMAL_CLOSE</code> (1006)</li>
+</ul>
+<p>is reported to the client as a transition to the disconnected or the suspended state, depending on whether or not the client has exceeded the suspended timeout.</p>
+<p>Any close with any of the following codes:</p>
+<ul>
+	<li><code>CLOSE_PROTOCOL_ERROR</code> (1002)</li>
+	<li><code>REFUSE</code> (1003)</li>
+	<li><code>NO_UTF8</code> (1007)</li>
+	<li><code>POLICY_VALIDATION</code> (1008)</li>
+	<li><code>TOOBIG</code> (1009)</li>
+	<li><code>EXTENSION</code> (1010)</li>
+	<li><code>UNEXPECTED_CONDITION</code> (1011)</li>
+	<li><code>TLS_ERROR</code> (1015)</li>
+</ul>
+<p>is reported as a transition to the failed state. The reason code is derived from the reported WebSocket reason code as follows:</p>
+<ul>
+	<li><code>REFUSE</code>, <code>POLICY_VALIDATION</code> (0100)</li>
+	<li><code>TOOBIG</code> (40000)</li>
+	<li>any other code (80000)</li>
+</ul>
+<h2 id="websocket-draft-protocol-support">WebSocket protocol draft support</h2>
+<p>Clients must use the <a href="https://tools.ietf.org/html/rfc6455">RFC 6455 WebSocket protocol</a>. Browsers that support earlier drafts are accommodated by the service based on specific knowledge of the state of those browser&#8217;s conformance to a particular draft; the Ably service does attempt to comply with any draft other than the RFC.</p>
+    </article>
+    <hr class="back">
+    <a href="#documentation">Back to top</a>
+  </div>
+  <div id="sidebar">
+  <a href="/" title="API Documentation Home"><img src="/images/ably-logo.png" class="ably-logo" title="API Documentation Home"></a>
+  <ul>
+<li class=''><a href='/quick-start-guide/'>Quickstart Guide</a></li>
+<li class=''><a href='/how-ably-works/'>How Ably works</a></li>
+<li class=''><a href='/tutorials/'>Tutorials</a></li>
+</ul>
+  <h2><a href="/realtime/">Realtime client lib</a></h2>
+<ul>
+<li class=''><a href='/realtime/usage/'>Using the Realtime library</a></li>
+<li class=''><a href='/realtime/connection/'>Connection</a></li>
+<li class=''><a href='/realtime/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/realtime/presence/'>Presence</a></li>
+<li class=''><a href='/realtime/authentication/'>Authentication</a></li>
+<li class=''><a href='/realtime/history/'>History</a></li>
+<li class=''><a href='/realtime/encryption/'>Encryption</a></li>
+<li class=''><a href='/realtime/statistics/'>Statistics</a></li>
+<li class=''><a href='/realtime/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest/">REST client lib</a></h2>
+<ul>
+<li class=''><a href='/rest/usage/'>Using the REST library</a></li>
+<li class=''><a href='/rest/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/rest/presence/'>Presence</a></li>
+<li class=''><a href='/rest/authentication/'>Authentication</a></li>
+<li class=''><a href='/rest/history/'>History</a></li>
+<li class=''><a href='/rest/encryption/'>Encryption</a></li>
+<li class=''><a href='/rest/statistics/'>Statistics</a></li>
+<li class=''><a href='/rest/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest-api/">REST API</a></h2>
+<ul>
+</ul>
+  <h2>General</h2>
+<ul>
+<li class=''><a href='/general/authentication/'>Authentication</a></li>
+<li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
+<li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
+<li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
+<li class=''><a href='/general/statistics/'>Application Statistics</a></li>
+</ul>
+  <h2><a href="/client-lib-development-guide/">Library Development</a></h2>
+<ul>
+<li class=''><a href='/client-lib-development-guide/features/'>Features spec v0.9</a></li>
+<li class=''><a href='/client-lib-development-guide/feature-prioritisation/'>Feature prioritisation</a></li>
+<li class=''><a href='/client-lib-development-guide/protocol/'>Realtime Protocol Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/rest-api/'>REST API Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/test-api/'>Sandbox Test API</a></li>
+<li class=''><a href='/client-lib-development-guide/encryption/'>Encryption</a></li>
+<li class='selected'><a href='/client-lib-development-guide/websocket/'>WebSocket Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/comet/'>Comet Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/connection-recovery/'>Connection Recovery</a></li>
+<li class=''><a href='/client-lib-development-guide/connection-manager/'>Connection Manager</a></li>
+<li class=''><a href='/client-lib-development-guide/connection-fallback/'>Connection host fallback</a></li>
+<li class=''><a href='/client-lib-development-guide/documentation-formatting-guide/'>Documentation Formatting Guide</a></li>
+<li class=''><a href='/code-index/'>Code Examples List</a></li>
+</ul>
+  <ul>
+<li><a href="https://www.ably.io">Visit Ably.io</a></li>
+</ul>
+</div>
+
+</body>
+</html>

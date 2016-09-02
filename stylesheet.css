@@ -1,0 +1,675 @@
+@charset "UTF-8";
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Georgia, Palatino, Times, 'Times New Roman', sans-serif; }
+
+pre {
+  font-family: monospace, serif; }
+
+body {
+  background: #fff; }
+
+a {
+  text-decoration: none; }
+
+ol, ul {
+  margin: 0;
+  padding: 0; }
+
+a:link,
+a:visited {
+  color: #f30; }
+
+a:hover {
+  color: #f90; }
+
+#documentation {
+  position: absolute;
+  top: 50px;
+  left: 280px;
+  width: 650px; }
+  #documentation.with-langauage-selector {
+    top: 75px; }
+
+#sidebar {
+  position: absolute;
+  top: 25px;
+  left: 20px;
+  width: 200px;
+  padding: 0 20px 0 0;
+  border-right: 1px solid #ccc;
+  text-align: right; }
+  #sidebar .ably-logo {
+    margin-bottom: 20px; }
+  #sidebar h2 {
+    text-transform: uppercase;
+    font-size: 13px;
+    color: #333;
+    letter-spacing: 1px;
+    line-height: 16px;
+    margin: 5px 0; }
+    #sidebar h2 a {
+      color: #000; }
+      #sidebar h2 a:hover {
+        color: #f90; }
+    #sidebar h2.selected a {
+      color: #b32400; }
+  #sidebar ul {
+    list-style-type: none;
+    margin: 0 0 20px 0; }
+  #sidebar li {
+    font-size: 13px;
+    line-height: 16px; }
+  #sidebar li.selected a {
+    font-weight: bold;
+    color: #b32400; }
+
+hr.back {
+  clear: both;
+  margin: 25px 0 10px 0;
+  border-top: 1px solid #ffad99;
+  border-bottom: none; }
+  hr.back + a {
+    margin-bottom: 15px;
+    display: block; }
+
+/* Github fork banner fixed top right */
+.fork-banner {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2; }
+  .fork-banner img {
+    border: 0; }
+
+/* Notice for people who arrive here and don't realise this is not the canonical source of documentation */
+.canonical-notice {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 2;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #ffa54c;
+  text-align: center;
+  height: 25px; }
+  .canonical-notice .canonical-notice-text {
+    position: relative;
+    top: -5px; }
+    .canonical-notice .canonical-notice-text a {
+      color: #fffccc; }
+      .canonical-notice .canonical-notice-text a:hover {
+        text-decoration: underline; }
+  .canonical-notice img {
+    margin-top: 4px;
+    height: 18px;
+    width: 18px;
+    position: relative;
+    padding: 0;
+    border: 0; }
+
+#documentation {
+  font-family: Lucida Sans Unicode, sans-serif;
+  font-size: 12px;
+  /* if a list is within a div tag, remove white space at the top */
+  /* First paragraph after a H1 is emphasised */
+  /* H2s indicate sections such as Methods / Attributes of an object */
+  /* H4s indicate sections within a method or attribute */
+  /* H6s indicate methods or attribute */
+  /* provide sufficient space after h6 tags and following text */
+  /* h6 that follow paragraphs need less space above */
+  /* indent all copy under a heading */
+  /* block quotes are used for function definitions as code, but are changed at runtime with code blocks as they can be colour coded */
+  /* more space for method definition unless after a H6 definition anchor */
+  /* code examples with language specified */
+  /* code block that potentially has a language nav above it if a language is not supported */
+  /* typically an inline language resource shown if the correct global language is selected */
+  /* used to simply break up consecutive language tags so that they are not grouped */
+  /* div with a language within a dt is used to indicate the language for the dt and dd, so don't treat this as a div */
+  /* Code try it button appears at bottom of pretty printed code block */
+  /* in this section navigation at the top of documentation where meta data exists */ }
+  #documentation h1 {
+    color: #6E7D9A;
+    font-size: 30px;
+    font-weight: normal;
+    line-height: 30px;
+    padding-top: 25px; }
+    #documentation h1:first-child {
+      padding-top: 0;
+      margin-top: 0;
+      font-weight: bold; }
+  #documentation header h1 {
+    padding-top: 0;
+    margin-top: 0;
+    font-weight: bold; }
+  #documentation header .breadcrumb {
+    font-size: 20px; }
+    #documentation header .breadcrumb a {
+      color: #8c98af; }
+  #documentation header .separator {
+    margin: 0 10px;
+    font-size: 20px;
+    color: #8c98af; }
+  #documentation p {
+    margin: 0 0 20px 0;
+    font-size: 12px;
+    line-height: 20px;
+    /* if a paragraph precedes a list, don't double space with margins */ }
+    #documentation p + ul, #documentation p ol {
+      margin-top: 0; }
+    #documentation p + pre[lang] {
+      margin-top: -5px; }
+  #documentation ul, #documentation ol {
+    margin: 20px; }
+    #documentation ul li > ul, #documentation ol li > ul {
+      margin-bottom: 0; }
+  #documentation div[lang] ul, #documentation div[lang] ol {
+    margin: 0 20px 20px 20px; }
+    #documentation div[lang] ul.linenums, #documentation div[lang] ol.linenums {
+      margin: 0 5px 5px 30px; }
+  #documentation li {
+    font-size: 12px;
+    line-height: 20px; }
+  #documentation ul li {
+    list-style-type: square; }
+  #documentation h1, #documentation header {
+    /* standard format is header + article > p */
+    /* allow in-line H1 tag and following p to be emphasised */ }
+    #documentation h1 + article > p:first-child, #documentation header + article > p:first-child {
+      font-size: 1.2em;
+      line-height: 1.2em; }
+    #documentation h1 + p, #documentation header + p {
+      font-size: 1.2em;
+      line-height: 1.2em; }
+  #documentation p.larger {
+    font-size: 1.2em;
+    line-height: 1.2em; }
+  #documentation article h1 {
+    border-top: 5px dashed #AAA;
+    margin: 50px 0 20px 0;
+    padding-top: 40px; }
+  #documentation h2 {
+    border-top: 1px solid #AAA;
+    padding-top: 20px;
+    font-size: 22px;
+    margin-top: 25px; }
+  #documentation h3 {
+    font-size: 17px;
+    margin-top: 25px; }
+  #documentation h4 {
+    font-size: 13.5px; }
+  #documentation h5 {
+    font-size: 13px;
+    color: #444;
+    clear: left; }
+  #documentation h6 {
+    background-color: #A6412C;
+    color: white;
+    font-size: 12px;
+    font-weight: normal;
+    display: inline;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: monospace, serif;
+    line-height: 40px;
+    position: relative;
+    top: 15px; }
+    #documentation h6 code {
+      background-color: transparent;
+      color: #FBB; }
+  #documentation p ~ code.prettyprint, #documentation h6 + code, #documentation h6 + code.prettyprint {
+    margin-top: 20px; }
+  #documentation h6 ~ p {
+    margin-top: 1px; }
+  #documentation p ~ h6, #documentation p ~ div[lang] h6 {
+    line-height: 25px;
+    top: 0; }
+  #documentation h2, #documentation h3, #documentation h6[lang] {
+    /* code definition heading is following a section heading yet is inline, so needs to be positioned carefully
+       also include support for ul in case a language selector is added, or another h6[lang] tag */ }
+    #documentation h2 + h6, #documentation h2 + ul + h6, #documentation h3 + h6, #documentation h3 + ul + h6, #documentation h6[lang] + h6, #documentation h6[lang] + ul + h6 {
+      position: static;
+      line-height: inherit; }
+      #documentation h2 + h6 + code, #documentation h2 + h6 + code.prettyprint, #documentation h2 + ul + h6 + code, #documentation h2 + ul + h6 + code.prettyprint, #documentation h3 + h6 + code, #documentation h3 + h6 + code.prettyprint, #documentation h3 + ul + h6 + code, #documentation h3 + ul + h6 + code.prettyprint, #documentation h6[lang] + h6 + code, #documentation h6[lang] + h6 + code.prettyprint, #documentation h6[lang] + ul + h6 + code, #documentation h6[lang] + ul + h6 + code.prettyprint {
+        margin-top: 15px; }
+      #documentation h2 + h6 + p, #documentation h2 + ul + h6 + p, #documentation h3 + h6 + p, #documentation h3 + ul + h6 + p, #documentation h6[lang] + h6 + p, #documentation h6[lang] + ul + h6 + p {
+        margin-top: 20px; }
+  #documentation h3 ~ p, #documentation h3 ~ div[lang] p {
+    margin-left: 10px; }
+  #documentation em {
+    color: #888; }
+  #documentation ul > li > ul {
+    margin-top: 0; }
+  #documentation code.prettyprint {
+    border: 1px solid #999;
+    background-color: #F6F6F6;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    display: block; }
+    #documentation code.prettyprint p {
+      margin: 0; }
+  #documentation blockquote {
+    margin: 0 0 20px 10px;
+    font-family: monospace, serif;
+    background-color: #F6F6F6;
+    border-radius: 10px;
+    padding: 5px 10px; }
+    #documentation blockquote p:last-child {
+      margin: 0; }
+  #documentation table {
+    border-collapse: collapse; }
+    #documentation table th, #documentation table td {
+      border: 1px solid #eee;
+      padding: 5px; }
+  #documentation dl {
+    /* make space for anything after a definiion list */
+    margin-bottom: 3em; }
+    #documentation dl + dl {
+      /* push up consecutive definition lists so only 1em between */
+      margin-top: -2em; }
+    #documentation dl dt {
+      clear: left;
+      float: left;
+      width: 180px;
+      font-weight: bold;
+      text-align: right;
+      padding: 0 10px 0 0;
+      color: #57647e;
+      /* title row for a defintion list */ }
+      #documentation dl dt:before {
+        content: ""; }
+      #documentation dl dt:after {
+        content: ":"; }
+      #documentation dl dt.header:after {
+        content: ""; }
+      #documentation dl dt > strong {
+        font-family: Lucida Sans Unicode, sans-serif;
+        font-weight: bold;
+        display: block;
+        background-color: #DDD;
+        color: #000;
+        padding: 0 4px; }
+        #documentation dl dt > strong:after {
+          content: ""; }
+    #documentation dl dd {
+      margin: 5px 0 13px 190px;
+      /* Default value */
+      /* Type definition as last italicised item */
+      /* code block within a dl using a <pre>@code@</pre> */
+      /* title row for a defintion list */ }
+      #documentation dl dd em {
+        color: #000;
+        background-color: #EEE;
+        padding: 2px 5px;
+        border-radius: 5px;
+        line-height: 23px;
+        position: relative;
+        top: -2px; }
+        #documentation dl dd em:before {
+          content: "(default: "; }
+        #documentation dl dd em:after {
+          content: ")\A";
+          white-space: pre; }
+        #documentation dl dd em code {
+          background-color: transparent; }
+      #documentation dl dd i:last-child {
+        display: block;
+        color: #999;
+        font-style: normal;
+        text-alignt: right; }
+        #documentation dl dd i:last-child code {
+          color: #000; }
+      #documentation dl dd pre:not([lang]) {
+        border: none;
+        background-color: transparent;
+        padding: 1px;
+        font-size: 12px; }
+        #documentation dl dd pre:not([lang]) code {
+          background-color: transparent;
+          color: #009;
+          font-size: 1em; }
+      #documentation dl dd ul {
+        margin: 0; }
+        #documentation dl dd ul li {
+          margin: 0 0 0 30px; }
+        #documentation dl dd ul > br {
+          display: none; }
+      #documentation dl dd pre ol.linenums {
+        margin: 0; }
+        #documentation dl dd pre ol.linenums li {
+          margin: 0;
+          list-style: none; }
+      #documentation dl dd > strong {
+        font-family: Lucida Sans Unicode, sans-serif;
+        font-weight: bold;
+        display: block;
+        background-color: #DDD;
+        color: #000;
+        padding: 0 4px; }
+  #documentation ul.lang-selector {
+    margin: 10px 0 0 20px;
+    position: relative;
+    z-index: 5; }
+    #documentation ul.lang-selector li {
+      list-style: none;
+      margin: 0 -1px 0 0;
+      float: left;
+      border: 1px solid #999;
+      border-bottom: 0;
+      padding: 2px 10px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      cursor: pointer; }
+      #documentation ul.lang-selector li.selected {
+        background-color: #EEE; }
+      #documentation ul.lang-selector li.warning {
+        border: 0;
+        float: right;
+        color: #A00;
+        cursor: default; }
+        #documentation ul.lang-selector li.warning:before {
+          content: "⚠";
+          font-size: 16px;
+          font-weight: bold;
+          position: relative;
+          top: 3px;
+          margin-right: 5px; }
+  #documentation pre {
+    border: 1px solid #999;
+    border-radius: 5px;
+    background-color: #F6F6F6;
+    padding: 5px 5px 0 10px;
+    font-family: monospace, serif;
+    font-size: 11px; }
+  #documentation code.prettyprint {
+    margin-top: 40px;
+    margin-bottom: 10px; }
+  #documentation h3 + pre {
+    margin-top: 30px; }
+  #documentation pre[lang] {
+    margin: 5px 0 10px 0;
+    /*&.with-lang-nav::before {
+      display: none;
+    }*/ }
+    #documentation pre[lang] code {
+      font-family: monospace, serif;
+      font-size: 11px;
+      background-color: transparent; }
+      #documentation pre[lang] code span {
+        font-family: monospace, serif; }
+    #documentation pre[lang][lang]::before {
+      font-weight: bold;
+      background-color: white;
+      background-color: rgba(255, 255, 255, 0.5);
+      color: rgba(0, 0, 0, 0.5);
+      padding: 3px;
+      border-radius: 3px;
+      float: right; }
+    #documentation pre[lang].linenums[lang]::before {
+      position: relative;
+      left: 5px; }
+    #documentation pre[lang].bash.linenums ol {
+      margin-left: 15px; }
+      #documentation pre[lang].bash.linenums ol li {
+        list-style-type: none; }
+    #documentation pre[lang].bash.linenums ol > li.L0:first-child::before {
+      content: "$";
+      position: absolute;
+      left: 14px;
+      color: #333; }
+    #documentation pre[lang][lang=javascript]::before {
+      content: "Javascript"; }
+    #documentation pre[lang][lang=java]::before {
+      content: "Java"; }
+    #documentation pre[lang][lang=python]::before {
+      content: "Python"; }
+    #documentation pre[lang][lang=php]::before {
+      content: "PHP"; }
+    #documentation pre[lang][lang=ruby]::before {
+      content: "Ruby"; }
+    #documentation pre[lang][lang=nodejs]::before {
+      content: "Node.js"; }
+    #documentation pre[lang][lang=objc]::before {
+      content: "Obj-C"; }
+    #documentation pre[lang][lang=swift]::before {
+      content: "Swift"; }
+    #documentation pre[lang][lang=go]::before {
+      content: "Swift"; }
+    #documentation pre[lang][lang=csharp]::before {
+      content: "C# .Net"; }
+    #documentation pre[lang][lang=cplusplus]::before {
+      content: "C++"; }
+    #documentation pre[lang][lang=c]::before {
+      content: "C"; }
+    #documentation pre[lang][lang=appcelerator]::before {
+      content: "Appcelerator"; }
+    #documentation pre[lang][lang=phonegap]::before {
+      content: "PhoneGap"; }
+    #documentation pre[lang][lang=html]::before {
+      content: "HTML"; }
+    #documentation pre[lang][lang=json]::before {
+      content: "JSON"; }
+    #documentation pre[lang][lang=sh]::before {
+      content: "Shell script"; }
+    #documentation pre[lang][lang=yaml]::before {
+      content: "YAML"; }
+  #documentation code {
+    font-family: monospace, serif;
+    background-color: #FDE9D7; }
+  #documentation .with-lang-nav {
+    display: none;
+    position: relative;
+    top: -1px;
+    z-index: 1;
+    clear: left;
+    border-style: dashed;
+    padding: 10px;
+    border-radius: 5px; }
+    #documentation .with-lang-nav:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      border-color: #666; }
+    #documentation .with-lang-nav.selected {
+      display: block; }
+  #documentation .lang-resource {
+    outline: 1px dashed rgba(0, 0, 0, 0.075);
+    display: none;
+    /* hide by default and let language selector show the correct resource */ }
+    #documentation .lang-resource p {
+      clear: both; }
+    #documentation .lang-resource.selected {
+      display: block; }
+    #documentation .lang-resource:hover {
+      background-color: rgba(0, 0, 0, 0.03);
+      border-color: #CCC; }
+  #documentation span.lang-resource.selected {
+    display: inline; }
+  #documentation h6.lang-resource.selected {
+    /* h6 blocks are used as code definitions so ensure they remain inline with block surrounding the type */
+    display: inline; }
+  #documentation .breaker {
+    display: none; }
+  #documentation dl dt[lang] > div {
+    display: inline; }
+  #documentation ol.linenums {
+    margin: 0 5px 5px 30px; }
+    #documentation ol.linenums li {
+      font-size: 10px; }
+  #documentation .tip {
+    display: block;
+    float: right;
+    margin: 10px 0 10px 10px;
+    border: 1px solid #AAA;
+    background-color: #FBFAB4;
+    width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: "American Typewriter", "Trebuchet MS", sans; }
+    #documentation .tip:before {
+      content: 'TIP';
+      font-weight: bold;
+      color: #A6412C;
+      display: block;
+      margin-bottom: 5px; }
+  #documentation .prettyprint {
+    /* highlight types that are also links */ }
+    #documentation .prettyprint a .typ {
+      color: red; }
+    #documentation .prettyprint a:hover .typ {
+      text-decoration: underline; }
+  #documentation .try-it-button {
+    border: 1px solid #666;
+    border-radius: 5px;
+    padding: 6px;
+    margin-bottom: 10px;
+    background-color: #FFF;
+    display: block;
+    width: 100px;
+    text-align: center; }
+    #documentation .try-it-button:hover {
+      color: #000;
+      background-color: #F9F9F9; }
+  #documentation .inline-toc {
+    border: 1px solid #FA0;
+    background-color: #ffeecc;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 0;
+    font-weight: bold;
+    overflow: hidden; }
+    #documentation .inline-toc:before {
+      content: "In this section";
+      display: block;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #FA0;
+      padding: 5px 15px; }
+    #documentation .inline-toc ul {
+      margin: 0 30px 5px 0; }
+      #documentation .inline-toc ul li {
+        font-size: 10px;
+        font-weight: normal;
+        list-style: none; }
+        #documentation .inline-toc ul li a {
+          font-size: 10px; }
+    #documentation .inline-toc > ul {
+      float: left;
+      margin-left: 15px; }
+      #documentation .inline-toc > ul > li {
+        font-weight: bold;
+        font-size: 11px; }
+      #documentation .inline-toc > ul > li > ul > li {
+        float: left;
+        width: 280px;
+        margin-bottom: 20px; }
+        #documentation .inline-toc > ul > li > ul > li > ul li {
+          margin-left: 15px; }
+
+div.global-lang-container {
+  font-family: Georgia, Palatino, Times, 'Times New Roman', sans-serif;
+  position: fixed;
+  top: 40px;
+  left: 280px;
+  width: 650px;
+  display: block;
+  background-color: #FEC;
+  border: 1px solid #ffb84d;
+  border-top: 0;
+  border-radius: 5px;
+  z-index: 5;
+  box-shadow: 0 0 7px #F90; }
+  div.global-lang-container:before {
+    top: 38px;
+    content: "View docs in:";
+    display: block;
+    position: fixed;
+    font-size: 12px;
+    color: #ffa31a;
+    padding: 5px; }
+  div.global-lang-container ul {
+    margin-left: 6em;
+    float: left; }
+    div.global-lang-container ul li {
+      list-style: none;
+      float: left;
+      font-size: 14px;
+      padding: 1px 10px 3px 10px;
+      color: #b36b00;
+      cursor: pointer; }
+      div.global-lang-container ul li.selected {
+        cursor: default;
+        color: white;
+        background-color: #F90; }
+        div.global-lang-container ul li.selected:hover {
+          color: white; }
+      div.global-lang-container ul li:hover {
+        color: black; }
+
+nav.jump-to-nav {
+  position: fixed;
+  left: 950px;
+  top: 36px;
+  z-index: 100; }
+  nav.jump-to-nav .form {
+    padding: 5px;
+    background-color: white;
+    border: 1px solid #f30;
+    border-radius: 10px; }
+    nav.jump-to-nav .form select {
+      background-color: white; }
+
+/* Prettify color coding custom scheme */
+.str {
+  color: #AB0000; }
+
+/* string content */
+.kwd {
+  color: #0000AB; }
+
+/* a keyword */
+.com {
+  color: #909090; }
+
+/* a comment */
+.typ {
+  color: #2b91af; }
+
+/* a type name */
+.lit {
+  color: #800000; }
+
+/* a literal value */
+.pun {
+  color: #000; }
+
+/* punctuation */
+.pln {
+  color: #000; }
+
+/* plain text */
+.tag {
+  color: #800000; }
+
+/* a markup tag name */
+.atn {
+  color: #f00; }
+
+/* a markup attribute name */
+.atv {
+  color: #00f; }
+
+/* a markup attribute value */
+.dec {
+  color: #800080; }
+
+/* a declaration */
+li.L1, li.L3, li.L5, li.L7, li.L9 {
+  background: #F0F0F0; }
+
+.prettyprint ol.linenums li {
+  list-style-type: decimal;
+  color: #AAA; }
+
+/* remove all styling from text only blocks */
+pre.prettyprint[lang=text] .str, pre.prettyprint[lang=text] .kwd, pre.prettyprint[lang=text] .com, pre.prettyprint[lang=text] .typ, pre.prettyprint[lang=text] .lit, pre.prettyprint[lang=text] .pun, pre.prettyprint[lang=text] .pln, pre.prettyprint[lang=text] .tag, pre.prettyprint[lang=text] .atn, pre.prettyprint[lang=text] .atv, pre.prettyprint[lang=text] .dec {
+  color: #000000; }
