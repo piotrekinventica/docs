@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ably API Documentation - History Tutorial</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/vendor/prettify/prettify.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheet.css" media="screen">
+
+    
+
+    <script src="/vendor/javascripts/jquery-1-8-3-min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/jquery-cookie-1-3-1.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/kjua-0.1.1.min.js" type="text/javascript"></script>
+    <script src="/vendor/javascripts/base64.js" type="text/javascript"></script>
+
+    <script src="/vendor/prettify/prettify-lib.js" type="text/javascript"></script>
+
+    <script src="//cdn.ably.io/lib/ably.min.js" type="text/javascript"></script>
+
+    <script src="/javascripts/application.js" type="text/javascript"></script>
+    <script src="/javascripts/lang-manager.js" type="text/javascript"></script>
+
+    
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.7.5">
+  </head>
+  <body>
+    <div class="canonical-notice">
+      <img src="/images/icon-alert.png">
+      <span class="canonical-notice-text">
+        You are viewing our bleeding edge unstable documentation. We recommend you use our <a href="https://www.ably.io/documentation">stable documentation »</a>
+      </span>
+      <img src="/images/icon-alert.png">
+    </div>
+    <div class="fork-banner"><a href="https://github.com/ably/docs"><img src="/images/forkme.png" alt="Fork me on GitHub"></a></div>
+
+  <div id="documentation">
+    
+    <header>
+      
+      
+        <h1 id="title">History Tutorial</h1>
+      
+    </header>
+    <article>
+      <p>Ably&#8217;s <a href="/realtime/history">history feature</a> enables you to store messages published on channels that can later be retrieved using the <a href="/realtime/history">channel history API</a>.</p>
+<p>By default, channels will only store messages in memory for up to two minutes. However, using <a href="https://support.ably.io/solution/articles/3000030057-what-are-channel-rules-and-how-can-i-use-them-in-my-app">channel rules</a>, you can configure messages published on matching channels to be persisted to disk for <a href="https://support.ably.io/solution/articles/3000030059-how-long-are-messages-stored-for">typically 24 &#8211; 72 hours</a>. Those messages will then be immediately available for retrieval via our Realtime and REST API clients for as long as the message is stored on disk.</p>
+<p>Using our <a href="/realtime/history">history API</a> is trivial.  Let&#8217;s get started.</p>
+<h2>Step 1 &#8211; Set up a free account with Ably</h2>
+<p>In order to run these tutorials locally, you will need an <a href="https://support.ably.io/support/solutions/articles/3000030502-setting-up-and-managing-api-keys">Ably API key</a>. If you are not already signed up, you should <a href="https://www.ably.io/signup">sign up now for a free Ably account</a>.  Once you have an Ably account:</p>
+<ol>
+	<li><a href="https://support.ably.io/support/solutions/articles/3000030053-how-do-i-access-my-app-dashboard">Log into your app dashboard</a></li>
+	<li>Under &#8220;Your apps&#8221;, click on &#8220;Manage app&#8221; for any app you wish to use for this tutorial, or create a new one with the &#8220;Create New App&#8221; button</li>
+	<li>Click on the &#8220;API Keys&#8221; tab</li>
+	<li>Copy the secret &#8220;API Key&#8221; value from your Root key and store it so that you can use it later in this tutorial<br />
+<a href="/images/tutorials/copy-api-key.png" target="_blank"><br />
+  <img src="/images/tutorials/copy-api-key.png" style="width: 100%" alt="Copy API Key screenshot"><br />
+</a></li>
+</ol>
+<h2>Step 2 &#8211; Configure all channels within a namespace to persist messages to disk</h2>
+<p>Channels can be named using any unicode string characters with the only restriction that they cannot start with a <code>[</code> or <code>:</code> character as these are used as &#8220;special&#8221; characters. A colon <code>:</code> is used to delimit channel namespaces in a format such as <code>namespace:channel</code>. Namespaces provide a flexible means to group channels together. Channel grouping can be useful when, for example, <a href="/general/authentication#capabilities-explained">configuring permissions (capabilities) for a set of channels within a client token</a> or setting up rules to apply to one or more channels.</p>
+<p>We will be using channel rules in this tutorial to ensure all channels in the <code>persisted</code> namespace are configured to persist messages to disk i.e. we will explicitlyt enable the history feature. Follow these steps:</p>
+<ol>
+	<li>Visit your <a href="https://support.ably.io/solution/articles/3000048664-how-do-i-access-my-account-dashboard">account dashboard</a>, navigate to the same app you chose in Step 1 when obtaining your API key earlier</li>
+	<li>Click on the Settings tab and scroll down to the &#8220;Channel rules&#8221; section</li>
+	<li>Click the &#8220;Add new rule&#8221; button (see below)<br />
+<a href="/images/tutorials/channel-rules-add-new-rule.png" target="_blank"><br />
+  <img src="/images/tutorials/channel-rules-add-new-rule.png" style="width: 100%" alt="Add new channel rule screenshot"><br />
+</a></li>
+	<li>Once the modal has opened, enter &#8220;persisted&#8221; for the namespace, check the Persisted check box to enable history, and click the &#8220;Create channel rule&#8221; button (see below)<br />
+<a href="/images/tutorials/channel-rules-create-modal.png" target="_blank"><br />
+  <img src="/images/tutorials/channel-rules-create-modal.png" style="width: 100%" alt="Create channel rule screenshot"><br />
+</a></li>
+</ol>
+<p>You have now enabled history for all channels in the <code>persisted</code> namespace i.e. any channel with a name matching the pattern <code>peristed:*</code> will store published messages to disk.</p>
+<h2>Step 3 &#8211; Install Ably</h2>
+
+
+<div lang="javascript"> <!-- start javascript language block -->
+<p>To start using Ably in your web app, you first need to include the Ably library. We recommend that you include the latest client library from our CDN using a simple <code>&lt;script&gt;</code> tag. The client library must be instanced with the API key you copied in Step 1. Note in production we recommend you always use the <a href="/general/authentication#token-authentication">token authentication scheme</a> for browser clients, however in this example we use an API key for simplicity.</p>
+<p>Include the code below just before your closing your HTML <code>&lt;/html&gt;</code> tag.</p>
+<pre lang="javascript"><code lang="javascript">&lt;script src="//cdn.ably.io/lib/ably-0.min.js"&gt;&lt;/script&gt;
+
+&lt;script type="text/javascript"&gt;
+  var realtime = new Ably.Realtime(apiKey);
+&lt;/script&gt;</code></pre>
+<p><a href="https://github.com/ably/tutorials/commit/a55b855">See this step in Github</a></p>
+
+</div> <!-- /end javascript language block -->
+
+
+
+<div lang="ruby"> <!-- start ruby language block -->
+<p>To start using Ably you first need to install the Ably RubyGem. The RubyGem can be installed as follows:</p>
+<pre lang="sh"><code lang="sh">gem install ably</code></pre>
+<p>Or if using bundler, simply add the following to your Gemfile and run <code>bundle install</code>:</p>
+<pre lang="ruby"><code lang="ruby">gem 'ably'</code></pre>
+<p>The client library must be instanced with the API key you copied in Step 1. API keys used with <a href="/general/authentication#basic-authentication">basic authentication</a> for your own servers is generally preferred, however clients running on insecure devices should always use the <a href="/general/authentication#token-authentication">token authentication scheme</a> instead. In this example, we use an API key for simplicity.</p>
+<p>As we do not need asynchronous access to the realtime API for this tutorial, we&#8217;ll be using the simpler <a href="/rest">REST client library</a>. However, in some cases where users want to subscribe to events asynchronously from Ruby, we recommend the use of the <a href="/realtime">Realtime client library</a>.</p>
+<pre lang="ruby"><code lang="ruby">require 'ably'
+ably = Ably::Rest.new(key: api_key)</code></pre>
+<p><a href="https://github.com/ably/tutorials/commit/05e2e16">See this step in Github</a></p>
+
+</div> <!-- /end ruby language block -->
+
+<h2>Step 4 &#8211; Publishing messages to be stored with channel history</h2>
+<p>Before we can use the history API to retrieve previously published messages, we need to publish some messages to a channel. In the example code below, we publish 3 messages to the channel.</p>
+
+
+<div lang="javascript"> <!-- start javascript language block -->
+<pre lang="javascript"><code lang="javascript">var channel = realtime.channels.get("persisted:sounds");
+channel.publish("play", "bark");
+channel.publish("play", "meow");
+channel.publish("play", "cluck");</code></pre>
+<p><a href="https://github.com/ably/tutorials/commit/f460ba7">See this step in Github</a></p>
+
+</div> <!-- /end javascript language block -->
+
+
+
+<div lang="ruby"> <!-- start ruby language block -->
+<pre lang="ruby"><code lang="ruby">channel = ably.channels.get('persisted:sounds')
+channel.publish 'play', 'bark'
+channel.publish 'play', 'meow'
+channel.publish 'play', 'cluck'</code></pre>
+<p><a href="https://github.com/ably/tutorials/commit/c99d105">See this step in Github</a></p>
+
+</div> <!-- /end ruby language block -->
+
+<h2>Step 5 &#8211; Retrieving messages from history</h2>
+<p>Now that we have published messages on a channel that is configured to store messages on disk, we can retrieve them using the history method of the channel object.</p>
+
+
+<div lang="javascript"> <!-- start javascript language block -->
+<pre lang="javascript"><code lang="javascript">var channel = realtime.channels.get("persisted:sounds");
+channel.history(function(err, resultPage) {
+  alert("Last message published: " + JSON.stringify(resultPage.items[0].data));
+});</code></pre>
+<p><a href="https://github.com/ably/tutorials/commit/9716aa2">See this step in Github</a></p>
+
+</div> <!-- /end javascript language block -->
+
+
+
+<div lang="ruby"> <!-- start ruby language block -->
+<pre lang="ruby"><code lang="ruby">channel = ably.channels.get('persisted:sounds')
+result_page = channel.history
+puts "Last message published: #{result_page.items.first.data}"</code></pre>
+<p><a href="https://github.com/ably/tutorials/commit/55ad113">See this step in Github</a></p>
+
+</div> <!-- /end ruby language block -->
+
+<p>We&#8217;re done, it&#8217;s that simple. We have now shown you how to set up a channel to use persisted history using channel rules, then we published some messages on that channel, and later retrieved them using the history API.</p>
+<h2>Download tutorial source code</h2>
+
+
+<div lang="javascript"> <!-- start javascript language block -->
+<p>The complete source code for each step of <a href="https://github.com/ably/tutorials/commits/history-javascript">this tutorial is available on Github</a>.</p>
+<p>We recommend that you clone the repo locally:</p>
+<pre lang="sh"><code lang="sh">git clone https://github.com/ably/tutorials.git</code></pre>
+<p>Checkout the tutorial branch:</p>
+<pre lang="sh"><code lang="sh">git checkout history-javascript</code></pre>
+<p>And then run the demo locally by adding your <a href="https://support.ably.io/support/solutions/articles/3000030502-setting-up-and-managing-api-keys">Ably API key</a> to <code>example.html</code> and opening the page in your browser.</p>
+
+</div> <!-- /end javascript language block -->
+
+
+
+<div lang="ruby"> <!-- start ruby language block -->
+<p>The complete source code for each step of <a href="https://github.com/ably/tutorials/commits/history-ruby">this tutorial is available on Github</a>.</p>
+<p>We recommend that you clone the repo locally:</p>
+<pre lang="sh"><code lang="sh">git clone https://github.com/ably/tutorials.git</code></pre>
+<p>Checkout the tutorial branch:</p>
+<pre lang="sh"><code lang="sh">git checkout history-ruby</code></pre>
+<p>And then run the demo locally by adding your <a href="https://support.ably.io/support/solutions/articles/3000030502-setting-up-and-managing-api-keys">Ably API key</a> to <code>example.rb</code> and running the demo <code>bundle exec ruby example.rb</code></p>
+
+</div> <!-- /end ruby language block -->
+
+<h2>Next steps</h2>
+<p>1. If you would like to find out more about how to use the history API from your devices and apps, see the <a href="https://www.ably.io/documentation/realtime/history">Realtime history documentation</a>. Typically on servers customers prefer to use the <a href="https://www.ably.io/documentation/rest/history">REST history API</a><br />
+2. Learn more about <a href="https://www.ably.io/features">Ably features</a> by stepping through our other <a href="https://www.ably.io/tutorials">Ably tutorials</a><br />
+3. Gain a good technical <a href="https://www.ably.io/documentation/how-ably-works">overview of how the Ably realtime platform works</a><br />
+4. <a href="https://www.ably.io/contact">Get in touch if you need help</a></p>
+    </article>
+    <hr class="back">
+    <a href="#documentation">Back to top</a>
+  </div>
+  <div id="sidebar">
+  <a href="/" title="API Documentation Home"><img src="/images/ably-logo.png" class="ably-logo" title="API Documentation Home"></a>
+  <ul>
+<li class=''><a href='/quick-start-guide/'>Quickstart Guide</a></li>
+<li class=''><a href='/how-ably-works/'>How Ably works</a></li>
+<li class=''><a href='/tutorials/'>Tutorials</a></li>
+</ul>
+  <h2><a href="/realtime/">Realtime client lib</a></h2>
+<ul>
+<li class=''><a href='/realtime/usage/'>Using the Realtime library</a></li>
+<li class=''><a href='/realtime/connection/'>Connection</a></li>
+<li class=''><a href='/realtime/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/realtime/presence/'>Presence</a></li>
+<li class=''><a href='/realtime/authentication/'>Authentication</a></li>
+<li class=''><a href='/realtime/history/'>History</a></li>
+<li class=''><a href='/realtime/encryption/'>Encryption</a></li>
+<li class=''><a href='/realtime/statistics/'>Statistics</a></li>
+<li class=''><a href='/realtime/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest/">REST client lib</a></h2>
+<ul>
+<li class=''><a href='/rest/usage/'>Using the REST library</a></li>
+<li class=''><a href='/rest/channels-messages/'>Channels and Messages</a></li>
+<li class=''><a href='/rest/presence/'>Presence</a></li>
+<li class=''><a href='/rest/authentication/'>Authentication</a></li>
+<li class=''><a href='/rest/history/'>History</a></li>
+<li class=''><a href='/rest/encryption/'>Encryption</a></li>
+<li class=''><a href='/rest/statistics/'>Statistics</a></li>
+<li class=''><a href='/rest/types/'>Types</a></li>
+</ul>
+  <h2><a href="/rest-api/">REST API</a></h2>
+<ul>
+</ul>
+  <h2>General</h2>
+<ul>
+<li class=''><a href='/general/authentication/'>Authentication</a></li>
+<li class=''><a href='/general/channel-rules-namespaces/'>Channel Rules and Namespaces</a></li>
+<li class=''><a href='/general/push-notifications/'>Mobile push notifications</a></li>
+<li class=''><a href='/general/queues/'>Message Queues</a></li>
+<li class=''><a href='/general/webhooks/'>Receiving WebHooks</a></li>
+<li class=''><a href='/general/statistics/'>Application Statistics</a></li>
+</ul>
+  <h2><a href="/client-lib-development-guide/">Library Development</a></h2>
+<ul>
+<li class=''><a href='/client-lib-development-guide/features/'>Features spec v0.9</a></li>
+<li class=''><a href='/client-lib-development-guide/feature-prioritisation/'>Feature prioritisation</a></li>
+<li class=''><a href='/client-lib-development-guide/protocol/'>Realtime Protocol Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/rest-api/'>REST API Definition</a></li>
+<li class=''><a href='/client-lib-development-guide/test-api/'>Sandbox Test API</a></li>
+<li class=''><a href='/client-lib-development-guide/encryption/'>Encryption</a></li>
+<li class=''><a href='/client-lib-development-guide/websocket/'>WebSocket Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/comet/'>Comet Transport</a></li>
+<li class=''><a href='/client-lib-development-guide/connection-recovery/'>Connection Recovery</a></li>
+<li class=''><a href='/client-lib-development-guide/connection-manager/'>Connection Manager</a></li>
+<li class=''><a href='/client-lib-development-guide/connection-fallback/'>Connection host fallback</a></li>
+<li class=''><a href='/client-lib-development-guide/documentation-formatting-guide/'>Documentation Formatting Guide</a></li>
+<li class=''><a href='/code-index/'>Code Examples List</a></li>
+</ul>
+  <ul>
+<li><a href="https://www.ably.io">Visit Ably.io</a></li>
+</ul>
+</div>
+
+</body>
+</html>
